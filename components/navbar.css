@@ -1,0 +1,205 @@
+/* ================================
+   NAVIGATION COMPONENT STYLES
+   ================================ */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: transparent;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+    padding: var(--spacing-sm) 0;
+}
+
+/* État scrollé - fond semi-transparent */
+.navbar.scrolled {
+    background: rgba(13, 20, 33, 0.9);
+    border-bottom-color: var(--border-color);
+}
+
+/* Adaptation pour sections blanches */
+.navbar.white-section {
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.navbar.white-section .nav-brand-text,
+.navbar.white-section .nav-link,
+.navbar.white-section .search-input::placeholder {
+    color: var(--bg-primary) !important;
+}
+
+.navbar.white-section .search-input {
+    border-color: rgba(13, 20, 33, 0.2);
+    color: var(--bg-primary);
+}
+
+.navbar.white-section .btn-join {
+    background: var(--bg-primary);
+    color: white;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md) var(--spacing-lg);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    margin-left: var(--spacing-md);
+    position: relative;
+    z-index: 1001;
+}
+
+/* Logo WenBot en blanc initialement */
+.nav-brand-text {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.nav-menu {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xl);
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white;
+}
+
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-gradient);
+    border-radius: 1px;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.search-container {
+    position: relative;
+}
+
+/* Nouvelle barre de recherche - plus rectangulaire, plus grande, fond transparent, sans loupe */
+.search-input {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px; /* Plus rectangulaire */
+    padding: 12px 20px; /* Plus grande */
+    color: white;
+    font-size: var(--font-size-sm);
+    width: 240px; /* Largeur fixe plus grande */
+    transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-join {
+    background: var(--color-gradient);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-weight: 600;
+    font-size: var(--font-size-sm);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-join:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.nav-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+}
+
+.nav-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    transition: all 0.3s ease;
+    border-radius: 2px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-menu {
+        position: fixed;
+        top: 70px;
+        right: -100%;
+        width: 100%;
+        height: calc(100vh - 70px);
+        background: rgba(13, 20, 33, 0.95);
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        padding-top: var(--spacing-3xl);
+        transition: right 0.3s ease;
+    }
+
+    .nav-menu.active {
+        right: 0;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .search-input {
+        width: 180px;
+        padding: 10px 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-container {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+
+    .search-container {
+        display: none;
+    }
+} 

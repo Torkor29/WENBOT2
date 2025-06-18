@@ -23,23 +23,71 @@
 
 /* Adaptation pour sections blanches */
 .navbar.white-section {
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom-color: rgba(13, 20, 33, 0.15);
+    backdrop-filter: blur(20px);
 }
 
-.navbar.white-section .nav-brand-text,
-.navbar.white-section .nav-link,
-.navbar.white-section .search-input::placeholder {
-    color: var(--bg-primary) !important;
+/* Logo WenBot sombre sur fond blanc */
+.navbar.white-section .nav-brand-text {
+    color: #0d1421 !important;
+    font-weight: 800;
 }
 
+/* Liens de navigation sombres sur fond blanc */
+.navbar.white-section .nav-link {
+    color: #4a5568 !important;
+    font-weight: 600;
+}
+
+.navbar.white-section .nav-link:hover,
+.navbar.white-section .nav-link.active {
+    color: #0d1421 !important;
+    font-weight: 700;
+}
+
+/* Indicateur actif adapté */
+.navbar.white-section .nav-link.active::after {
+    background: var(--color-gradient);
+    height: 3px;
+}
+
+/* Barre de recherche adaptée pour fond blanc */
 .navbar.white-section .search-input {
-    border-color: rgba(13, 20, 33, 0.2);
-    color: var(--bg-primary);
+    border-color: rgba(13, 20, 33, 0.4);
+    color: #0d1421;
+    background: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
 }
 
+.navbar.white-section .search-input::placeholder {
+    color: rgba(13, 20, 33, 0.6) !important;
+    font-weight: 500;
+}
+
+.navbar.white-section .search-input:focus {
+    border-color: var(--color-blue);
+    box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.15);
+    background: rgba(255, 255, 255, 1);
+    color: #0d1421;
+}
+
+/* Bouton Join adapté */
 .navbar.white-section .btn-join {
-    background: var(--bg-primary);
+    background: var(--color-gradient);
     color: white;
+    box-shadow: 0 4px 12px rgba(41, 98, 255, 0.4);
+    font-weight: 700;
+}
+
+.navbar.white-section .btn-join:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(41, 98, 255, 0.5);
+}
+
+/* Menu mobile adapté */
+.navbar.white-section .nav-toggle span {
+    background: #0d1421;
 }
 
 .nav-container {

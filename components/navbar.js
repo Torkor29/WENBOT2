@@ -92,32 +92,60 @@ class NavbarComponent {
     // Mise à jour de l'apparence de la navbar selon la section
     updateNavbarAppearance(sections, scrollY) {
         let isOnWhiteSection = false;
+        let currentSection = null;
         
+        // Trouver la section actuelle
         sections.forEach(section => {
             const sectionTop = section.offsetTop - 100;
             const sectionHeight = section.offsetHeight;
             
             if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                // Vérifier si la section a un fond blanc/clair
-                const computedStyle = window.getComputedStyle(section);
-                const backgroundColor = computedStyle.backgroundColor;
-                
-                // Détection des sections avec fond clair
-                if (section.classList.contains('trading-pairs-section') || 
-                    section.classList.contains('faq-section') ||
-                    section.classList.contains('white-section') ||
-                    backgroundColor === 'rgb(255, 255, 255)' ||
-                    backgroundColor === 'white') {
-                    isOnWhiteSection = true;
-                }
+                currentSection = section;
             }
         });
 
-        // Application des styles selon le type de section
+        if (currentSection) {
+            console.log('📍 Section actuelle:', currentSection.id, currentSection.className);
+            
+            // Vérifier l'attribut data-navbar-style en priorité
+            const navbarStyle = currentSection.getAttribute('data-navbar-style');
+            console.log('🏷️ Attribut data-navbar-style:', navbarStyle);
+            
+            if (navbarStyle === 'light') {
+                // Section blanche = navbar doit être sombre pour contraste
+                isOnWhiteSection = true;
+                console.log('✨ Mode forcé: navbar sombre (pour section blanche)');
+            } else if (navbarStyle === 'dark') {
+                // Section sombre = navbar doit être claire
+                isOnWhiteSection = false;
+                console.log('🌙 Mode forcé: navbar claire (pour section sombre)');
+            } else {
+                // Détection automatique uniquement pour les sections sans attribut
+                const computedStyle = window.getComputedStyle(currentSection);
+                const backgroundColor = computedStyle.backgroundColor;
+                console.log('🎨 Couleur de fond détectée:', backgroundColor);
+                
+                // Détection des sections avec fond clair
+                if (currentSection.classList.contains('trading-pairs-section') || 
+                    currentSection.classList.contains('faq-section') ||
+                    currentSection.classList.contains('white-section') ||
+                    backgroundColor === 'rgb(255, 255, 255)' ||
+                    backgroundColor === 'white') {
+                    isOnWhiteSection = true;
+                    console.log('⚪ Section blanche détectée automatiquement');
+                } else {
+                    console.log('⚫ Section sombre détectée');
+                }
+            }
+        }
+
+        // Application des styles
         if (isOnWhiteSection) {
             this.navbar.classList.add('white-section');
+            console.log('🔄 Navbar adaptée pour section blanche');
         } else {
             this.navbar.classList.remove('white-section');
+            console.log('🔄 Navbar normale (mode sombre)');
         }
     }
 
@@ -235,14 +263,37 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = NavbarComponent;
 }
 
-// Initialisation automatique si le DOM est prêt
-document.addEventListener('DOMContentLoaded', () => {
-    // Vérifier si la navbar existe déjà dans le DOM
+// Initialisation forcée avec plusieurs méthodes de détection
+function initNavbar() {
+    console.log('🚀 Tentative d\'initialisation de la navbar...');
+    
+    // Vérifier si la navbar existe dans le DOM
     if (document.getElementById('navbar')) {
+        console.log('✅ Navbar trouvée, initialisation...');
         const navbar = new NavbarComponent();
         navbar.init();
         
         // Rendre accessible globalement
         window.NavbarComponent = navbar;
+        console.log('✅ NavbarComponent initialisé et disponible globalement');
+    } else {
+        console.warn('❌ Navbar non trouvée dans le DOM');
     }
-}); 
+}
+
+// Méthodes multiples d'initialisation pour s'assurer que ça marche
+if (document.readyState === 'loading') {
+    console.log('📋 DOM en cours de chargement, attente...');
+    document.addEventListener('DOMContentLoaded', initNavbar);
+} else {
+    console.log('📋 DOM déjà chargé, initialisation immédiate');
+    initNavbar();
+}
+
+// Backup d'initialisation après un délai
+setTimeout(() => {
+    if (!window.NavbarComponent) {
+        console.log('🔄 Backup d\'initialisation après délai...');
+        initNavbar();
+    }
+}, 500); 

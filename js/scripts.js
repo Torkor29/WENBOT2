@@ -27,113 +27,6 @@ function smoothScrollTo(target) {
 }
 
 /* ================================
-   NAVIGATION MODULE
-   ================================ */
-
-const NavigationModule = {
-    init() {
-        this.navbar = document.getElementById('navbar');
-        this.navLinks = document.querySelectorAll('.nav-link');
-        this.navToggle = document.getElementById('nav-toggle');
-        this.navMenu = document.getElementById('nav-menu');
-        
-        this.bindEvents();
-        this.handleScroll();
-    },
-
-    bindEvents() {
-        // Scroll event with debouncing
-        window.addEventListener('scroll', debounce(() => {
-            this.handleScroll();
-        }, 16));
-
-        // Navigation link clicks
-        this.navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const target = link.getAttribute('href');
-                this.setActiveLink(link);
-                smoothScrollTo(target);
-            });
-        });
-
-        // Mobile menu toggle
-        if (this.navToggle) {
-            this.navToggle.addEventListener('click', () => {
-                this.toggleMobileMenu();
-            });
-        }
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!this.navbar.contains(e.target)) {
-                this.closeMobileMenu();
-            }
-        });
-    },
-
-    handleScroll() {
-        const scrollY = window.scrollY;
-        const sections = document.querySelectorAll('section');
-        
-        // Add scrolled class to navbar
-        if (scrollY > 50) {
-            this.navbar.classList.add('scrolled');
-        } else {
-            this.navbar.classList.remove('scrolled');
-        }
-
-        // Change navbar appearance based on section background
-        let currentSection = '';
-        sections.forEach(section => {
-            const sectionTop = section.offsetTop - 100;
-            const sectionHeight = section.offsetHeight;
-            
-            if (scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
-                currentSection = section.id;
-                
-                // Check if current section has white background
-                if (section.classList.contains('trading-pairs-section') || 
-                    section.classList.contains('faq-section')) {
-                    this.navbar.classList.add('white-section');
-                } else {
-                    this.navbar.classList.remove('white-section');
-                }
-            }
-        });
-
-        // Update active navigation link
-        this.updateActiveLink(currentSection);
-    },
-
-    setActiveLink(activeLink) {
-        this.navLinks.forEach(link => link.classList.remove('active'));
-        activeLink.classList.add('active');
-    },
-
-    updateActiveLink(currentSection) {
-        this.navLinks.forEach(link => {
-            const href = link.getAttribute('href').substring(1);
-            if (href === currentSection) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-    },
-
-    toggleMobileMenu() {
-        this.navMenu.classList.toggle('active');
-        this.navToggle.classList.toggle('active');
-    },
-
-    closeMobileMenu() {
-        this.navMenu.classList.remove('active');
-        this.navToggle.classList.remove('active');
-    }
-};
-
-/* ================================
    HERO CHART MODULE
    ================================ */
 
@@ -404,8 +297,10 @@ const TradingPairsModule = {
 
 // Initialize all modules when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize modules in order
-    NavigationModule.init();
+    // Note: Navigation is now handled by components/navbar.js
+    console.log('🚀 Navigation gérée par le composant navbar.js');
+    
+    // Initialize other modules
     HeroChartModule.init();
     TradingPairsModule.init();
 

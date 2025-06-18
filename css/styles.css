@@ -74,187 +74,6 @@ body {
 }
 
 /* ================================
-   NAVIGATION STYLES (NOUVELLES MODIFICATIONS)
-   ================================ */
-
-.navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-    background: transparent;
-    backdrop-filter: blur(10px);
-    transition: all 0.3s ease;
-    border-bottom: 1px solid transparent;
-    padding: var(--spacing-sm) 0;
-}
-
-.navbar.scrolled {
-    background: rgba(13, 20, 33, 0.9);
-    border-bottom-color: var(--border-color);
-}
-
-.navbar.white-section {
-    background: rgba(255, 255, 255, 0.9);
-}
-
-.navbar.white-section .nav-brand-text,
-.navbar.white-section .nav-link,
-.navbar.white-section .search-input::placeholder {
-    color: var(--bg-primary) !important;
-}
-
-.navbar.white-section .search-input {
-    border-color: rgba(13, 20, 33, 0.2);
-    color: var(--bg-primary);
-}
-
-.navbar.white-section .btn-join {
-    background: var(--bg-primary);
-    color: white;
-}
-
-.nav-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--spacing-md) var(--spacing-lg);
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.nav-brand {
-    display: flex;
-    align-items: center;
-    margin-left: var(--spacing-md);
-    position: relative;
-    z-index: 1001;
-}
-
-.nav-logo {
-    width: 32px;
-    height: 32px;
-    filter: brightness(0) invert(1);
-    margin-right: var(--spacing-sm);
-    object-fit: contain;
-    display: block;
-    opacity: 1 !important;
-}
-
-/* Logo WenBot en blanc initialement */
-.nav-brand-text {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.nav-menu {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xl);
-}
-
-.nav-link {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    font-size: var(--font-size-sm);
-    transition: all 0.3s ease;
-    position: relative;
-}
-
-.nav-link:hover,
-.nav-link.active {
-    color: white;
-}
-
-.nav-link.active::after {
-    content: '';
-    position: absolute;
-    bottom: -8px;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: var(--color-gradient);
-    border-radius: 1px;
-}
-
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-md);
-}
-
-.search-container {
-    position: relative;
-}
-
-/* Nouvelle barre de recherche - plus rectangulaire, plus grande, fond transparent, sans loupe */
-.search-input {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    padding: 12px 20px;
-    color: white;
-    font-size: var(--font-size-sm);
-    width: 240px;
-    transition: all 0.3s ease;
-}
-
-.search-input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: var(--color-blue);
-    box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.search-icon {
-    position: absolute;
-    left: var(--spacing-sm);
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-secondary);
-}
-
-.btn-join {
-    background: var(--color-gradient);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    padding: var(--spacing-sm) var(--spacing-lg);
-    font-weight: 600;
-    font-size: var(--font-size-sm);
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-join:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
-}
-
-.nav-toggle {
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    cursor: pointer;
-}
-
-.nav-toggle span {
-    width: 24px;
-    height: 2px;
-    background: var(--text-primary);
-    transition: all 0.3s ease;
-}
-
-/* ================================
    HERO SECTION STYLES
    ================================ */
 
@@ -635,7 +454,7 @@ body {
    ================================ */
 
 .about-section {
-    background: var(--bg-primary);
+    background: white;
     padding: var(--spacing-3xl) 0;
 }
 
@@ -649,14 +468,14 @@ body {
     font-size: var(--font-size-3xl);
     font-weight: 700;
     margin-bottom: var(--spacing-xl);
-    color: var(--text-primary);
+    color: var(--bg-primary);
 }
 
 .about-text p {
     font-size: var(--font-size-lg);
     line-height: 1.7;
     margin-bottom: var(--spacing-lg);
-    color: var(--text-secondary);
+    color: rgba(13, 20, 33, 0.8);
 }
 
 .about-text strong {
@@ -675,8 +494,8 @@ body {
     align-items: center;
     gap: var(--spacing-md);
     padding: var(--spacing-lg);
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: rgba(13, 20, 33, 0.03);
+    border: 1px solid rgba(13, 20, 33, 0.1);
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
 }
@@ -684,7 +503,7 @@ body {
 .feature-item:hover {
     transform: translateX(8px);
     border-color: var(--color-blue);
-    box-shadow: var(--glow);
+    box-shadow: 0 8px 32px rgba(41, 98, 255, 0.15);
 }
 
 .feature-icon {
@@ -701,7 +520,7 @@ body {
 .feature-text h4 {
     font-size: var(--font-size-md);
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--bg-primary);
 }
 
 .trade-stats {
@@ -712,7 +531,7 @@ body {
     font-size: var(--font-size-2xl);
     font-weight: 700;
     margin-bottom: var(--spacing-xl);
-    color: var(--text-primary);
+    color: var(--bg-primary);
     text-align: center;
 }
 
@@ -727,15 +546,15 @@ body {
     align-items: flex-start;
     gap: var(--spacing-md);
     padding: var(--spacing-lg);
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
+    background: rgba(13, 20, 33, 0.03);
+    border: 1px solid rgba(13, 20, 33, 0.1);
     border-radius: var(--border-radius);
     transition: all 0.3s ease;
 }
 
 .stat-item:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .stat-item .stat-icon {
@@ -758,12 +577,12 @@ body {
 
 .stat-title {
     font-weight: 600;
-    color: var(--text-primary);
+    color: var(--bg-primary);
     font-size: var(--font-size-sm);
 }
 
 .stat-desc {
-    color: var(--text-secondary);
+    color: rgba(13, 20, 33, 0.7);
     font-size: var(--font-size-sm);
 }
 
@@ -881,18 +700,6 @@ body {
    ================================ */
 
 @media (max-width: 768px) {
-    .nav-menu {
-        display: none;
-    }
-    
-    .nav-toggle {
-        display: flex;
-    }
-    
-    .search-input {
-        width: 150px;
-    }
-    
     .hero-title {
         font-size: 2.5rem;
     }
@@ -919,10 +726,6 @@ body {
 }
 
 @media (max-width: 480px) {
-    .nav-container {
-        padding: var(--spacing-sm) var(--spacing-md);
-    }
-    
     .hero-container,
     .section-container,
     .about-content {
@@ -936,13 +739,4 @@ body {
     .stat-card {
         padding: var(--spacing-md);
     }
-    
-    .search-container {
-        display: none;
-    }
-}
-
-/* Ajustement pour le mode clair */
-.navbar.white-section .nav-logo {
-    filter: brightness(0);
 } 

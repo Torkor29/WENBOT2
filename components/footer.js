@@ -145,6 +145,12 @@ class FooterComponent {
         const legalLinks = document.querySelectorAll('.legal-link');
         
         legalLinks.forEach(link => {
+            // Ne pas intercepter les liens qui ont déjà un href valide
+            if (link.href && link.href !== '#' && !link.href.endsWith('#')) {
+                // Laisser le navigateur gérer ces liens normalement
+                return;
+            }
+            
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 
@@ -154,29 +160,27 @@ class FooterComponent {
         });
     }
 
-    // Gestion des clics sur les liens légaux
+    // Gestion des clics sur les liens légaux (seulement pour les liens sans href valide)
     handleLegalLinkClick(linkText) {
-        // Mapping des liens vers les pages correspondantes
+        // Mapping des liens vers les pages correspondantes (fallback pour anciens liens)
         const legalPages = {
-            'Mentions légales': '/legal/mentions-legales.html',
-            'Politique de confidentialité': '/legal/confidentialite.html',
-            'Conditions d\'utilisation': '/legal/conditions.html',
-            'Politique de cookies': '/legal/cookies.html',
-            'RGPD': '/legal/rgpd.html'
+            'Legal Notice': 'legal.html#legal-notice',
+            'Privacy Policy': 'legal.html#privacy-policy',
+            'Terms of Service': 'legal.html#terms-of-service',
+            'Cookie Policy': 'legal.html#cookie-policy',
+            'GDPR': 'legal.html#gdpr',
+            // Anciens liens français pour compatibilité
+            'Mentions légales': 'legal.html#legal-notice',
+            'Politique de confidentialité': 'legal.html#privacy-policy',
+            'Conditions d\'utilisation': 'legal.html#terms-of-service',
+            'Politique de cookies': 'legal.html#cookie-policy',
+            'RGPD': 'legal.html#gdpr'
         };
 
         const targetPage = legalPages[linkText];
         
         if (targetPage) {
-            // Vérifier si la page existe, sinon afficher une modal
-            this.checkPageExists(targetPage)
-                .then(exists => {
-                    if (exists) {
-                        window.location.href = targetPage;
-                    } else {
-                        this.showLegalModal(linkText);
-                    }
-                });
+            window.location.href = targetPage;
         } else {
             this.showLegalModal(linkText);
         }

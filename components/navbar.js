@@ -42,11 +42,23 @@ class NavbarComponent {
         // Gestion des clics sur les liens de navigation
         this.navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
-                e.preventDefault();
                 const target = link.getAttribute('href');
-                this.setActiveLink(link);
-                this.smoothScrollTo(target);
-                this.closeMobileMenu();
+                
+                // Si c'est un lien vers une page externe (.html), laisser la navigation normale
+                if (target && target.includes('.html')) {
+                    this.setActiveLink(link);
+                    this.closeMobileMenu();
+                    // Ne pas empêcher la navigation par défaut pour les liens .html
+                    return;
+                }
+                
+                // Pour les ancres internes, utiliser le smooth scroll
+                if (target && target.startsWith('#')) {
+                    e.preventDefault();
+                    this.setActiveLink(link);
+                    this.smoothScrollTo(target);
+                    this.closeMobileMenu();
+                }
             });
         });
 

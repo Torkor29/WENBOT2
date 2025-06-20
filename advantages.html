@@ -59,7 +59,55 @@
         /* Stats Section */
         .stats-showcase {
             padding: var(--spacing-3xl) 0;
-            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+            background: var(--bg-primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-showcase::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                rgba(41, 98, 255, 0.3) 0%,
+                rgba(102, 126, 234, 0.4) 25%,
+                rgba(118, 75, 162, 0.3) 50%,
+                rgba(41, 98, 255, 0.2) 75%,
+                rgba(102, 126, 234, 0.3) 100%
+            );
+            animation: waveFlow 8s ease-in-out infinite;
+            z-index: -2;
+        }
+        
+        .stats-showcase::after {
+            content: '';
+            position: absolute;
+            top: 20%;
+            left: 0;
+            width: 200%;
+            height: 60%;
+            background: linear-gradient(
+                -90deg,
+                rgba(118, 75, 162, 0.2) 0%,
+                rgba(41, 98, 255, 0.3) 33%,
+                rgba(102, 126, 234, 0.2) 66%,
+                rgba(118, 75, 162, 0.3) 100%
+            );
+            animation: waveFlow 12s ease-in-out infinite reverse;
+            z-index: -1;
+        }
+        
+        @keyframes waveFlow {
+            0%, 100% {
+                transform: translateX(-50%);
+            }
+            50% {
+                transform: translateX(0%);
+            }
         }
         
         .stats-grid {
@@ -70,14 +118,15 @@
         }
         
         .stat-highlight {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-color);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: var(--border-radius);
             padding: var(--spacing-xl);
             text-align: center;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
         }
         
         .stat-highlight::before {
@@ -668,6 +717,7 @@
     </footer>
 
     <script src="js/scripts.js?v=5"></script>
+    <script src="js/auth.js"></script>
     <script src="components/navbar.js?v=5"></script>
     <script src="components/footer.js?v=5"></script>
     <script>

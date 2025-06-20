@@ -292,19 +292,30 @@ const TradingPairsModule = {
 };
 
 /* ================================
-   INITIALIZATION
+   AUTHENTICATION INTEGRATION
    ================================ */
 
-// Initialize all modules when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Note: Navigation is now handled by components/navbar.js
-    console.log('🚀 Navigation gérée par le composant navbar.js');
-    
-    // Initialize other modules
+// Initialize authentication system for Join buttons
+function initializeAuthSystem() {
+    // This will be handled by auth.js when loaded
+    // Adding this placeholder to ensure compatibility
+    console.log('Authentication system initialization placeholder');
+}
+
+/* ================================
+   MAIN INITIALIZATION
+   ================================ */
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize existing modules
     HeroChartModule.init();
     TradingPairsModule.init();
-
-    console.log('🚀 WenBot website initialized successfully!');
+    
+    // Initialize authentication system
+    initializeAuthSystem();
+    
+    // Additional initialization can be added here
+    console.log('WenBot application initialized successfully');
 });
 
 // Handle window resize

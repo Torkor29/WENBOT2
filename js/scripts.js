@@ -328,11 +328,386 @@ const SmoothScrollModule = {
     }
 };
 
+/* ================================
+   SEARCH MODULE
+   ================================ */
+
+const SearchModule = {
+    init() {
+        this.searchInput = document.querySelector('.search-input');
+        this.searchContainer = document.querySelector('.search-container');
+        this.originalText = new Map(); // Store original text content
+        this.siteContent = null; // Cache pour le contenu du site
+        
+        if (!this.searchInput) return;
+        
+        this.setupSearchFunctionality();
+        this.createSearchResults();
+        this.loadSiteContent(); // Charger le contenu de toutes les pages
+    },
+
+    // Charger le contenu de toutes les pages du site
+    async loadSiteContent() {
+        const pages = [
+            { url: 'index.html', title: 'Accueil' },
+            { url: 'about.html', title: 'À propos' },
+            { url: 'advantages.html', title: 'Avantages' },
+            { url: 'advantages-new.html', title: 'Nouveaux Avantages' },
+            { url: 'pricing.html', title: 'Tarifs' },
+            { url: 'faq.html', title: 'FAQ' },
+            { url: 'contact.html', title: 'Contact' },
+            { url: 'legal.html', title: 'Mentions légales' },
+            { url: 'auth.html', title: 'Authentification' }
+        ];
+
+        this.siteContent = [];
+
+        for (const page of pages) {
+            try {
+                const response = await fetch(page.url);
+                if (response.ok) {
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    
+                    // Extraire le contenu textuel de la page
+                    const content = this.extractPageContent(doc, page);
+                    this.siteContent.push(content);
+                }
+            } catch (error) {
+                console.log(`Could not load ${page.url}:`, error);
+            }
+        }
+    },
+
+    extractPageContent(doc, pageInfo) {
+        const content = {
+            title: pageInfo.title,
+            url: pageInfo.url,
+            sections: []
+        };
+
+        // Sélecteurs pour extraire le contenu pertinent
+        const selectors = [
+            'h1, h2, h3, h4',
+            'p',
+            '.faq-item',
+            '.feature-item',
+            '.stat-item',
+            '.pair-card',
+            '.about-text',
+            '.performance-title',
+            '.performance-subtitle'
+        ];
+
+        selectors.forEach(selector => {
+            const elements = doc.querySelectorAll(selector);
+            elements.forEach(element => {
+                const text = element.textContent.trim();
+                if (text && text.length > 10) { // Ignorer les textes trop courts
+                    content.sections.push({
+                        text: text,
+                        type: this.getElementType(element),
+                        html: element.outerHTML
+                    });
+                }
+            });
+        });
+
+        return content;
+    },
+
+    getElementType(element) {
+        if (element.matches('h1, h2, h3, h4')) return 'titre';
+        if (element.matches('.faq-item, .faq-item *')) return 'faq';
+        if (element.matches('.about-text, .about-text *')) return 'apropos';
+        if (element.matches('.feature-item, .feature-item *')) return 'fonctionnalite';
+        if (element.matches('.stat-item, .stat-item *')) return 'statistique';
+        if (element.matches('.pair-card, .pair-card *')) return 'trading';
+        return 'texte';
+    },
+
+    setupSearchFunctionality() {
+        // Add search on input with debounce
+        this.searchInput.addEventListener('input', debounce((e) => {
+            this.performSearch(e.target.value.trim());
+        }, 300));
+
+        // Handle Enter key
+        this.searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                this.performSearch(e.target.value.trim());
+            }
+        });
+
+        // Handle focus events
+        this.searchInput.addEventListener('focus', () => {
+            this.searchContainer.classList.add('search-active');
+        });
+
+        this.searchInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                this.searchContainer.classList.remove('search-active');
+                if (!this.searchInput.value.trim()) {
+                    this.clearHighlights();
+                    this.hideResults();
+                }
+            }, 200);
+        });
+    },
+
+    createSearchResults() {
+        // Create search results dropdown
+        this.resultsContainer = document.createElement('div');
+        this.resultsContainer.className = 'search-results';
+        this.resultsContainer.innerHTML = `
+            <div class="search-results-header">
+                <span class="results-count">0 résultat(s)</span>
+                <button class="clear-search" title="Effacer la recherche">✕</button>
+            </div>
+            <div class="search-results-list"></div>
+        `;
+        
+        this.searchContainer.appendChild(this.resultsContainer);
+
+        // Handle clear search
+        this.resultsContainer.querySelector('.clear-search').addEventListener('click', () => {
+            this.clearSearch();
+        });
+    },
+
+    performSearch(query) {
+        if (!query || query.length < 2) {
+            this.hideResults();
+            this.clearHighlights();
+            return;
+        }
+
+        const results = [];
+        this.clearHighlights();
+        const queryLower = query.toLowerCase();
+
+        // 1. Rechercher dans la page actuelle
+        const currentPageResults = this.searchCurrentPage(queryLower);
+        results.push(...currentPageResults);
+
+        // 2. Rechercher dans toutes les autres pages si le contenu est chargé
+        if (this.siteContent && this.siteContent.length > 0) {
+            const siteResults = this.searchSiteContent(queryLower);
+            results.push(...siteResults);
+        }
+
+        // Trier les résultats par pertinence
+        results.sort((a, b) => {
+            // Prioriser les résultats de la page actuelle
+            if (a.isCurrentPage && !b.isCurrentPage) return -1;
+            if (!a.isCurrentPage && b.isCurrentPage) return 1;
+            
+            // Puis par type (titres en premier)
+            const typeOrder = { 'titre': 0, 'faq': 1, 'apropos': 2, 'fonctionnalite': 3, 'texte': 4 };
+            return (typeOrder[a.type] || 5) - (typeOrder[b.type] || 5);
+        });
+
+        this.displayResults(results, query);
+    },
+
+    searchCurrentPage(queryLower) {
+        const results = [];
+        const searchableSelectors = [
+            '.faq-item h3',
+            '.faq-item p',
+            '.about-text h2',
+            '.about-text p',
+            '.feature-text h4',
+            '.trade-stats h3',
+            '.stat-title',
+            '.stat-desc',
+            '.pair-symbol',
+            '.performance-title',
+            '.performance-subtitle'
+        ];
+
+        searchableSelectors.forEach(selector => {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                const text = element.textContent.toLowerCase();
+                
+                if (text.includes(queryLower)) {
+                    // Store original text if not already stored
+                    if (!this.originalText.has(element)) {
+                        this.originalText.set(element, element.innerHTML);
+                    }
+
+                    // Highlight the search term
+                    const highlightedHTML = this.highlightText(element.innerHTML, queryLower);
+                    element.innerHTML = highlightedHTML;
+
+                    // Add to results
+                    results.push({
+                        element,
+                        text: element.textContent.trim(),
+                        section: this.getCurrentPageSection(element),
+                        isCurrentPage: true,
+                        type: 'current',
+                        url: window.location.pathname
+                    });
+                }
+            });
+        });
+
+        return results;
+    },
+
+    searchSiteContent(queryLower) {
+        const results = [];
+        const currentUrl = window.location.pathname.split('/').pop() || 'index.html';
+
+        this.siteContent.forEach(page => {
+            // Ignorer la page actuelle (déjà traitée)
+            if (page.url === currentUrl) return;
+
+            page.sections.forEach(section => {
+                if (section.text.toLowerCase().includes(queryLower)) {
+                    results.push({
+                        text: section.text,
+                        section: page.title,
+                        isCurrentPage: false,
+                        type: section.type,
+                        url: page.url,
+                        pageTitle: page.title
+                    });
+                }
+            });
+        });
+
+        return results;
+    },
+
+    highlightText(text, query) {
+        const regex = new RegExp(`(${this.escapeRegex(query)})`, 'gi');
+        return text.replace(regex, '<mark class="search-highlight">$1</mark>');
+    },
+
+    escapeRegex(text) {
+        return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    },
+
+    getCurrentPageSection(element) {
+        // Determine which section the element belongs to on current page
+        if (element.closest('.faq-section')) return 'FAQ';
+        if (element.closest('.about-section')) return 'À propos';
+        if (element.closest('.trading-pairs-section')) return 'Paires de trading';
+        if (element.closest('.main-section')) return 'Accueil';
+        return 'Autre';
+    },
+
+    displayResults(results, query) {
+        const resultsList = this.resultsContainer.querySelector('.search-results-list');
+        const resultsCount = this.resultsContainer.querySelector('.results-count');
+        
+        resultsCount.textContent = `${results.length} résultat(s) pour "${query}"`;
+
+        if (results.length === 0) {
+            resultsList.innerHTML = '<div class="no-results">Aucun résultat trouvé</div>';
+        } else {
+            resultsList.innerHTML = results.map((result, index) => {
+                const isExternal = !result.isCurrentPage;
+                const pageIndicator = isExternal ? ` • ${result.pageTitle}` : '';
+                const linkIcon = isExternal ? ' 🔗' : '';
+                
+                return `
+                    <div class="search-result-item ${isExternal ? 'external-result' : ''}" data-index="${index}">
+                        <div class="result-section">${result.section}${pageIndicator}${linkIcon}</div>
+                        <div class="result-text">${this.truncateText(result.text, query)}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Add click handlers for results
+            resultsList.querySelectorAll('.search-result-item').forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    const result = results[index];
+                    if (result.isCurrentPage && result.element) {
+                        // Scroll to element on current page
+                        this.scrollToResult(result.element);
+                    } else {
+                        // Navigate to other page
+                        window.location.href = result.url;
+                    }
+                    this.searchInput.blur();
+                });
+            });
+        }
+
+        this.showResults();
+    },
+
+    truncateText(text, query) {
+        const queryIndex = text.toLowerCase().indexOf(query.toLowerCase());
+        if (queryIndex === -1) return text.substring(0, 100) + '...';
+        
+        const start = Math.max(0, queryIndex - 30);
+        const end = Math.min(text.length, queryIndex + query.length + 30);
+        
+        let truncated = text.substring(start, end);
+        if (start > 0) truncated = '...' + truncated;
+        if (end < text.length) truncated += '...';
+        
+        return truncated;
+    },
+
+    scrollToResult(element) {
+        element.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+        });
+        
+        // Add a temporary highlight effect
+        element.style.backgroundColor = 'rgba(212, 134, 74, 0.2)';
+        element.style.transition = 'background-color 0.3s ease';
+        
+        setTimeout(() => {
+            element.style.backgroundColor = '';
+        }, 2000);
+    },
+
+    showResults() {
+        this.resultsContainer.style.display = 'block';
+    },
+
+    hideResults() {
+        this.resultsContainer.style.display = 'none';
+    },
+
+    clearHighlights() {
+        // Restore original text content
+        this.originalText.forEach((originalHTML, element) => {
+            element.innerHTML = originalHTML;
+        });
+        
+        // Remove any existing highlights
+        document.querySelectorAll('.search-highlight').forEach(mark => {
+            const parent = mark.parentNode;
+            parent.replaceChild(document.createTextNode(mark.textContent), mark);
+            parent.normalize();
+        });
+    },
+
+    clearSearch() {
+        this.searchInput.value = '';
+        this.clearHighlights();
+        this.hideResults();
+        this.originalText.clear();
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize existing modules
     HeroChartModule.init();
     TradingPairsModule.init();
     SmoothScrollModule.init();
+    SearchModule.init();
     
     // Initialize authentication system
     initializeAuthSystem();

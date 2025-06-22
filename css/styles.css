@@ -36,54 +36,85 @@ img, picture, video, canvas, svg {
 }
 
 :root {
-    /* TradingView Dark Theme Colors */
-    --bg-primary: #0d1421;
-    --bg-secondary: #1e2329;
-    --bg-card: #131722;
-    --bg-card-hover: #1a1e2b;
+    /* ================================
+       VARIABLES CSS - PALETTE ESPACE COHÉRENTE
+       ================================ */
     
-    /* Text Colors */
-    --text-primary: #d1d4dc;
-    --text-secondary: #8a8e9b;
-    --text-accent: #2962ff;
+    /* Couleurs principales basées sur l'image espace réelle */
+    --space-warm-orange: #D4864A;      /* Orange chaud de la nébuleuse */
+    --space-amber: #E6A05C;            /* Ambre lumineux */
+    --space-forest-green: #4A6B3A;     /* Vert forêt spatial */
+    --space-sage-green: #7A9B6D;       /* Vert sauge */
+    --space-cream: #F5E6D3;            /* Crème stellaire */
+    --space-warm-brown: #8B5A3C;       /* Brun chaud */
+    --space-deep-teal: #2D4A42;        /* Teal profond */
+    --space-soft-gold: #E8C547;        /* Or doux */
     
-    /* Trading Colors */
-    --color-positive: #26a69a;
-    --color-negative: #ef5350;
-    --color-neutral: #8a8e9b;
+    /* Couleurs dérivées pour l'UI - tons chauds et naturels */
+    --primary-bg: rgba(255, 255, 255, 0.15);        /* Blanc transparent */
+    --secondary-bg: rgba(245, 230, 211, 0.1);       /* Crème très transparent */
+    --accent-color: rgba(212, 134, 74, 0.8);        /* Orange chaud */
+    --border-color: rgba(212, 134, 74, 0.2);        /* Bordure orange transparente */
+    --text-primary: rgba(34, 34, 34, 0.95);         /* Texte noir */
+    --text-secondary: rgba(68, 68, 68, 0.85);       /* Texte gris foncé */
+    --glow-color: rgba(212, 134, 74, 0.4);          /* Lueur orange douce */
     
-    /* Accent Colors */
-    --color-blue: #2962ff;
-    --color-purple: #9c27b0;
-    --color-gradient: linear-gradient(135deg, #2962ff 0%, #9c27b0 100%);
-    
-    /* Border & Shadow */
-    --border-color: #2a2e39;
-    --border-radius: 8px;
-    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
-    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
-    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
-    --glow: 0 0 20px rgba(41, 98, 255, 0.3);
-    
-    /* Typography */
-    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-size-xs: 0.75rem;
-    --font-size-sm: 0.875rem;
-    --font-size-md: 1rem;
-    --font-size-lg: 1.125rem;
-    --font-size-xl: 1.25rem;
-    --font-size-2xl: 1.5rem;
-    --font-size-3xl: 2rem;
-    --font-size-4xl: 2.5rem;
-    
-    /* Spacing */
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
+    /* Espacements */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.75rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
     --spacing-2xl: 3rem;
     --spacing-3xl: 4rem;
+    
+    /* Typographie */
+    --font-size-sm: 0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg: 1.125rem;
+    --font-size-xl: 1.25rem;
+    --font-size-2xl: 1.5rem;
+    --font-size-3xl: 1.875rem;
+    --font-size-4xl: 2.25rem;
+    --font-size-5xl: 3rem;
+    --font-size-6xl: 3.75rem;
+    
+    /* Ombres spatiales - tons chauds */
+    --shadow-cosmic: 0 20px 60px rgba(139, 90, 60, 0.4);
+    --shadow-nebula: 0 0 30px rgba(212, 134, 74, 0.3);
+    --shadow-stellar: 0 8px 25px rgba(74, 107, 58, 0.25);
+    
+    /* Thème Blanc avec palette spatiale */
+    --bg-primary: #ffffff;
+    --bg-secondary: rgba(245, 230, 211, 0.1);
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-card-hover: rgba(255, 255, 255, 0.95);
+    
+    /* Text Colors */
+    --text-accent: var(--space-warm-orange);
+    
+    /* Trading Colors avec palette spatiale */
+    --color-positive: var(--space-sage-green);
+    --color-negative: #D2691E;
+    --color-neutral: var(--space-cream);
+    
+    /* Accent Colors avec palette spatiale */
+    --color-blue: var(--space-warm-orange);
+    --color-purple: var(--space-sage-green);
+    --color-gradient: linear-gradient(135deg, var(--space-warm-orange) 0%, var(--space-amber) 100%);
+    
+    /* Border & Shadow avec palette spatiale */
+    --border-radius: 8px;
+    --shadow-sm: 0 2px 8px rgba(139, 90, 60, 0.15);
+    --shadow-md: 0 4px 16px rgba(139, 90, 60, 0.2);
+    --shadow-lg: 0 8px 32px rgba(139, 90, 60, 0.25);
+    --glow: 0 0 20px var(--glow-color);
+    
+    /* Typography */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-size-xs: 0.75rem;
+    --font-size-md: 1rem;
+    --font-size-3xl: 2rem;
 }
 
 body {
@@ -106,7 +137,7 @@ body {
 
 .main-section {
     position: relative;
-    min-height: 200vh;
+    min-height: 220vh;
     display: flex;
     flex-direction: column;
     padding-top: 0;
@@ -249,55 +280,56 @@ body {
 }
 
 /* ================================
+   PERFORMANCE INTRO SECTION
+   ================================ */
+
+.performance-intro {
+    text-align: center;
+    margin: 8vh auto 4vh auto;
+    max-width: 600px;
+    animation: fadeInUp 0.8s ease 0.4s both;
+}
+
+.performance-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: var(--spacing-md);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+.performance-subtitle {
+    font-size: var(--font-size-lg);
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+    opacity: 0.9;
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* ================================
    DASHBOARD CARD - Positionnée après le scroll
    ================================ */
 
 .dashboard-card {
-    background: rgba(19, 23, 34, 0.95);
+    background: var(--primary-bg);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     border-radius: 16px;
     padding: var(--spacing-xl);
     box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+        var(--shadow-cosmic),
+        var(--shadow-nebula),
+        0 0 0 1px var(--border-color);
     animation: fadeInUp 0.8s ease 0.6s both;
     position: relative;
     overflow: hidden;
     max-width: 1000px;
     width: 100%;
-    margin: 20vh auto 0 auto;
+    margin: 6vh auto 0 auto;
     z-index: 10;
 }
 
-.dashboard-card::before {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    background: conic-gradient(
-        from 0deg,
-        transparent 85%,
-        rgba(41, 98, 255, 0.8) 90%,
-        rgba(102, 126, 234, 1) 95%,
-        rgba(41, 98, 255, 0.8) 100%,
-        transparent 5%
-    );
-    border-radius: 18px;
-    z-index: -1;
-    animation: rotateBorder 3s linear infinite;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: xor;
-    padding: 2px;
-}
 
-.dashboard-card::after {
-    content: '';
-    position: absolute;
-    inset: 1px;
-    background: rgba(19, 23, 34, 0.98);
-    border-radius: 15px;
-    z-index: -1;
-}
 
 /* Pseudo-éléments activés pour l'effet parallaxe */
 
@@ -338,14 +370,16 @@ body {
 }
 
 .user-details h3 {
-    color: var(--text-primary);
+    color: white;
     font-size: var(--font-size-lg);
     margin-bottom: var(--spacing-xs);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .user-details p {
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.8);
     font-size: var(--font-size-sm);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .date-selector {
@@ -353,14 +387,18 @@ body {
     align-items: center;
     gap: var(--spacing-sm);
     padding: var(--spacing-sm) var(--spacing-md);
-    background: var(--bg-secondary);
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     cursor: pointer;
     transition: all 0.3s ease;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .date-selector:hover {
-    background: var(--bg-card-hover);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--space-amber);
 }
 
 .dashboard-stats {
@@ -371,7 +409,8 @@ body {
 }
 
 .stat-card {
-    background: var(--bg-secondary);
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     display: flex;
@@ -384,7 +423,8 @@ body {
 
 .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-stellar);
+    border-color: var(--space-amber);
 }
 
 .stat-card::before {
@@ -394,7 +434,11 @@ body {
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--color-gradient);
+    background: linear-gradient(90deg, 
+        var(--space-warm-orange), 
+        var(--space-amber), 
+        var(--space-sage-green)
+    );
     transform: scaleX(0);
     transition: transform 0.3s ease;
 }
@@ -411,7 +455,8 @@ body {
     width: 40px;
     height: 40px;
     border-radius: 8px;
-    background: rgba(41, 98, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--space-warm-orange);
 }
 
 .stat-info {
@@ -422,7 +467,8 @@ body {
 
 .stat-label {
     font-size: var(--font-size-sm);
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .stat-change {
@@ -439,23 +485,89 @@ body {
 }
 
 .stat-change.neutral {
-    color: var(--text-secondary);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 .stat-value {
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--text-primary);
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .dashboard-chart {
-    background: var(--bg-secondary);
+    background: var(--secondary-bg);
+    border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     height: 300px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.chart-svg {
+    width: 100%;
+    height: 100%;
+}
+
+.chart-grid-line {
+    stroke: rgba(255, 255, 255, 0.1);
+    stroke-width: 1;
+}
+
+.chart-axis-text {
+    fill: rgba(255, 255, 255, 0.8);
+    font-size: 12px;
+    font-family: var(--font-family);
+}
+
+.chart-line {
+    fill: none;
+    stroke: url(#chartGradient);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 6px rgba(212, 134, 74, 0.4));
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    animation: drawLine 4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.chart-area {
+    fill: url(#chartAreaGradient);
+    opacity: 0;
+    animation: fadeInArea 3s ease-in-out 1.5s forwards;
+}
+
+.chart-point {
+    fill: var(--space-amber);
+    stroke: white;
+    stroke-width: 3;
+    opacity: 0;
+    transform-origin: center;
+    animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    filter: drop-shadow(0 0 4px rgba(232, 197, 71, 0.6));
+}
+
+.chart-point.active {
+    opacity: 1;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.chart-point:nth-of-type(1) { animation-delay: 2s; }
+.chart-point:nth-of-type(2) { animation-delay: 2.2s; }
+.chart-point:nth-of-type(3) { animation-delay: 2.4s; }
+.chart-point:nth-of-type(4) { animation-delay: 2.6s; }
+.chart-point:nth-of-type(5) { animation-delay: 2.8s; }
+.chart-point:nth-of-type(6) { animation-delay: 3s; }
+.chart-point:nth-of-type(7) { animation-delay: 3.2s; }
+
+.dashboard-chart:hover .chart-point {
+    opacity: 1;
+}
+
+.dashboard-chart:hover .chart-line {
+    filter: drop-shadow(0 0 8px var(--space-amber));
 }
 
 /* ================================
@@ -533,6 +645,7 @@ body {
 .pair-symbol {
     font-weight: 600;
     font-size: var(--font-size-md);
+    color: #333333;
 }
 
 .pair-change {
@@ -561,13 +674,14 @@ body {
     font-size: var(--font-size-xl);
     font-weight: 700;
     margin-bottom: var(--spacing-sm);
+    color: #222222;
 }
 
 .pair-details {
     display: flex;
     justify-content: space-between;
     font-size: var(--font-size-xs);
-    color: rgba(13, 20, 33, 0.6);
+    color: #666666;
 }
 
 /* ================================
@@ -589,14 +703,14 @@ body {
     font-size: var(--font-size-3xl);
     font-weight: 700;
     margin-bottom: var(--spacing-xl);
-    color: var(--bg-primary);
+    color: #222222;
 }
 
 .about-text p {
     font-size: var(--font-size-lg);
     line-height: 1.7;
     margin-bottom: var(--spacing-lg);
-    color: rgba(13, 20, 33, 0.8);
+    color: #444444;
 }
 
 .about-text strong {
@@ -641,7 +755,7 @@ body {
 .feature-text h4 {
     font-size: var(--font-size-md);
     font-weight: 600;
-    color: var(--bg-primary);
+    color: #222222;
 }
 
 .trade-stats {
@@ -652,7 +766,7 @@ body {
     font-size: var(--font-size-2xl);
     font-weight: 700;
     margin-bottom: var(--spacing-xl);
-    color: var(--bg-primary);
+    color: #222222;
     text-align: center;
 }
 
@@ -698,12 +812,12 @@ body {
 
 .stat-title {
     font-weight: 600;
-    color: var(--bg-primary);
+    color: #222222;
     font-size: var(--font-size-sm);
 }
 
 .stat-desc {
-    color: rgba(13, 20, 33, 0.7);
+    color: #555555;
     font-size: var(--font-size-sm);
 }
 
@@ -722,7 +836,7 @@ body {
     font-size: var(--font-size-3xl);
     font-weight: 700;
     margin-bottom: var(--spacing-3xl);
-    color: var(--bg-primary);
+    color: #222222;
 }
 
 .faq-grid {
@@ -763,11 +877,11 @@ body {
     font-size: var(--font-size-lg);
     font-weight: 600;
     margin-bottom: var(--spacing-md);
-    color: var(--bg-primary);
+    color: #222222;
 }
 
 .faq-item p {
-    color: rgba(13, 20, 33, 0.7);
+    color: #555555;
     line-height: 1.6;
 }
 
@@ -822,6 +936,58 @@ body {
     }
     100% {
         transform: rotate(360deg);
+    }
+}
+
+
+
+@keyframes drawLine {
+    0% {
+        stroke-dashoffset: 1200;
+        filter: drop-shadow(0 0 6px rgba(212, 134, 74, 0));
+    }
+    50% {
+        filter: drop-shadow(0 0 8px rgba(212, 134, 74, 0.6));
+    }
+    100% {
+        stroke-dashoffset: 0;
+        filter: drop-shadow(0 0 6px rgba(212, 134, 74, 0.4));
+    }
+}
+
+@keyframes fadeInArea {
+    0% {
+        opacity: 0;
+        transform: scaleY(0);
+    }
+    100% {
+        opacity: 0.4;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0) rotate(180deg);
+    }
+    60% {
+        transform: scale(1.3) rotate(0deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        filter: drop-shadow(0 0 4px rgba(232, 197, 71, 0.6));
+    }
+    50% {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 8px rgba(232, 197, 71, 0.9));
     }
 }
 
@@ -909,6 +1075,14 @@ body {
     .hero-cta-btn {
         padding: 16px 32px;
         font-size: var(--font-size-md);
+    }
+    
+    .performance-title {
+        font-size: 2rem;
+    }
+    
+    .performance-intro {
+        margin: 6vh auto 3vh auto;
     }
     
     .dashboard-card {

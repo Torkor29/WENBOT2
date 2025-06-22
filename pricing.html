@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pricing - WenBot Trading Bot</title>
-    <link rel="stylesheet" href="css/styles.css?v=2">
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds-updated">
     <link rel="stylesheet" href="components/navbar.css?v=2">
-    <link rel="stylesheet" href="components/footer.css?v=2">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
     <link rel="stylesheet" href="css/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -14,15 +14,86 @@
         .pricing-page {
             background: var(--bg-primary);
             min-height: 100vh;
-            padding-top: 80px;
+        }
+        
+        /* Navbar transparente au début, blanche au scroll */
+        .navbar {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .navbar .nav-brand-text,
+        .navbar .nav-link {
+            color: white !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .navbar.scrolled .nav-brand-text,
+        .navbar.scrolled .nav-link {
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .navbar.scrolled .nav-link:hover {
+            color: var(--space-warm-orange) !important;
+        }
+        
+        /* Styles pour la barre de recherche */
+        .navbar .search-input {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        .navbar.scrolled .search-input {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar.scrolled .search-input::placeholder {
+            color: rgba(0, 0, 0, 0.5) !important;
         }
         
         /* Hero Section */
         .pricing-hero {
-            padding: var(--spacing-3xl) 0;
-            text-align: center;
             position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.jpg?v=tradingview-quality');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
             overflow: hidden;
+            /* Optimisations qualité image style TradingView */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+            filter: contrast(1.15) brightness(1.05) saturate(1.1);
+            transform: scale(1.01);
+        }
+        
+        /* Support WebP avec fallback */
+        .webp .pricing-hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
         }
         
         .pricing-hero::before {
@@ -32,24 +103,41 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: radial-gradient(ellipse at center, rgba(41, 98, 255, 0.15) 0%, transparent 70%);
-            z-index: -1;
+            background: linear-gradient(135deg, 
+                rgba(212, 134, 74, 0.25) 0%, 
+                rgba(230, 160, 92, 0.15) 30%,
+                rgba(74, 107, 58, 0.2) 70%,
+                rgba(122, 155, 109, 0.15) 100%);
+            z-index: 1;
+        }
+        
+        .pricing-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .pricing-hero > * {
+            position: relative;
+            z-index: 2;
         }
         
         .hero-title {
             font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 700;
-            background: var(--color-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: white;
             margin-bottom: var(--spacing-lg);
             animation: fadeInUp 0.8s ease;
         }
         
         .hero-subtitle {
             font-size: var(--font-size-lg);
-            color: var(--text-secondary);
+            color: rgba(255, 255, 255, 0.9);
             margin-bottom: var(--spacing-2xl);
             max-width: 600px;
             margin-left: auto;
@@ -320,14 +408,14 @@
         }
         
         .faq-question {
-            color: #ffffff;
+            color: var(--text-primary);
             font-weight: 600;
             margin-bottom: var(--spacing-md);
             font-size: var(--font-size-lg);
         }
         
         .faq-answer {
-            color: #ffffff;
+            color: var(--text-secondary);
             line-height: 1.6;
             font-size: var(--font-size-md);
             margin-top: var(--spacing-sm);

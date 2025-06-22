@@ -8,33 +8,6 @@
     box-sizing: border-box;
 }
 
-/* Optimisations globales pour la qualité d'image - TradingView style */
-html {
-    /* Force hardware acceleration pour toutes les images */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Optimisation globale des médias */
-img, picture, video, canvas, svg {
-    display: block;
-    max-width: 100%;
-    height: auto;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    image-rendering: high-quality;
-}
-
-/* Force l'accélération matérielle pour tous les éléments avec background-image */
-[style*="background-image"], .main-section::before {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-}
-
 :root {
     /* TradingView Dark Theme Colors */
     --bg-primary: #0d1421;
@@ -101,10 +74,10 @@ body {
 }
 
 /* ================================
-   HERO SECTION STYLES - Image space uniquement
+   HERO SECTION STYLES - Style TradingView
    ================================ */
 
-.main-section {
+.hero-section {
     position: relative;
     min-height: 200vh;
     display: flex;
@@ -113,65 +86,69 @@ body {
     overflow: hidden;
 }
 
-.main-section::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Support WebP avec fallback JPEG - technique TradingView */
-    background: url('../images/espace.webp?v=tradingview-quality'), url('../images/espace.jpg?v=tradingview-quality');
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-size: cover;
-    will-change: transform;
-    z-index: -2;
-    
-    /* Optimisations de rendu avancées - style TradingView */
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
-    image-rendering: high-quality;
-    image-rendering: pixelated; /* Pour éviter le blur sur certains navigateurs */
-    
-    /* Filtres de qualité professionnels */
-    filter: 
-        contrast(1.25) 
-        brightness(1.12) 
-        saturate(1.18) 
-        hue-rotate(2deg)
-        blur(0px)
-        sharpen(1.5);
-    
-    /* Transformation pour masquer la pixellisation */
-    transform: scale(1.015) translateZ(0);
-    
-    /* Optimisation GPU */
-    backface-visibility: hidden;
-    perspective: 1000px;
-    transform-style: preserve-3d;
-}
-
-.main-section::after {
+/* Premier niveau - Image space.jpg en fond sur toute la hauteur de l'écran */
+.hero-section::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 50%;
     background: linear-gradient(
         180deg, 
         rgba(13, 20, 33, 0.1) 0%,
-        rgba(13, 20, 33, 0.2) 30%,
-        rgba(13, 20, 33, 0.4) 60%,
-        rgba(13, 20, 33, 0.7) 80%,
-        rgba(13, 20, 33, 0.9) 100%
+        rgba(13, 20, 33, 0.3) 60%,
+        rgba(13, 20, 33, 0.7) 85%,
+        rgba(13, 20, 33, 0.95) 100%
+    ),
+    url('../images/space.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -3;
+}
+
+/* Deuxième niveau - Image stars.jpg pour la partie basse */
+.hero-section::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        180deg,
+        rgba(13, 20, 33, 0.95) 0%,
+        rgba(13, 20, 33, 0.7) 20%,
+        rgba(13, 20, 33, 0.3) 60%,
+        rgba(13, 20, 33, 0.5) 100%
+    ),
+    url('../images/stars.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -2;
+}
+
+/* Transition noire entre les deux images */
+.hero-section .transition-overlay {
+    position: absolute;
+    top: 45%;
+    left: 0;
+    right: 0;
+    height: 10%;
+    background: linear-gradient(
+        180deg,
+        transparent 0%,
+        rgba(13, 20, 33, 0.9) 30%,
+        rgba(13, 20, 33, 1) 50%,
+        rgba(13, 20, 33, 0.9) 70%,
+        transparent 100%
     );
     z-index: -1;
 }
 
-.main-container {
+.hero-container {
     position: relative;
     z-index: 1;
     max-width: 1200px;
@@ -183,7 +160,7 @@ body {
     min-height: 200vh;
 }
 
-/* Section titre - Position initiale */
+/* Section titre - Descendu pour être bien visible */
 .hero-content {
     display: flex;
     flex-direction: column;
@@ -191,31 +168,30 @@ body {
     justify-content: center;
     text-align: center;
     height: 100vh;
-    max-width: 900px;
+    max-width: 800px;
     margin: 0 auto;
-    padding-top: 0;
+    padding-top: 120px;
 }
 
 .hero-title {
-    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-size: clamp(3rem, 6vw, 5rem);
     font-weight: 800;
     line-height: 1.1;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
     color: white;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
     animation: fadeInUp 0.8s ease;
     letter-spacing: -0.02em;
 }
 
 .hero-subtitle {
-    font-size: var(--font-size-2xl);
+    font-size: var(--font-size-xl);
     color: rgba(255, 255, 255, 0.95);
-    margin-bottom: var(--spacing-2xl);
-    font-weight: 500;
+    margin-bottom: var(--spacing-xl);
+    font-weight: 400;
     text-shadow: 0 2px 15px rgba(0, 0, 0, 0.6);
     animation: fadeInUp 0.8s ease 0.2s both;
-    max-width: 700px;
-    line-height: 1.4;
+    max-width: 600px;
 }
 
 /* Bouton CTA Hero - Style blanc élégant */
@@ -224,9 +200,9 @@ body {
     color: #1a202c;
     border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50px;
-    padding: 20px 50px;
-    font-size: var(--font-size-xl);
-    font-weight: 800;
+    padding: 18px 40px;
+    font-size: var(--font-size-lg);
+    font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 
@@ -234,72 +210,92 @@ body {
         0 0 0 1px rgba(255, 255, 255, 0.1);
     animation: fadeInUp 0.8s ease 0.4s both;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     backdrop-filter: blur(10px);
 }
 
 .hero-cta-btn:hover {
     background: white;
-    transform: translateY(-3px) scale(1.05);
+    transform: translateY(-3px);
     box-shadow: 
         0 15px 40px rgba(0, 0, 0, 0.3),
-        0 0 0 1px rgba(255, 255, 255, 0.2),
-        0 0 30px rgba(41, 98, 255, 0.3);
+        0 0 0 1px rgba(255, 255, 255, 0.2);
+    scale: 1.05;
     border-color: rgba(255, 255, 255, 0.5);
 }
 
 /* ================================
-   DASHBOARD CARD - Positionnée après le scroll
+   DASHBOARD CARD STYLES - FORCÉE À ÊTRE VISIBLE
    ================================ */
 
 .dashboard-card {
-    background: rgba(19, 23, 34, 0.95);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.95) !important;
+    backdrop-filter: blur(30px) !important;
+    border: 3px solid rgba(255, 255, 255, 0.3) !important;
     border-radius: 16px;
     padding: var(--spacing-xl);
     box-shadow: 
-        0 20px 60px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(255, 255, 255, 0.05);
+        0 50px 100px rgba(0, 0, 0, 0.9) !important,
+        0 20px 60px rgba(0, 0, 0, 0.8) !important,
+        0 0 0 1px rgba(255, 255, 255, 0.2) !important,
+        inset 0 2px 0 rgba(255, 255, 255, 0.2) !important;
     animation: fadeInUp 0.8s ease 0.6s both;
-    position: relative;
+    position: relative !important;
     overflow: hidden;
+    margin: 130vh auto var(--spacing-3xl) !important;
     max-width: 1000px;
-    width: 100%;
-    margin: 20vh auto 0 auto;
-    z-index: 10;
+    width: calc(100% - 40px) !important;
+    z-index: 999 !important;
+    transform: translateY(-50vh) !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: block !important;
 }
 
 .dashboard-card::before {
     content: '';
     position: absolute;
-    inset: -2px;
+    inset: -3px;
     background: conic-gradient(
         from 0deg,
-        transparent 85%,
-        rgba(41, 98, 255, 0.8) 90%,
+        transparent 80%,
+        rgba(255, 255, 255, 0.8) 85%,
+        rgba(41, 98, 255, 1) 90%,
         rgba(102, 126, 234, 1) 95%,
-        rgba(41, 98, 255, 0.8) 100%,
+        rgba(255, 255, 255, 0.8) 100%,
         transparent 5%
-    );
-    border-radius: 18px;
+    ) !important;
+    border-radius: 19px;
     z-index: -1;
     animation: rotateBorder 3s linear infinite;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: xor;
-    padding: 2px;
+    padding: 3px;
 }
 
 .dashboard-card::after {
     content: '';
     position: absolute;
-    inset: 1px;
-    background: rgba(19, 23, 34, 0.98);
-    border-radius: 15px;
+    inset: 2px;
+    background: rgba(0, 0, 0, 0.98) !important;
+    border-radius: 14px;
     z-index: -1;
 }
 
-/* Pseudo-éléments activés pour l'effet parallaxe */
+/* Forcer tous les éléments de la card à être visibles */
+.dashboard-card * {
+    color: white !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.dashboard-header,
+.dashboard-stats,
+.dashboard-chart {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
 
 .dashboard-header {
     display: flex;
@@ -829,69 +825,11 @@ body {
    RESPONSIVE DESIGN
    ================================ */
 
-/* Optimisations spécifiques par résolution - technique TradingView */
-@media (min-width: 2560px) {
-    .main-section::before {
-        filter: 
-            contrast(1.35) 
-            brightness(1.15) 
-            saturate(1.25) 
-            hue-rotate(3deg)
-            sharpen(2.0)
-            unsharp-mask(1.5, 0.5, 0);
-        transform: scale(1.008) translateZ(0);
-    }
-}
-
-@media (min-width: 1920px) and (max-width: 2559px) {
-    .main-section::before {
-        filter: 
-            contrast(1.28) 
-            brightness(1.13) 
-            saturate(1.20) 
-            hue-rotate(2.5deg)
-            sharpen(1.7);
-        transform: scale(1.010) translateZ(0);
-    }
-}
-
-@media (max-width: 1919px) {
-    .main-section::before {
-        filter: 
-            contrast(1.22) 
-            brightness(1.10) 
-            saturate(1.15) 
-            hue-rotate(2deg)
-            sharpen(1.3);
-        transform: scale(1.012) translateZ(0);
-    }
-}
-
-@media (max-width: 1024px) {
-    .main-section::before {
-        filter: 
-            contrast(1.18) 
-            brightness(1.08) 
-            saturate(1.12) 
-            hue-rotate(1.5deg)
-            sharpen(1.0);
-        transform: scale(1.015) translateZ(0);
-        /* Optimisation mobile */
-        background-attachment: scroll; /* Évite les problèmes de performance mobile */
-    }
-}
+/* ================================
+   RESPONSIVE DESIGN - Mobile First
+   ================================ */
 
 @media (max-width: 768px) {
-    .main-section::before {
-        filter: 
-            contrast(1.15) 
-            brightness(1.05) 
-            saturate(1.08) 
-            hue-rotate(1deg)
-            sharpen(0.8);
-        transform: scale(1.020) translateZ(0);
-    }
-    
     .hero-title {
         font-size: clamp(2.5rem, 10vw, 4rem);
         margin-bottom: var(--spacing-md);
@@ -939,18 +877,11 @@ body {
 }
 
 @media (max-width: 480px) {
-    .main-section {
+    .hero-section {
         min-height: 200vh;
     }
     
-    .main-section::before {
-        position: absolute;
-        filter: contrast(1.02) brightness(1.01) saturate(1.02);
-        transform: scale(1.002);
-        image-rendering: auto;
-    }
-    
-    .main-container {
+    .hero-container {
         padding: 0 var(--spacing-md);
     }
     

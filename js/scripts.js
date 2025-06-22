@@ -306,10 +306,33 @@ function initializeAuthSystem() {
    MAIN INITIALIZATION
    ================================ */
 
+/* ================================
+   SMOOTH SCROLL NAVIGATION
+   ================================ */
+
+const SmoothScrollModule = {
+    init() {
+        // Smooth scroll pour les liens de navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(anchor.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize existing modules
     HeroChartModule.init();
     TradingPairsModule.init();
+    SmoothScrollModule.init();
     
     // Initialize authentication system
     initializeAuthSystem();

@@ -586,7 +586,7 @@ body {
     font-size: var(--font-size-3xl);
     font-weight: 700;
     margin-bottom: var(--spacing-3xl);
-    color: var(--bg-primary);
+    color: #222222;
 }
 
 .pairs-carousel {

@@ -277,7 +277,7 @@ body {
     box-shadow: 
         0 15px 40px rgba(0, 0, 0, 0.3),
         0 0 0 1px rgba(255, 255, 255, 0.2),
-        0 0 30px rgba(41, 98, 255, 0.3);
+        0 0 30px rgba(212, 134, 74, 0.4);
     border-color: rgba(255, 255, 255, 0.5);
 }
 
@@ -616,8 +616,8 @@ body {
 
 .pair-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(41, 98, 255, 0.2);
-    border-color: rgba(41, 98, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(212, 134, 74, 0.3);
+    border-color: rgba(212, 134, 74, 0.4);
 }
 
 .pair-card::before {
@@ -625,7 +625,7 @@ body {
     position: absolute;
     inset: 0;
     padding: 1px;
-    background: linear-gradient(135deg, transparent, rgba(41, 98, 255, 0.3), transparent);
+    background: linear-gradient(135deg, transparent, rgba(212, 134, 74, 0.3), transparent);
     border-radius: var(--border-radius);
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     mask-composite: xor;
@@ -740,7 +740,7 @@ body {
 .feature-item:hover {
     transform: translateX(8px);
     border-color: var(--color-blue);
-    box-shadow: 0 8px 32px rgba(41, 98, 255, 0.15);
+    box-shadow: 0 8px 32px rgba(212, 134, 74, 0.2);
 }
 
 .feature-icon {
@@ -750,7 +750,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(41, 98, 255, 0.1);
+    background: rgba(212, 134, 74, 0.1);
     border-radius: var(--border-radius);
 }
 
@@ -801,7 +801,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(41, 98, 255, 0.1);
+    background: rgba(212, 134, 74, 0.1);
     border-radius: var(--border-radius);
     flex-shrink: 0;
 }
@@ -859,8 +859,8 @@ body {
 
 .faq-item:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    border-color: rgba(41, 98, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(212, 134, 74, 0.2);
+    border-color: rgba(212, 134, 74, 0.4);
 }
 
 .faq-icon {
@@ -871,7 +871,7 @@ body {
     justify-content: center;
     width: 60px;
     height: 60px;
-    background: rgba(41, 98, 255, 0.1);
+    background: rgba(212, 134, 74, 0.1);
     border-radius: var(--border-radius);
 }
 

@@ -17,7 +17,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: radial-gradient(ellipse at center, rgba(41, 98, 255, 0.15) 0%, transparent 70%);
+    background: radial-gradient(ellipse at center, rgba(212, 134, 74, 0.15) 0%, transparent 70%);
     z-index: 0;
 }
 
@@ -52,7 +52,7 @@
 
 .auth-form-container:hover {
     transform: translateY(-5px);
-    box-shadow: 0 20px 60px rgba(41, 98, 255, 0.2);
+    box-shadow: 0 20px 60px rgba(212, 134, 74, 0.2);
 }
 
 .auth-form-container:hover::before {
@@ -111,7 +111,7 @@
     outline: none;
     border-color: var(--color-blue);
     background: var(--bg-card);
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    box-shadow: 0 0 0 3px rgba(212, 134, 74, 0.1);
 }
 
 .form-options {
@@ -223,7 +223,7 @@
 
 .btn-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 8px 25px rgba(212, 134, 74, 0.3);
 }
 
 .btn-submit:active {

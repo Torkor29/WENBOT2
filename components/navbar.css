@@ -69,7 +69,7 @@
 
 .navbar.white-section .search-input:focus {
     border-color: var(--color-blue);
-    box-shadow: 0 0 0 3px rgba(41, 98, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(212, 134, 74, 0.15);
     background: rgba(255, 255, 255, 1);
     color: #0d1421;
 }
@@ -78,13 +78,13 @@
 .navbar.white-section .btn-join {
     background: var(--color-gradient);
     color: white;
-    box-shadow: 0 4px 12px rgba(41, 98, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(212, 134, 74, 0.4);
     font-weight: 700;
 }
 
 .navbar.white-section .btn-join:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(41, 98, 255, 0.5);
+    box-shadow: 0 6px 16px rgba(212, 134, 74, 0.5);
 }
 
 /* Menu mobile adapté */
@@ -182,7 +182,7 @@
 .search-input:focus {
     outline: none;
     border-color: var(--color-blue);
-    box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(212, 134, 74, 0.3);
     background: rgba(255, 255, 255, 0.15);
 }
 
@@ -356,12 +356,12 @@
     font-size: var(--font-size-sm);
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(41, 98, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(212, 134, 74, 0.3);
 }
 
 .btn-join:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(41, 98, 255, 0.4);
+    box-shadow: 0 6px 20px rgba(212, 134, 74, 0.4);
 }
 
 .nav-toggle {

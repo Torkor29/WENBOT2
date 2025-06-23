@@ -74,8 +74,8 @@
         /* Hero Section */
         .about-hero {
             position: relative;
-            /* Support WebP avec fallback JPEG - technique TradingView identique à l'accueil */
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality'), url('images/espace.jpg?v=tradingview-quality');
+            /* Image d'espace optimisée WebP - technique TradingView identique à l'accueil */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
@@ -373,6 +373,18 @@
             margin-top: var(--spacing-xl);
         }
         
+        .roadmap-item.wide {
+            grid-column: span 2;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .roadmap-item.wide {
+                grid-column: span 1;
+            }
+        }
+        
         .roadmap-item {
             background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--border-color);
@@ -578,6 +590,13 @@
                             <h3>Educational Platform</h3>
                             <span class="roadmap-status coming">📝 In Development</span>
                             <p>Comprehensive learning platform combining theoretical knowledge with practical application, featuring interactive courses and simulation environments.</p>
+                        </div>
+                        
+                        <div class="roadmap-item wide">
+                            <span class="roadmap-icon">🌌</span>
+                            <h3>Future Innovations</h3>
+                            <span class="roadmap-status future">🔮 The Future Will Tell</span>
+                            <p>Many exciting projects are yet to be born. As technology evolves and markets change, new opportunities will emerge. The future holds infinite possibilities, and only time will reveal what innovations we'll bring to life next.</p>
                         </div>
                     </div>
                 </div>

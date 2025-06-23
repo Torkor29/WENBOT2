@@ -77,7 +77,7 @@
         .pricing-hero {
             position: relative;
             /* Support WebP avec fallback JPEG - technique TradingView identique à l'accueil */
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality'), url('images/espace.jpg?v=tradingview-quality');
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
             background-size: cover;
             background-position: center center;
             background-attachment: fixed;
@@ -360,9 +360,15 @@
         
         .why-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: var(--spacing-2xl);
             margin-top: var(--spacing-2xl);
+        }
+        
+        @media (max-width: 768px) {
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
         }
         
         .why-item {
@@ -473,7 +479,6 @@
                 gap: var(--spacing-md);
             }
             
-            .why-grid,
             .faq-grid {
                 grid-template-columns: 1fr;
                 gap: var(--spacing-lg);

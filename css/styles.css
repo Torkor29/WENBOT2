@@ -153,8 +153,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    /* Support WebP avec fallback JPEG - technique TradingView */
-    background: url('../images/espace.webp?v=tradingview-quality'), url('../images/espace.jpg?v=tradingview-quality');
+    /* Image d'espace optimisée WebP - technique TradingView */
+    background: url('../images/espace.webp?v=tradingview-quality');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;

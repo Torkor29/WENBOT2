@@ -10,6 +10,8 @@
 
 /* Optimisations globales pour la qualité d'image - TradingView style */
 html {
+    /* Zoom par défaut à 75% */
+    zoom: 0.75;
     /* Force hardware acceleration pour toutes les images */
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;

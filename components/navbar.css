@@ -85,6 +85,7 @@
 .navbar.white-section .btn-join:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(212, 134, 74, 0.5);
+    
 }
 
 /* Menu mobile adapté */

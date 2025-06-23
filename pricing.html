@@ -76,24 +76,40 @@
         /* Hero Section */
         .pricing-hero {
             position: relative;
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.jpg?v=tradingview-quality');
+            /* Support WebP avec fallback JPEG - technique TradingView identique à l'accueil */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality'), url('images/espace.jpg?v=tradingview-quality');
             background-size: cover;
-            background-position: center;
+            background-position: center center;
             background-attachment: fixed;
+            background-repeat: no-repeat;
             padding: 120px 0 80px;
             text-align: center;
             color: white;
             overflow: hidden;
-            /* Optimisations qualité image style TradingView */
+            
+            /* Optimisations de rendu avancées - style TradingView identique */
             image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
             image-rendering: crisp-edges;
-            filter: contrast(1.15) brightness(1.05) saturate(1.1);
-            transform: scale(1.01);
-        }
-        
-        /* Support WebP avec fallback */
-        .webp .pricing-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
+            image-rendering: high-quality;
+            image-rendering: pixelated;
+            
+            /* Filtres de qualité professionnels identiques à l'accueil */
+            filter: 
+                contrast(1.25) 
+                brightness(1.12) 
+                saturate(1.18) 
+                hue-rotate(2deg)
+                blur(0px)
+                sharpen(1.5);
+            
+            /* Transformation pour masquer la pixellisation */
+            transform: scale(1.015) translateZ(0);
+            
+            /* Optimisation GPU */
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform-style: preserve-3d;
         }
         
         .pricing-hero::before {

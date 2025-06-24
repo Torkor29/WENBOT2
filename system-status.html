@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Status - WenBot</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds-updated">
+    <link rel="stylesheet" href="components/navbar.css?v=4">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Navbar transparent styles */
+        .navbar {
+            background-color: transparent !important;
+            backdrop-filter: none !important;
+        }
+        
+        .navbar .nav-brand-text {
+            color: white !important;
+            font-weight: 700 !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .navbar.scrolled .nav-brand-text {
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar .nav-link {
+            color: white !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .navbar.scrolled .nav-link {
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .navbar.scrolled .nav-link:hover {
+            color: var(--space-warm-orange) !important;
+        }
+        
+        /* Styles pour la barre de recherche */
+        .navbar .search-input {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        .navbar.scrolled .search-input {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar.scrolled .search-input::placeholder {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* Hero Section avec image de fond */
+        .status-hero {
+            position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            image-rendering: high-quality;
+            image-rendering: pixelated;
+            
+            filter: 
+                contrast(1.25) 
+                brightness(1.12) 
+                saturate(1.18) 
+                hue-rotate(2deg)
+                blur(0px)
+                sharpen(1.5);
+            
+            transform: scale(1.015) translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        
+        .status-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(212, 134, 74, 0.25) 0%, 
+                rgba(230, 160, 92, 0.15) 30%,
+                rgba(74, 107, 58, 0.2) 70%,
+                rgba(122, 155, 109, 0.15) 100%);
+            z-index: 1;
+        }
+        
+        .status-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .status-hero > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .status-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--spacing-lg);
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .status-subtitle {
+            font-size: var(--font-size-lg);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main content */
+        .status-page {
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding-top: var(--spacing-2xl);
+        }
+        
+        .overall-status {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+            text-align: center;
+            position: relative;
+        }
+        
+        .overall-status::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .status-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            animation: pulse 2s infinite;
+            flex-shrink: 0;
+        }
+        
+        .status-text {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: #10b981;
+        }
+        
+        .status-description {
+            font-size: var(--font-size-md);
+            color: var(--text-secondary);
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-xl);
+            transition: all 0.3s ease;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(41, 98, 255, 0.15);
+        }
+        
+        .service-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .service-name {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .service-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: #10b981;
+        }
+        
+        .service-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            flex-shrink: 0;
+        }
+        
+        .service-details {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            line-height: 1.5;
+        }
+        
+        .service-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-md);
+            padding-top: var(--spacing-md);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .metric {
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: #10b981;
+            display: block;
+        }
+        
+        .metric-label {
+            font-size: var(--font-size-xs);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+
+        
+        .last-updated {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            margin-top: var(--spacing-xl);
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.1);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .status-page {
+                padding-top: 80px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .service-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-brand-text">WenBot</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html#home" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <button class="btn-join">Join</button>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section avec image de fond -->
+    <section class="status-hero">
+        <div class="section-container">
+            <h1 class="status-title">System Status</h1>
+            <p class="status-subtitle">
+                Real-time status of WenBot trading services
+            </p>
+        </div>
+    </section>
+
+    <main class="status-page">
+        <div class="section-container">
+
+            <!-- Overall Status -->
+            <div class="overall-status">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span class="status-text">All systems operational</span>
+                </div>
+                <p class="status-description">
+                    All services are running normally. No incidents detected.
+                </p>
+            </div>
+
+            <!-- Simple Services Grid -->
+            <div class="services-grid">
+                <!-- Trading Bot -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3 class="service-name">WenBot Trading System</h3>
+                        <div class="service-status">
+                            <div class="service-dot"></div>
+                            <span>Operational</span>
+                        </div>
+                    </div>
+                    <p class="service-details">
+                        Algorithmic trading bot and signal generation system
+                    </p>
+                    <div class="service-metrics">
+                        <div class="metric">
+                            <span class="metric-value">Active</span>
+                            <span class="metric-label">Status</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">Live</span>
+                            <span class="metric-label">Signals</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Maintenance Status -->
+                <div class="service-card">
+                    <div class="service-header">
+                        <h3 class="service-name">Maintenance</h3>
+                        <div class="service-status">
+                            <div class="service-dot"></div>
+                            <span>No maintenance scheduled</span>
+                        </div>
+                    </div>
+                    <p class="service-details">
+                        No planned maintenance or updates currently scheduled
+                    </p>
+                    <div class="service-metrics">
+                        <div class="metric">
+                            <span class="metric-value">None</span>
+                            <span class="metric-label">Scheduled</span>
+                        </div>
+                        <div class="metric">
+                            <span class="metric-value">Available</span>
+                            <span class="metric-label">Service</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="last-updated">
+                <p>Last updated: <span id="last-update-time"></span></p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <!-- Main Footer Content -->
+            <div class="footer-content">
+                <!-- Company Column -->
+                <div class="footer-column">
+                    <div class="footer-brand">
+                        <span class="footer-logo">WenBot</span>
+                        <p class="footer-tagline">Where the world brings markets to life</p>
+                    </div>
+                    <p class="footer-description">
+                        Plateforme de trading algorithmique avancée conçue pour maximiser vos performances sur les marchés financiers avec une précision exceptionnelle.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Telegram">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Discord">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Products Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Produits</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">WenBot Trading</a></li>
+                        <li><a href="#" class="footer-link">Signaux en temps réel</a></li>
+                        <li><a href="#" class="footer-link">Analyse technique</a></li>
+                        <li><a href="#" class="footer-link">Portfolio Management</a></li>
+                        <li><a href="#" class="footer-link">API Trading</a></li>
+                        <li><a href="#" class="footer-link">Formation Trading</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Ressources</h3>
+                    <ul class="footer-links">
+                        <li><a href="documentation.html" class="footer-link" style="color: #667eea;">Documentation</a></li>
+                        <li><a href="getting-started.html" class="footer-link" style="color: #667eea;">Guide de démarrage</a></li>
+                        <li><a href="community.html" class="footer-link" style="color: #667eea;">Communauté</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Centre d'aide</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html" class="footer-link" style="font-weight: 600; color: #667eea;">Helping center - Contact us</a></li>
+                        <li><a href="faq.html" class="footer-link">FAQ</a></li>
+                        <li><a href="system-status.html" class="footer-link" style="color: #667eea;">Status système</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Newsletter</h3>
+                    <p class="newsletter-desc">Recevez nos analyses exclusives</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Votre email" class="newsletter-input">
+                        <button type="submit" class="newsletter-btn">S'abonner</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="footer-legal">
+                        <p>&copy; 2024 WenBot. All rights reserved.</p>
+                        <div class="legal-links">
+                            <a href="legal.html#legal-notice" class="legal-link">Legal Notice</a>
+                            <a href="legal.html#privacy-policy" class="legal-link">Privacy Policy</a>
+                            <a href="legal.html#terms-of-service" class="legal-link">Terms of Service</a>
+                            <a href="legal.html#cookie-policy" class="legal-link">Cookie Policy</a>
+                            <a href="legal.html#gdpr" class="legal-link">GDPR</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-disclaimer">
+                        <p class="disclaimer-text">
+                            ⚠️ Avertissement sur les risques : Le trading comporte des risques significatifs de perte en capital. 
+                            Les performances passées ne garantissent pas les résultats futurs. 
+                            Ne tradez que des fonds que vous pouvez vous permettre de perdre.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/scripts.js?v=5"></script>
+    <script src="js/auth.js"></script>
+    <script src="components/navbar.js?v=5"></script>
+    <script src="components/footer.js?v=5"></script>
+    
+    <script>
+        // Script pour l'effet de transparence de la navbar au scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Update last update time
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('last-update-time').textContent = timeString;
+        }
+
+        // Update time on page load and every minute
+        updateLastUpdateTime();
+        setInterval(updateLastUpdateTime, 60000);
+    </script>
+</body>
+</html>

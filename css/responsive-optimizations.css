@@ -1,0 +1,353 @@
+/* ================================
+   OPTIMISATIONS RESPONSIVES AVANCÉES
+   WenBot - Tablettes et Mobiles
+   ================================ */
+
+/* ================================
+   RÉGLAGES GLOBAUX RESPONSIVE
+   ================================ */
+
+/* Optimisation des polices pour mobile */
+@media (max-width: 1024px) {
+    html {
+        /* Désactiver le zoom automatique sur iOS */
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
+        
+        /* Améliorer le rendu des polices sur mobile */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        
+        /* Scroll smooth pour mobile */
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Amélioration du rendu sur mobile */
+    * {
+        -webkit-tap-highlight-color: transparent;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+    
+    /* Permettre la sélection pour les textes */
+    p, span, div, h1, h2, h3, h4, h5, h6, a {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
+    
+    /* Amélioration des inputs pour mobile */
+    input, textarea, select {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+        -webkit-appearance: none;
+        border-radius: 0; /* Éviter les bordures arrondies par défaut sur iOS */
+    }
+}
+
+/* ================================
+   OPTIMISATIONS POUR SAFARI MOBILE
+   ================================ */
+@supports (-webkit-touch-callout: none) {
+    /* Correction des hauteurs viewport sur iOS */
+    .hero-content,
+    .main-section {
+        min-height: -webkit-fill-available;
+    }
+    
+    /* Éviter le zoom sur focus des inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="search"],
+    textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* ================================
+   AMÉLIORATIONS GESTUELLES MOBILES
+   ================================ */
+@media (max-width: 767px) {
+    /* Amélioration du swipe horizontal pour les carousels */
+    .pairs-track {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
+    
+    .pairs-track::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .pair-card {
+        scroll-snap-align: center;
+        scroll-snap-stop: always;
+    }
+    
+    /* Amélioration des zones tactiles */
+    .hero-cta-btn,
+    .nav-link,
+    .footer-link,
+    .social-link {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* ================================
+   OPTIMISATIONS POUR ANDROID
+   ================================ */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    /* Amélioration du rendu sur Android */
+    .main-section::before {
+        transform: translateZ(0);
+        will-change: transform;
+    }
+    
+    /* Optimisation des animations sur Android */
+    .chart-point,
+    .stat-card,
+    .scroll-indicator {
+        will-change: transform;
+        transform: translateZ(0);
+    }
+}
+
+/* ================================
+   MODES SOMBRE ET CLAIR SYSTÈME
+   ================================ */
+@media (prefers-color-scheme: dark) {
+    /* Adaptations pour le mode sombre système */
+    @media (max-width: 767px) {
+        .navbar.white-section {
+            background: rgba(13, 20, 33, 0.95) !important;
+        }
+        
+        .navbar.white-section .nav-brand-text,
+        .navbar.white-section .nav-link {
+            color: white !important;
+        }
+        
+        .navbar.white-section .nav-toggle span {
+            background: white !important;
+        }
+    }
+}
+
+/* ================================
+   OPTIMISATIONS POUR ÉCRANS HAUTE DENSITÉ
+   ================================ */
+@media (-webkit-min-device-pixel-ratio: 2),
+       (min-resolution: 192dpi),
+       (min-resolution: 2dppx) {
+    /* Amélioration de la netteté sur écrans Retina */
+    .footer-logo,
+    .nav-brand-text,
+    .hero-title {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Optimisation des images sur Retina */
+    .main-section::before {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+/* ================================
+   ACCESSIBILITÉ MOBILE
+   ================================ */
+@media (max-width: 1024px) {
+    /* Amélioration pour les utilisateurs de lecteurs d'écran */
+    .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+    
+    /* Focus visible amélioré pour navigation au clavier */
+    .nav-link:focus,
+    .hero-cta-btn:focus,
+    .footer-link:focus,
+    .social-link:focus {
+        outline: 2px solid var(--color-blue);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+    
+    /* Amélioration du contraste pour les malvoyants */
+    @media (prefers-contrast: high) {
+        .hero-title,
+        .nav-brand-text {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+        
+        .hero-cta-btn {
+            border: 2px solid var(--color-blue);
+        }
+    }
+}
+
+/* ================================
+   RÉDUCTION DES MOUVEMENTS
+   ================================ */
+@media (prefers-reduced-motion: reduce) {
+    /* Désactiver les animations pour les utilisateurs sensibles */
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .scroll-indicator {
+        display: none;
+    }
+}
+
+/* ================================
+   OPTIMISATIONS POUR TRÈS PETITS ÉCRANS
+   ================================ */
+@media (max-width: 320px) {
+    /* Adaptations pour les très vieux iPhones */
+    .hero-title {
+        font-size: 1.6rem !important;
+        line-height: 1.1;
+    }
+    
+    .hero-subtitle {
+        font-size: 0.8rem !important;
+    }
+    
+    .hero-cta-btn {
+        padding: 10px 20px;
+        font-size: 0.8rem;
+        min-width: 140px;
+    }
+    
+    .nav-brand-text {
+        font-size: 0.95rem;
+    }
+    
+    .footer-container {
+        padding: 0 8px;
+    }
+}
+
+/* ================================
+   OPTIMISATIONS POUR ÉCRANS ULTRA-LARGES MOBILES
+   ================================ */
+@media (max-width: 1024px) and (min-width: 768px) and (orientation: landscape) {
+    /* Optimisations pour tablettes en mode paysage */
+    .hero-content {
+        height: 80vh;
+        justify-content: center;
+    }
+    
+    .hero-title {
+        font-size: clamp(2.5rem, 4vw, 3.2rem);
+    }
+    
+    .dashboard-stats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--spacing-md);
+    }
+    
+    .faq-grid,
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ================================
+   GESTION DES NOTCHS (iPhone X et plus)
+   ================================ */
+@supports (padding: max(0px)) {
+    .navbar {
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+    }
+    
+    .footer {
+        padding-bottom: max(var(--spacing-lg), env(safe-area-inset-bottom));
+    }
+    
+    @media (max-width: 767px) {
+        .nav-menu.active {
+            padding-top: max(var(--spacing-xl), env(safe-area-inset-top));
+            padding-bottom: max(var(--spacing-xl), env(safe-area-inset-bottom));
+        }
+    }
+}
+
+/* ================================
+   OPTIMISATIONS DE PERFORMANCE MOBILE
+   ================================ */
+@media (max-width: 767px) {
+    /* Simplifier les animations coûteuses sur mobile */
+    .chart-line,
+    .chart-area {
+        animation: none;
+    }
+    
+    /* Réduire la complexité des ombres sur mobile */
+    .dashboard-card,
+    .stat-card,
+    .pair-card {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Optimiser les filtres CSS sur mobile */
+    .main-section::before {
+        filter: contrast(1.05) brightness(1.02) saturate(1.05);
+    }
+}
+
+/* ================================
+   CORRECTIONS SPÉCIFIQUES NAVIGATEURS
+   ================================ */
+
+/* Firefox mobile */
+@-moz-document url-prefix() {
+    @media (max-width: 767px) {
+        .hero-content {
+            height: 95vh;
+        }
+        
+        .nav-menu {
+            background: rgba(13, 20, 33, 0.95);
+        }
+    }
+}
+
+/* Chrome/Safari mobile */
+@supports (-webkit-appearance: none) {
+    @media (max-width: 767px) {
+        .search-input,
+        .newsletter-input {
+            -webkit-appearance: none;
+            border-radius: 8px;
+        }
+    }
+} 

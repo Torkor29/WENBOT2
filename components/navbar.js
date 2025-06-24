@@ -193,8 +193,19 @@ class NavbarComponent {
     // Gestion du menu mobile
     toggleMobileMenu() {
         if (this.navMenu && this.navToggle) {
-            this.navMenu.classList.toggle('active');
+            const isActive = this.navMenu.classList.toggle('active');
             this.navToggle.classList.toggle('active');
+            
+            // Empêcher le scroll du body quand le menu est ouvert
+            if (isActive) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = '';
+            }
+            
+            // Gérer l'accessibilité
+            this.navToggle.setAttribute('aria-expanded', isActive);
+            this.navMenu.setAttribute('aria-hidden', !isActive);
         }
     }
 
@@ -202,15 +213,19 @@ class NavbarComponent {
         if (this.navMenu && this.navToggle) {
             this.navMenu.classList.remove('active');
             this.navToggle.classList.remove('active');
+            document.body.style.overflow = ''; // Restaurer le scroll
         }
     }
 
     // Gestion du redimensionnement
     handleResize() {
-        // Fermer le menu mobile si on passe en desktop
-        if (window.innerWidth > 768) {
+        // Fermer le menu mobile si la fenêtre devient assez large
+        if (window.innerWidth > 767 && this.navMenu) {
             this.closeMobileMenu();
         }
+        
+        // Réinitialiser le scroll du body
+        document.body.style.overflow = '';
     }
 
     // Scroll fluide vers une section

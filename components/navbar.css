@@ -418,4 +418,382 @@
     .search-container {
         display: none;
     }
+}
+
+/* ================================
+   RESPONSIVE NAVBAR - TABLETTES ET MOBILES
+   ================================ */
+
+/* ================================
+   TABLETTES - 1025px à 1200px
+   ================================ */
+@media (max-width: 1200px) and (min-width: 1025px) {
+    .nav-container {
+        padding: var(--spacing-md) var(--spacing-xl);
+        max-width: 95%;
+    }
+    
+    .search-input {
+        width: 220px;
+        font-size: 0.9rem;
+    }
+    
+    .nav-menu {
+        gap: var(--spacing-lg);
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+    }
+}
+
+/* ================================
+   TABLETTES - 768px à 1024px (iPad, Surface)
+   ================================ */
+@media (max-width: 1024px) and (min-width: 768px) {
+    .navbar {
+        padding: var(--spacing-sm) 0;
+    }
+    
+    .nav-container {
+        padding: var(--spacing-md) var(--spacing-lg);
+        max-width: 90%;
+    }
+    
+    .nav-brand {
+        margin-left: var(--spacing-sm);
+    }
+    
+    .nav-brand-text {
+        font-size: 1.3rem;
+        font-weight: 800;
+    }
+    
+    .nav-menu {
+        display: flex;
+        gap: var(--spacing-lg);
+    }
+    
+    .nav-link {
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+    
+    .search-input {
+        width: 200px;
+        padding: 10px 16px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-join {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+    
+    /* Amélioration des zones tactiles */
+    .nav-link,
+    .btn-join,
+    .search-input {
+        min-height: 44px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+}
+
+/* ================================
+   MOBILES - 480px à 767px (iPhones modernes)
+   ================================ */
+@media (max-width: 767px) and (min-width: 480px) {
+    .navbar {
+        padding: var(--spacing-xs) 0;
+        background: rgba(13, 20, 33, 0.95);
+        backdrop-filter: blur(20px);
+    }
+    
+    .nav-container {
+        padding: var(--spacing-sm) var(--spacing-md);
+        justify-content: space-between;
+        position: relative;
+    }
+    
+    .nav-brand {
+        margin-left: 0;
+        z-index: 1001;
+    }
+    
+    .nav-brand-text {
+        font-size: 1.2rem;
+        font-weight: 800;
+    }
+    
+    /* Menu hamburger visible */
+    .nav-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        z-index: 1002;
+        position: relative;
+    }
+    
+    .nav-toggle span {
+        display: block;
+        height: 3px;
+        width: 100%;
+        background: white;
+        margin: 3px 0;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+    
+    .nav-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    
+    .nav-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+    
+    .nav-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(7px, -6px);
+    }
+    
+    /* Menu mobile caché par défaut */
+    .nav-menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(13, 20, 33, 0.98);
+        backdrop-filter: blur(20px);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: var(--spacing-xl);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+    }
+    
+    .nav-menu.active {
+        transform: translateX(0);
+    }
+    
+    .nav-link {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: white;
+        padding: var(--spacing-md);
+        text-align: center;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--border-radius);
+        transition: all 0.3s ease;
+    }
+    
+    .nav-link:hover,
+    .nav-link.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        transform: scale(1.05);
+    }
+    
+    .nav-actions {
+        flex-direction: column;
+        gap: var(--spacing-lg);
+        width: 80%;
+        max-width: 300px;
+    }
+    
+    .search-container {
+        width: 100%;
+        order: 1;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 14px 20px;
+        font-size: 1rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.15);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    .search-input:focus {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: var(--color-blue);
+    }
+    
+    .btn-join {
+        width: 100%;
+        padding: 16px 24px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        border-radius: 8px;
+        order: 2;
+    }
+}
+
+/* ================================
+   PETITS MOBILES - 320px à 479px
+   ================================ */
+@media (max-width: 479px) {
+    .nav-container {
+        padding: var(--spacing-sm);
+    }
+    
+    .nav-brand-text {
+        font-size: 1.1rem;
+    }
+    
+    .nav-toggle {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .nav-toggle span {
+        height: 2px;
+        margin: 2px 0;
+    }
+    
+    .nav-link {
+        font-size: 1.1rem;
+        padding: var(--spacing-sm);
+        min-height: 50px;
+    }
+    
+    .search-input {
+        padding: 12px 16px;
+        font-size: 0.95rem;
+    }
+    
+    .btn-join {
+        padding: 14px 20px;
+        font-size: 1rem;
+    }
+    
+    .nav-actions {
+        width: 90%;
+        max-width: 280px;
+    }
+}
+
+/* ================================
+   ADAPTATION POUR SECTIONS BLANCHES - RESPONSIVE
+   ================================ */
+@media (max-width: 767px) {
+    .navbar.white-section {
+        background: rgba(255, 255, 255, 0.98);
+    }
+    
+    .navbar.white-section .nav-brand-text {
+        color: #0d1421 !important;
+    }
+    
+    .navbar.white-section .nav-toggle span {
+        background: #0d1421;
+    }
+    
+    .navbar.white-section .nav-menu {
+        background: rgba(255, 255, 255, 0.98);
+    }
+    
+    .navbar.white-section .nav-link {
+        color: #0d1421 !important;
+    }
+    
+    .navbar.white-section .nav-link:hover,
+    .navbar.white-section .nav-link.active {
+        background: rgba(13, 20, 33, 0.1);
+        color: #0d1421 !important;
+    }
+    
+    .navbar.white-section .search-input {
+        background: rgba(13, 20, 33, 0.05);
+        border-color: rgba(13, 20, 33, 0.2);
+        color: #0d1421;
+    }
+    
+    .navbar.white-section .search-input:focus {
+        background: rgba(13, 20, 33, 0.1);
+        border-color: var(--color-blue);
+    }
+}
+
+/* ================================
+   OPTIMISATIONS TOUCH
+   ================================ */
+@media (max-width: 1024px) {
+    .nav-link,
+    .btn-join,
+    .search-input,
+    .nav-toggle {
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+    
+    /* Amélioration de la zone tactile */
+    .nav-toggle {
+        padding: var(--spacing-xs);
+        border-radius: 4px;
+    }
+    
+    .nav-toggle:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* ================================
+   ANIMATIONS OPTIMISÉES MOBILE
+   ================================ */
+@media (max-width: 767px) {
+    @media (prefers-reduced-motion: reduce) {
+        .nav-menu,
+        .nav-toggle span,
+        .nav-link {
+            transition: none;
+        }
+    }
+}
+
+/* ================================
+   RÉGLAGES SPÉCIFIQUES PAR APPAREIL
+   ================================ */
+
+/* iPhone 12/13/14 Pro Max */
+@media (max-width: 428px) and (min-width: 390px) {
+    .nav-brand-text {
+        font-size: 1.15rem;
+    }
+    
+    .nav-link {
+        font-size: 1.15rem;
+    }
+}
+
+/* iPhone SE et très petits écrans */
+@media (max-width: 374px) {
+    .nav-container {
+        padding: 8px var(--spacing-sm);
+    }
+    
+    .nav-brand-text {
+        font-size: 1rem;
+    }
+    
+    .nav-toggle {
+        width: 26px;
+        height: 26px;
+    }
 } 

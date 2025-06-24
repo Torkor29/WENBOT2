@@ -48,7 +48,7 @@
             <div class="hero-content">
                 <h1 class="hero-title">Where the world brings markets to life</h1>
                 <p class="hero-subtitle">Join thousands of traders and investors taking control of their future.</p>
-                <button class="hero-cta-btn">Join us</button>
+                <a href="auth.html" class="hero-cta-btn">Join us</a>
             </div>
             
             <!-- Performance Section -->
@@ -542,9 +542,35 @@
         </div>
     </footer>
 
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-arrow"></div>
+        <div class="scroll-arrow"></div>
+    </div>
+
     <script src="js/scripts.js?v=5"></script>
     <script src="js/auth.js"></script>
     <script src="components/navbar.js?v=5"></script>
     <script src="components/footer.js?v=5"></script>
+
+    <script>
+        // Script pour faire disparaître l'indicateur de scroll
+        window.addEventListener('scroll', function() {
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            if (window.scrollY > 50) {
+                scrollIndicator.classList.add('hidden');
+            } else {
+                scrollIndicator.classList.remove('hidden');
+            }
+        });
+
+        // Optionnel : scroll automatique au clic sur l'indicateur
+        document.getElementById('scrollIndicator').addEventListener('click', function() {
+            window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 </body>
 </html> 

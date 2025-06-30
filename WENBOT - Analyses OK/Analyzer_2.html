@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Analyzer - Analyse par Paire</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds">
+    <link rel="stylesheet" href="components/navbar.css">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link rel="stylesheet" href="css/responsive-optimizations.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .analyzer-container {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .pair-selector {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .pair-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pair-button:hover, .pair-button.active {
+            background: linear-gradient(45deg, #D4864A, #E6A05C);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            color: #E6A05C;
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        canvas {
+            max-width: 100%;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-brand-text">WenBot</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <a href="Analyzer_1.html" class="btn-trading-analyzer active">Trading Analyzer</a>
+                <button class="btn-join">Join</button>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="analyzer-container">
+        <h1>Analyse par Paire de Devises</h1>
+        
+        <div class="pair-selector" id="pair-selector">
+            <!-- Les boutons des paires seront ajoutés ici -->
+        </div>
+
+        <div class="chart-container">
+            <canvas id="profitChart"></canvas>
+            </div>
+
+        <div class="chart-container">
+            <canvas id="winRateChart"></canvas>
+            </div>
+
+        <div class="stats-grid" id="stats-grid">
+            <!-- Les statistiques seront ajoutées ici -->
+        </div>
+    </div>
+
+    <script>
+        // Récupérer les données de la session précédente
+        const taskId = sessionStorage.getItem('currentTaskId');
+        if (!taskId) {
+            window.location.href = 'Analyzer_1.html';
+        }
+
+        let profitChart = null;
+        let winRateChart = null;
+
+        async function loadPairAnalysis() {
+            try {
+                const response = await fetch(`/api/status/${taskId}`);
+                const data = await response.json();
+
+                if (!response.ok || data.status !== 'completed') {
+                    throw new Error('Données non disponibles');
+                }
+
+                const results = data.results.data;
+                const pairs = Object.keys(results.by_pair || {});
+
+                // Créer les boutons des paires
+                const pairSelector = document.getElementById('pair-selector');
+                pairSelector.innerHTML = pairs.map(pair => 
+                    `<button class="pair-button" onclick="showPairStats('${pair}')">${pair}</button>`
+                ).join('');
+
+                // Afficher la première paire par défaut
+                if (pairs.length > 0) {
+                    showPairStats(pairs[0]);
+                }
+
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        function showPairStats(pair) {
+            // Mettre à jour les boutons actifs
+            document.querySelectorAll('.pair-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent === pair) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Mettre à jour les graphiques
+            updateCharts(pair);
+            updateStats(pair);
+        }
+
+        function updateCharts(pair) {
+            const ctx1 = document.getElementById('profitChart').getContext('2d');
+            const ctx2 = document.getElementById('winRateChart').getContext('2d');
+
+            // Détruire les graphiques existants
+            if (profitChart) profitChart.destroy();
+            if (winRateChart) winRateChart.destroy();
+
+            // Créer de nouveaux graphiques
+            profitChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                    datasets: [{
+                        label: 'Profit Cumulé',
+                        data: [0, 1000, 2000, 1500, 3000, 2500],
+                        borderColor: '#E6A05C',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: 'white'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: 'white' }
+                        },
+                        x: {
+                            ticks: { color: 'white' }
+                        }
+                    }
+                }
+            });
+
+            winRateChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Trades Gagnants', 'Trades Perdants'],
+                    datasets: [{
+                        data: [65, 35],
+                        backgroundColor: ['#4CAF50', '#f44336']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            ticks: { color: 'white' }
+                        },
+                        x: {
+                            ticks: { color: 'white' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateStats(pair) {
+            const statsGrid = document.getElementById('stats-grid');
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">150</div>
+                    <div class="stat-label">Nombre de Trades</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">65%</div>
+                    <div class="stat-label">Taux de Réussite</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2500€</div>
+                    <div class="stat-label">Profit Total</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">15%</div>
+                    <div class="stat-label">Drawdown Maximum</div>
+                </div>
+            `;
+            }
+
+        // Charger les données au démarrage
+        loadPairAnalysis();
+    </script>
+</body>
+</html> 

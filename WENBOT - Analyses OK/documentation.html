@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - WenBot Trading Bot</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds-updated">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link rel="stylesheet" href="components/navbar.css?v=4">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Documentation page with consistent styling */
+        .documentation-page {
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+        
+        /* Navbar transparente au début, blanche au scroll */
+        .navbar {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .navbar .nav-brand-text,
+        .navbar .nav-link {
+            color: white !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .navbar.scrolled .nav-brand-text,
+        .navbar.scrolled .nav-link {
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .navbar.scrolled .nav-link:hover {
+            color: var(--space-warm-orange) !important;
+        }
+        
+        /* Styles pour la barre de recherche */
+        .navbar .search-input {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        .navbar.scrolled .search-input {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar.scrolled .search-input::placeholder {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        /* Hero Section */
+        .documentation-hero {
+            position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            image-rendering: high-quality;
+            image-rendering: pixelated;
+            
+            filter: 
+                contrast(1.25) 
+                brightness(1.12) 
+                saturate(1.18) 
+                hue-rotate(2deg)
+                blur(0px)
+                sharpen(1.5);
+            
+            transform: scale(1.015) translateZ(0);
+            
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        
+        .documentation-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(212, 134, 74, 0.25) 0%, 
+                rgba(230, 160, 92, 0.15) 30%,
+                rgba(74, 107, 58, 0.2) 70%,
+                rgba(122, 155, 109, 0.15) 100%);
+            z-index: 1;
+        }
+        
+        .documentation-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .documentation-hero > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--spacing-lg);
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .hero-subtitle {
+            font-size: var(--font-size-lg);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        /* Navigation Sections */
+        .docs-navigation {
+            padding: var(--spacing-2xl) 0;
+            background: var(--bg-primary);
+        }
+        
+        .docs-nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+        
+        .docs-nav-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: var(--spacing-xl);
+            border: 1px solid rgba(41, 98, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .docs-nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(41, 98, 255, 0.2);
+            border-color: rgba(41, 98, 255, 0.3);
+        }
+        
+        .nav-card-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--color-gradient);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-md);
+            font-size: 24px;
+            color: white;
+        }
+        
+        .nav-card-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .nav-card-desc {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            line-height: 1.6;
+        }
+        
+        /* Content Sections */
+        .docs-section {
+            padding: var(--spacing-3xl) 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .docs-section:last-child {
+            border-bottom: none;
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+        
+        .section-title {
+            font-size: clamp(1.8rem, 3vw, 2.5rem);
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--color-gradient);
+            border-radius: 2px;
+        }
+        
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+            margin-top: var(--spacing-2xl);
+        }
+        
+        .resource-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: var(--spacing-xl);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border-color: rgba(41, 98, 255, 0.3);
+        }
+        
+        .resource-type {
+            display: inline-block;
+            background: var(--color-gradient);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: var(--font-size-xs);
+            font-weight: 500;
+            margin-bottom: var(--spacing-md);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .resource-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+            line-height: 1.4;
+        }
+        
+        .resource-desc {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+        
+        .resource-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+        }
+        
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(41, 98, 255, 0.1);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .resource-link.youtube {
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff0000;
+        }
+        
+        .resource-link.youtube:hover {
+            background: #ff0000;
+            color: white;
+        }
+        
+        .resource-link.pdf {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        .resource-link.pdf:hover {
+            background: #dc3545;
+            color: white;
+        }
+        
+        /* Quick Start Section */
+        .quick-start {
+            background: linear-gradient(135deg, rgba(41, 98, 255, 0.05) 0%, rgba(102, 126, 234, 0.05) 100%);
+            border-radius: 20px;
+            padding: var(--spacing-2xl);
+            margin: var(--spacing-2xl) 0;
+        }
+        
+        .quick-start-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-lg);
+            text-align: center;
+        }
+        
+        .quick-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        
+        .quick-step {
+            text-align: center;
+            padding: var(--spacing-lg);
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--color-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            margin: 0 auto var(--spacing-md);
+        }
+        
+        .step-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .step-desc {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .docs-nav-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+            
+            .resource-grid {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-lg);
+            }
+            
+            .quick-steps {
+                grid-template-columns: 1fr;
+                gap: var(--spacing-md);
+            }
+        }
+    </style>
+</head>
+<body class="documentation-page">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-brand-text">WenBot</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html#home" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <button class="btn-join">Join</button>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="documentation-hero">
+        <div class="container">
+            <h1 class="hero-title">Documentation & Learning Center</h1>
+            <p class="hero-subtitle">
+                Comprehensive resources to master trading automation, MetaTrader 5, 
+                algorithmic trading, and advanced market analysis techniques.
+            </p>
+        </div>
+    </section>
+
+    <!-- Quick Navigation -->
+    <section class="docs-navigation">
+        <div class="container">
+            <div class="docs-nav-grid">
+                <div class="docs-nav-card" onclick="scrollToSection('trading-basics')">
+                    <div class="nav-card-icon">📚</div>
+                    <h3 class="nav-card-title">Trading Fundamentals</h3>
+                    <p class="nav-card-desc">Learn the basics of trading, market analysis, and risk management</p>
+                </div>
+                
+                <div class="docs-nav-card" onclick="scrollToSection('mt5-platform')">
+                    <div class="nav-card-icon">🔧</div>
+                    <h3 class="nav-card-title">MetaTrader 5 Platform</h3>
+                    <p class="nav-card-desc">Complete guide to MT5 features, tools, and functionality</p>
+                </div>
+                
+                <div class="docs-nav-card" onclick="scrollToSection('trading-bots')">
+                    <div class="nav-card-icon">🤖</div>
+                    <h3 class="nav-card-title">Trading Bots & Automation</h3>
+                    <p class="nav-card-desc">Understanding automated trading systems and bot development</p>
+                </div>
+                
+                <div class="docs-nav-card" onclick="scrollToSection('algorithms')">
+                    <div class="nav-card-icon">⚡</div>
+                    <h3 class="nav-card-title">Trading Algorithms</h3>
+                    <p class="nav-card-desc">Deep dive into algorithmic trading strategies and implementation</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Start Guide -->
+    <section class="docs-section">
+        <div class="section-container">
+            <div class="quick-start">
+                <h2 class="quick-start-title">Quick Start Guide</h2>
+                <div class="quick-steps">
+                    <div class="quick-step">
+                        <div class="step-number">1</div>
+                        <h4 class="step-title">Learn Basics</h4>
+                        <p class="step-desc">Start with trading fundamentals and market analysis</p>
+                    </div>
+                    <div class="quick-step">
+                        <div class="step-number">2</div>
+                        <h4 class="step-title">Install MT5</h4>
+                        <p class="step-desc">Download and configure MetaTrader 5 platform</p>
+                    </div>
+                    <div class="quick-step">
+                        <div class="step-number">3</div>
+                        <h4 class="step-title">Understand Bots</h4>
+                        <p class="step-desc">Learn how trading bots work and their benefits</p>
+                    </div>
+                    <div class="quick-step">
+                        <div class="step-number">4</div>
+                        <h4 class="step-title">Start Trading</h4>
+                        <p class="step-desc">Deploy WenBot and begin automated trading</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trading Fundamentals Section -->
+    <section class="docs-section" id="trading-basics">
+        <div class="section-container">
+            <h2 class="section-title">Trading Fundamentals</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <span class="resource-type">Video Course</span>
+                    <h3 class="resource-title">Complete Trading Course for Beginners</h3>
+                    <p class="resource-desc">
+                        Comprehensive 10-hour course covering all basics of trading, from market analysis 
+                        to risk management strategies.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=DRAcPbYPNVk" target="_blank" class="resource-link youtube">
+                            🎥 Watch Course
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">PDF Guide</span>
+                    <h3 class="resource-title">Technical Analysis Handbook</h3>
+                    <p class="resource-desc">
+                        Essential guide to reading charts, understanding indicators, and identifying trading patterns.
+                    </p>
+                    <div class="resource-links">
+                        <a href="#" class="resource-link pdf">📄 Download PDF</a>
+                        <a href="https://www.youtube.com/watch?v=oxob0x0Xz7s" target="_blank" class="resource-link youtube">
+                            🎥 Video Tutorial
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Video Series</span>
+                    <h3 class="resource-title">Risk Management Masterclass</h3>
+                    <p class="resource-desc">
+                        Learn how to protect your capital with proper position sizing, stop losses, and portfolio management.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=9Am3SYnZtXk" target="_blank" class="resource-link youtube">
+                            🎥 Part 1: Position Sizing
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=qcQThtAu3Mc" target="_blank" class="resource-link youtube">
+                            🎥 Part 2: Stop Losses
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Interactive</span>
+                    <h3 class="resource-title">Market Psychology & Trading Psychology</h3>
+                    <p class="resource-desc">
+                        Understanding market sentiment, emotional trading, and developing the right mindset for success.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/playlist?list=PL_eLsmvxVV0euQiJY4atRUUR0YOAe2dLr" target="_blank" class="resource-link youtube">
+                            🎥 Psychology Course
+                        </a>
+                        <a href="#" class="resource-link">📚 Trading Journal Template</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MetaTrader 5 Section -->
+    <section class="docs-section" id="mt5-platform">
+        <div class="section-container">
+            <h2 class="section-title">MetaTrader 5 Platform</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <span class="resource-type">Installation Guide</span>
+                    <h3 class="resource-title">MT5 Setup & Configuration</h3>
+                    <p class="resource-desc">
+                        Step-by-step guide to download, install, and configure MetaTrader 5 for optimal trading performance.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=1OxgLHzSNiY" target="_blank" class="resource-link youtube">
+                            🎥 Installation Tutorial
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 Setup Guide PDF</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Platform Guide</span>
+                    <h3 class="resource-title">MT5 Interface & Tools</h3>
+                    <p class="resource-desc">
+                        Complete overview of MT5 interface, charting tools, indicators, and advanced features.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=9tGg9V4_LhU" target="_blank" class="resource-link youtube">
+                            🎥 Interface Tour
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=FHBppwYDcmg" target="_blank" class="resource-link youtube">
+                            🎥 Advanced Tools
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">MQL5 Programming</span>
+                    <h3 class="resource-title">MQL5 Programming Basics</h3>
+                    <p class="resource-desc">
+                        Learn MQL5 programming language to create custom indicators, Expert Advisors, and scripts.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=4GCwJAbrSVY" target="_blank" class="resource-link youtube">
+                            🎥 MQL5 Basics
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=iY-rgAmnCQw" target="_blank" class="resource-link youtube">
+                            🎥 EA Development
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 MQL5 Reference</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Expert Advisors</span>
+                    <h3 class="resource-title">Expert Advisors (EAs) Guide</h3>
+                    <p class="resource-desc">
+                        Understanding Expert Advisors, how to install them, configure settings, and optimize performance.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=bjELYqKZX2k" target="_blank" class="resource-link youtube">
+                            🎥 EA Installation
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=W1TWPW6sLQw" target="_blank" class="resource-link youtube">
+                            🎥 EA Optimization
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trading Bots Section -->
+    <section class="docs-section" id="trading-bots">
+        <div class="section-container">
+            <h2 class="section-title">Trading Bots & Automation</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <span class="resource-type">Introduction</span>
+                    <h3 class="resource-title">What Are Trading Bots?</h3>
+                    <p class="resource-desc">
+                        Complete introduction to automated trading systems, their benefits, risks, and how they work.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=c095S7PnzNQ" target="_blank" class="resource-link youtube">
+                            🎥 Trading Bots Explained
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 Bot Comparison Guide</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Strategy Guide</span>
+                    <h3 class="resource-title">Bot Trading Strategies</h3>
+                    <p class="resource-desc">
+                        Popular automated trading strategies including scalping, grid trading, arbitrage, and trend following.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=u5pAzaKhqig" target="_blank" class="resource-link youtube">
+                            🎥 Scalping Bots
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=PXZb9ycklUQ" target="_blank" class="resource-link youtube">
+                            🎥 Grid Trading
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 Strategy Comparison</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Implementation</span>
+                    <h3 class="resource-title">Bot Setup & Configuration</h3>
+                    <p class="resource-desc">
+                        How to properly set up trading bots, configure parameters, and monitor performance.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=D4bDMWrbMm4" target="_blank" class="resource-link youtube">
+                            🎥 Bot Configuration
+                        </a>
+                        <a href="#" class="resource-link">🔧 WenBot Setup Guide</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Advanced</span>
+                    <h3 class="resource-title">Bot Development & Customization</h3>
+                    <p class="resource-desc">
+                        Advanced topics including developing custom bots, backtesting strategies, and performance optimization.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=GgyL5k_tVrE" target="_blank" class="resource-link youtube">
+                            🎥 Custom Bot Development
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=0GSB5YZx9ZE" target="_blank" class="resource-link youtube">
+                            🎥 Backtesting Guide
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 API Documentation</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Algorithms Section -->
+    <section class="docs-section" id="algorithms">
+        <div class="section-container">
+            <h2 class="section-title">Trading Algorithms</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <span class="resource-type">Fundamentals</span>
+                    <h3 class="resource-title">Algorithmic Trading Basics</h3>
+                    <p class="resource-desc">
+                        Introduction to algorithmic trading, mathematical models, and quantitative analysis in financial markets.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=RaWXLxf2RQk" target="_blank" class="resource-link youtube">
+                            🎥 Algo Trading 101
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=w2shlfqsFJc" target="_blank" class="resource-link youtube">
+                            🎥 Quantitative Analysis
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 Algo Trading Primer</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Machine Learning</span>
+                    <h3 class="resource-title">AI & Machine Learning in Trading</h3>
+                    <p class="resource-desc">
+                        How artificial intelligence and machine learning are revolutionizing trading strategies and market prediction.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=m6QLaD4DdCw" target="_blank" class="resource-link youtube">
+                            🎥 AI Trading Systems
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=-hWcHW8_oXM" target="_blank" class="resource-link youtube">
+                            🎥 ML for Finance
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 ML Trading Models</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">High Frequency</span>
+                    <h3 class="resource-title">High-Frequency Trading (HFT)</h3>
+                    <p class="resource-desc">
+                        Understanding high-frequency trading systems, latency optimization, and ultra-fast execution strategies.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=q_8NJmhKQQY" target="_blank" class="resource-link youtube">
+                            🎥 HFT Explained
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=SEQbb_4lhfk" target="_blank" class="resource-link youtube">
+                            🎥 Latency & Speed
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Portfolio Management</span>
+                    <h3 class="resource-title">Algorithmic Portfolio Optimization</h3>
+                    <p class="resource-desc">
+                        Advanced portfolio management techniques using algorithms for risk assessment and asset allocation.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=GWGW0KKvmOU" target="_blank" class="resource-link youtube">
+                            🎥 Portfolio Algorithms
+                        </a>
+                        <a href="https://www.youtube.com/watch?v=4Y7zF0zss1A" target="_blank" class="resource-link youtube">
+                            🎥 Risk Management
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 Optimization Models</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advanced Resources Section -->
+    <section class="docs-section">
+        <div class="section-container">
+            <h2 class="section-title">Advanced Resources</h2>
+            <div class="resource-grid">
+                <div class="resource-card">
+                    <span class="resource-type">Market Data</span>
+                    <h3 class="resource-title">Real-Time Market Data & APIs</h3>
+                    <p class="resource-desc">
+                        Working with real-time market data feeds, API integration, and data processing for trading systems.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=N6lhF89_j9k" target="_blank" class="resource-link youtube">
+                            🎥 Market Data APIs
+                        </a>
+                        <a href="#" class="resource-link pdf">📄 API Reference</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Backtesting</span>
+                    <h3 class="resource-title">Advanced Backtesting Techniques</h3>
+                    <p class="resource-desc">
+                        Professional backtesting methods, avoiding common pitfalls, and validating trading strategies.
+                    </p>
+                    <div class="resource-links">
+                        <a href="https://www.youtube.com/watch?v=g_BQVHFNVsU" target="_blank" class="resource-link youtube">
+                            🎥 Backtesting Mastery
+                        </a>
+                        <a href="#" class="resource-link">🔧 Backtest Framework</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Regulation</span>
+                    <h3 class="resource-title">Trading Regulations & Compliance</h3>
+                    <p class="resource-desc">
+                        Understanding trading regulations, compliance requirements, and legal considerations for automated trading.
+                    </p>
+                    <div class="resource-links">
+                        <a href="#" class="resource-link pdf">📄 Regulatory Guide</a>
+                        <a href="#" class="resource-link">⚖️ Compliance Checklist</a>
+                    </div>
+                </div>
+                
+                <div class="resource-card">
+                    <span class="resource-type">Community</span>
+                    <h3 class="resource-title">Trading Communities & Forums</h3>
+                    <p class="resource-desc">
+                        Connect with other traders, share strategies, and learn from experienced professionals in the field.
+                    </p>
+                    <div class="resource-links">
+                        <a href="#" class="resource-link">💬 Discord Community</a>
+                        <a href="#" class="resource-link">📱 Telegram Group</a>
+                        <a href="#" class="resource-link">🔗 LinkedIn Network</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Component -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <!-- Main Footer Content -->
+            <div class="footer-content">
+                <!-- Company Column -->
+                <div class="footer-column">
+                    <div class="footer-brand">
+                        <span class="footer-logo">WenBot</span>
+                        <p class="footer-tagline">Where the world brings markets to life</p>
+                    </div>
+                    <p class="footer-description">
+                        Advanced algorithmic trading platform designed to maximize your performance on financial markets with exceptional precision.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Telegram">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Discord">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Products Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">WenBot Trading</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="documentation.html" class="footer-link" style="color: #667eea;">Documentation</a></li>
+                        <li><a href="getting-started.html" class="footer-link" style="color: #667eea;">Getting Started</a></li>
+                        <li><a href="community.html" class="footer-link" style="color: #667eea;">Community</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Centre d'aide</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html" class="footer-link" style="font-weight: 600; color: #667eea;">Helping center - Contact us</a></li>
+                        <li><a href="faq.html" class="footer-link" style="color: #667eea;">FAQ</a></li>
+                        <li><a href="system-status.html" class="footer-link" style="color: #667eea;">System Status</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Newsletter</h3>
+                    <p class="newsletter-desc">Get our exclusive analysis</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email" class="newsletter-input">
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="footer-legal">
+                        <p>&copy; 2024 WenBot. All rights reserved.</p>
+                        <div class="legal-links">
+                            <a href="legal.html#legal-notice" class="legal-link">Legal Notice</a>
+                            <a href="legal.html#privacy-policy" class="legal-link">Privacy Policy</a>
+                            <a href="legal.html#terms-of-service" class="legal-link">Terms of Service</a>
+                            <a href="legal.html#cookie-policy" class="legal-link">Cookie Policy</a>
+                            <a href="legal.html#gdpr" class="legal-link">GDPR</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-disclaimer">
+                        <p class="disclaimer-text">
+                            ⚠️ Risk Warning: Trading involves significant risk of capital loss. 
+                            Past performance does not guarantee future results. 
+                            Only trade funds you can afford to lose.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/scripts.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="components/navbar.js"></script>
+    <script src="components/footer.js"></script>
+    <script>
+        // Smooth scrolling to sections
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+        
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+        
+        // Animate cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all resource cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.resource-card, .docs-nav-card');
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html> 

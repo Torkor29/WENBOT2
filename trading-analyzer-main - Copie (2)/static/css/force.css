@@ -1,0 +1,115 @@
+/* FORÇAGE BRUTAL CSS - VERSION TIMESTAMP */
+
+/* TITRE NAVIGATION - ULTRA SPÉCIFIQUE */
+nav.navbar .navbar-brand,
+nav.navbar .navbar-brand:hover,
+nav.navbar .navbar-brand:focus,
+nav.navbar .navbar-brand:active,
+nav.navbar .navbar-brand:visited,
+nav.navbar-dark .navbar-brand,
+nav.navbar-dark .navbar-brand:hover,
+nav.navbar-dark .navbar-brand:focus,
+nav.navbar-dark .navbar-brand:active,
+nav.navbar-dark .navbar-brand:visited,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:hover,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:focus,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:active,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:visited {
+    color: #ffffff !important;
+    color: white !important;
+    color: rgb(255, 255, 255) !important;
+    text-decoration: none !important;
+}
+
+/* ICÔNE NAVIGATION */
+nav.navbar .navbar-brand i,
+nav.navbar .navbar-brand .fas,
+nav.navbar-dark .navbar-brand i,
+nav.navbar-dark .navbar-brand .fas,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand i,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand .fas {
+    color: #ffffff !important;
+    color: white !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+/* TEXTE STRONG NAVIGATION */
+nav.navbar .navbar-brand strong,
+nav.navbar-dark .navbar-brand strong,
+.navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand strong {
+    color: #ffffff !important;
+    color: white !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+/* ESPACEMENT DRASTIQUE */
+.container-fluid.py-1 {
+    padding-top: 0.25rem !important;
+    padding-bottom: 0.25rem !important;
+}
+
+.hero-section.mb-1 {
+    margin-bottom: 0.5rem !important;
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+}
+
+.row.g-3.mb-1 {
+    margin-bottom: 0.5rem !important;
+}
+
+.row:not(.g-3):not(.justify-content-center) {
+    margin-bottom: 0 !important;
+    margin-top: 0.5rem !important;
+}
+
+.p-2 {
+    padding: 0.5rem !important;
+}
+
+.cta-section {
+    padding: 1rem !important;
+    margin-top: 0.5rem !important;
+}
+
+/* MODE SOMBRE AUSSI */
+[data-bs-theme="dark"] nav.navbar .navbar-brand,
+[data-bs-theme="dark"] nav.navbar .navbar-brand:hover,
+[data-bs-theme="dark"] nav.navbar .navbar-brand:focus,
+[data-bs-theme="dark"] nav.navbar .navbar-brand:active,
+[data-bs-theme="dark"] nav.navbar .navbar-brand:visited,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand:hover,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand:focus,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand:active,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand:visited,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:hover,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:focus,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:active,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand:visited {
+    color: #ffffff !important;
+    color: white !important;
+    color: rgb(255, 255, 255) !important;
+    text-decoration: none !important;
+}
+
+[data-bs-theme="dark"] nav.navbar .navbar-brand i,
+[data-bs-theme="dark"] nav.navbar .navbar-brand .fas,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand i,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand .fas,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand i,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand .fas {
+    color: #ffffff !important;
+    color: white !important;
+    color: rgb(255, 255, 255) !important;
+}
+
+[data-bs-theme="dark"] nav.navbar .navbar-brand strong,
+[data-bs-theme="dark"] nav.navbar-dark .navbar-brand strong,
+[data-bs-theme="dark"] .navbar.navbar-expand-lg.navbar-dark.bg-gradient .navbar-brand strong {
+    color: #ffffff !important;
+    color: white !important;
+    color: rgb(255, 255, 255) !important;
+} 

@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Inscription - Wenbot Trading Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <!-- Card d'inscription -->
+            <div class="card auth-card shadow">
+                <div class="card-body p-4">
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <div class="auth-icon mb-3">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <h3 class="card-title mb-1">Créer un compte</h3>
+                        <p class="text-muted">Rejoignez Trading Analyzer</p>
+                    </div>
+
+                    <!-- Formulaire -->
+                    <form method="POST" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Prénom et Nom -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form.first_name.label(class="form-label") }}
+                                {{ form.first_name(class="form-control" + (" is-invalid" if form.first_name.errors else "")) }}
+                                {% if form.first_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.first_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.last_name.label(class="form-label") }}
+                                {{ form.last_name(class="form-control" + (" is-invalid" if form.last_name.errors else "")) }}
+                                {% if form.last_name.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.last_name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            {{ form.email.label(class="form-label") }}
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else "")) }}
+                            {% if form.email.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.email.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Mot de passe -->
+                        <div class="mb-3">
+                            {{ form.password.label(class="form-label") }}
+                            <div class="input-group">
+                                {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), id="passwordInput") }}
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="fas fa-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                            {% if form.password.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Confirmation mot de passe -->
+                        <div class="mb-3">
+                            {{ form.password2.label(class="form-label") }}
+                            <div class="input-group">
+                                {{ form.password2(class="form-control" + (" is-invalid" if form.password2.errors else ""), id="password2Input") }}
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword2">
+                                    <i class="fas fa-eye" id="toggleIcon2"></i>
+                                </button>
+                            </div>
+                            {% if form.password2.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.password2.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Conditions d'utilisation -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                {{ form.accept_terms(class="form-check-input" + (" is-invalid" if form.accept_terms.errors else "")) }}
+                                {{ form.accept_terms.label(class="form-check-label") }}
+                                {% if form.accept_terms.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.accept_terms.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Bouton d'inscription -->
+                        <div class="d-grid mb-3">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+
+                        <!-- Lien vers connexion -->
+                        <div class="text-center">
+                            <p class="mb-0 text-muted">
+                                Déjà un compte ?
+                                <a href="{{ url_for('auth.login') }}" class="text-decoration-none fw-medium">
+                                    Se connecter
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Informations sur le plan gratuit -->
+            <div class="card mt-3 border-success">
+                <div class="card-body text-center py-3">
+                    <h6 class="card-title mb-2">
+                        <i class="fas fa-gift text-success me-1"></i>
+                        Plan Gratuit
+                    </h6>
+                    <p class="card-text small text-muted mb-0">
+                        <i class="fas fa-check text-success me-1"></i>
+                        5 analyses par mois<br>
+                        <i class="fas fa-check text-success me-1"></i>
+                        Rapports Excel complets<br>
+                        <i class="fas fa-check text-success me-1"></i>
+                        Support communautaire
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.auth-card {
+    border: none;
+    border-radius: 15px;
+}
+
+.auth-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bs-primary), var(--bs-primary-rgb));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.form-control {
+    border-radius: 10px;
+    padding: 12px 16px;
+}
+
+.btn {
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.card {
+    backdrop-filter: blur(10px);
+}
+
+/* Mode sombre */
+[data-bs-theme="dark"] .auth-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-bs-theme="dark"] .card {
+    background: var(--bs-dark);
+}
+</style>
+
+<script>
+// Toggle password visibility
+function setupPasswordToggle(inputId, buttonId, iconId) {
+    document.getElementById(buttonId).addEventListener('click', function() {
+        const passwordInput = document.getElementById(inputId);
+        const toggleIcon = document.getElementById(iconId);
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            toggleIcon.className = 'fas fa-eye-slash';
+        } else {
+            passwordInput.type = 'password';
+            toggleIcon.className = 'fas fa-eye';
+        }
+    });
+}
+
+// Setup both password fields
+setupPasswordToggle('passwordInput', 'togglePassword', 'toggleIcon');
+setupPasswordToggle('password2Input', 'togglePassword2', 'toggleIcon2');
+</script>
+{% endblock %} 

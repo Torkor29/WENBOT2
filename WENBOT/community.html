@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - WenBot</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds-updated">
+    <link rel="stylesheet" href="components/navbar.css?v=4">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Community page styles */
+        .community-page {
+            background: var(--bg-primary);
+            min-height: 100vh;
+        }
+        
+        /* Navbar transparente au début, blanche au scroll */
+        .navbar {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .navbar .nav-brand-text,
+        .navbar .nav-link {
+            color: white !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .navbar.scrolled .nav-brand-text,
+        .navbar.scrolled .nav-link {
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .navbar.scrolled .nav-link:hover {
+            color: var(--space-warm-orange) !important;
+        }
+        
+        /* Styles pour la barre de recherche */
+        .navbar .search-input {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        .navbar.scrolled .search-input {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar.scrolled .search-input::placeholder {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            position: relative;
+            /* Image d'espace optimisée WebP - technique TradingView identique à l'accueil */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            
+            /* Optimisations de rendu avancées - style TradingView identique */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            image-rendering: high-quality;
+            image-rendering: pixelated;
+            
+            /* Filtres de qualité professionnels identiques à l'accueil */
+            filter: 
+                contrast(1.25) 
+                brightness(1.12) 
+                saturate(1.18) 
+                hue-rotate(2deg)
+                blur(0px)
+                sharpen(1.5);
+            
+            /* Transformation pour masquer la pixellisation */
+            transform: scale(1.015) translateZ(0);
+            
+            /* Optimisation GPU */
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(212, 134, 74, 0.25) 0%, 
+                rgba(230, 160, 92, 0.15) 30%,
+                rgba(74, 107, 58, 0.2) 70%,
+                rgba(122, 155, 109, 0.15) 100%);
+            z-index: 1;
+        }
+        
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .hero-section > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--spacing-lg);
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .hero-subtitle {
+            font-size: var(--font-size-lg);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+        
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-2xl);
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--space-warm-orange);
+        }
+        
+        .stat-label {
+            font-size: var(--font-size-sm);
+            opacity: 0.8;
+        }
+        
+        .section {
+            padding: var(--spacing-3xl) 0;
+        }
+        
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+        
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-2xl);
+            margin-bottom: var(--spacing-2xl);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--color-gradient);
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-blue);
+        }
+        
+        .section-title {
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+            color: var(--text-primary);
+        }
+        
+        .section-description {
+            font-size: var(--font-size-lg);
+            text-align: center;
+            margin-bottom: var(--spacing-2xl);
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .feature-item h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .feature-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .pillar-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: var(--spacing-xl);
+            border: 1px solid rgba(41, 98, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .pillar-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pillar-header {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .pillar-icon {
+            font-size: 2rem;
+        }
+        
+        .pillar-header h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .pillar-content p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+            line-height: 1.6;
+        }
+        
+        .pillar-features {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .pillar-features li {
+            padding: var(--spacing-sm) 0;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: var(--spacing-lg);
+        }
+        
+        .pillar-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--space-warm-orange);
+            font-weight: bold;
+        }
+        
+        .community-channels {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .channel-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: var(--spacing-xl);
+            text-align: center;
+            border: 1px solid rgba(41, 98, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .channel-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .channel-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .channel-card h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .channel-card p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .channel-btn {
+            background: var(--color-gradient);
+            color: white;
+            padding: var(--spacing-md) var(--spacing-xl);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: opacity 0.3s ease;
+        }
+        
+        .channel-btn:hover {
+            opacity: 0.9;
+        }
+        
+        .guidelines-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-xl);
+        }
+        
+        .guideline-item {
+            text-align: center;
+            padding: var(--spacing-xl);
+        }
+        
+        .guideline-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .guideline-item h3 {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-primary);
+        }
+        
+        .guideline-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes waveFlow {
+            0%, 100% {
+                transform: translateX(-25%);
+            }
+            50% {
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body class="community-page">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-brand-text">WenBot</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html#home" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <button class="btn-join">Join</button>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="section-container">
+            <h1 class="hero-title">Join the WenBot Community</h1>
+            <p class="hero-subtitle">More than just a trading platform – we're building the future of financial technology together</p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">5,000+</span>
+                    <span class="stat-label">Active Members</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Countries</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">24/7</span>
+                    <span class="stat-label">Support & Discussion</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Community Pillars -->
+    <section class="section">
+        <div class="section-container">
+            <h2 class="section-title">Our Community Pillars</h2>
+            
+            <div class="pillars-grid">
+                <div class="pillar-card">
+                    <div class="pillar-header">
+                        <span class="pillar-icon">💡</span>
+                        <h3>Innovation Hub</h3>
+                    </div>
+                    <div class="pillar-content">
+                        <p>Be at the forefront of trading technology. Our community shapes the future of algorithmic trading through collaborative innovation and continuous experimentation.</p>
+                        <ul class="pillar-features">
+                            <li>Alpha testing of new features</li>
+                            <li>Community-driven development</li>
+                            <li>Research collaboration opportunities</li>
+                            <li>Access to beta releases</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="pillar-card">
+                    <div class="pillar-header">
+                        <span class="pillar-icon">🔗</span>
+                        <h3>Web3 Integration</h3>
+                    </div>
+                    <div class="pillar-content">
+                        <p>Explore the intersection of traditional trading and decentralized finance. Our community is pioneering the integration of DeFi protocols with algorithmic trading.</p>
+                        <ul class="pillar-features">
+                            <li>DeFi protocol integration</li>
+                            <li>Smart contract automation</li>
+                            <li>Cross-chain trading strategies</li>
+                            <li>Tokenized trading algorithms</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="pillar-card">
+                    <div class="pillar-header">
+                        <span class="pillar-icon">🎓</span>
+                        <h3>Knowledge Sharing</h3>
+                    </div>
+                    <div class="pillar-content">
+                        <p>Learn from the best and share your expertise. Our community thrives on the collective knowledge of traders, developers, and financial experts worldwide.</p>
+                        <ul class="pillar-features">
+                            <li>Weekly strategy workshops</li>
+                            <li>Expert-led webinars</li>
+                            <li>Community case studies</li>
+                            <li>Mentorship programs</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Join the Community -->
+    <section class="section">
+        <div class="section-container">
+            <div class="cta-section">
+                <h2 class="section-title">Ready to Join Our Community?</h2>
+                <p class="section-description">
+                    Connect with like-minded traders and technology enthusiasts. Together, we're building the future of financial markets.
+                </p>
+                
+                <div class="community-channels">
+                    <div class="channel-card">
+                        <div class="channel-icon">💬</div>
+                        <h3>Discord Server</h3>
+                        <p>Real-time discussions, strategy sharing, and community support</p>
+                        <a href="#" class="channel-btn">Join Discord</a>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-icon">📱</div>
+                        <h3>Telegram Group</h3>
+                        <p>Quick updates, alerts, and mobile-friendly community chat</p>
+                        <a href="#" class="channel-btn">Join Telegram</a>
+                    </div>
+                    
+                    <div class="channel-card">
+                        <div class="channel-icon">🐦</div>
+                        <h3>Twitter Community</h3>
+                        <p>Latest news, market insights, and community highlights</p>
+                        <a href="#" class="channel-btn">Follow Us</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Community Guidelines -->
+    <section class="section">
+        <div class="section-container">
+            <div class="guidelines-section">
+                <h2 class="section-title">Community Guidelines</h2>
+                <div class="guidelines-grid">
+                    <div class="guideline-item">
+                        <span class="guideline-icon">🤝</span>
+                        <h3>Respect & Collaboration</h3>
+                        <p>Treat all members with respect, foster collaboration, and maintain a supportive environment for learning and growth.</p>
+                    </div>
+                    
+                    <div class="guideline-item">
+                        <span class="guideline-icon">📚</span>
+                        <h3>Share Knowledge</h3>
+                        <p>Contribute to the community by sharing insights, strategies, and experiences. Help others learn and grow.</p>
+                    </div>
+                    
+                    <div class="guideline-item">
+                        <span class="guideline-icon">🔍</span>
+                        <h3>Stay Curious</h3>
+                        <p>Embrace new technologies, ask questions, and stay open to innovative approaches in trading and finance.</p>
+                    </div>
+                    
+                    <div class="guideline-item">
+                        <span class="guideline-icon">⚠️</span>
+                        <h3>Risk Awareness</h3>
+                        <p>Always discuss risks transparently and remind others that trading involves potential losses.</p>
+                    </div>
+                    
+                    <div class="guideline-item">
+                        <span class="guideline-icon">🛡️</span>
+                        <h3>No Financial Advice</h3>
+                        <p>Share insights and strategies but never provide direct financial advice. Each member trades at their own risk.</p>
+                    </div>
+                    
+                    <div class="guideline-item">
+                        <span class="guideline-icon">🌟</span>
+                        <h3>Quality Over Quantity</h3>
+                        <p>Focus on meaningful contributions rather than frequent posts. Quality discussions drive community value.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Component -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <!-- Main Footer Content -->
+            <div class="footer-content">
+                <!-- Company Column -->
+                <div class="footer-column">
+                    <div class="footer-brand">
+                        <span class="footer-logo">WenBot</span>
+                        <p class="footer-tagline">Where the world brings markets to life</p>
+                    </div>
+                    <p class="footer-description">
+                        Advanced algorithmic trading platform designed to maximize your performance on financial markets with exceptional precision.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Telegram">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Discord">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Products Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">WenBot Trading</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="documentation.html" class="footer-link" style="color: #667eea;">Documentation</a></li>
+                        <li><a href="getting-started.html" class="footer-link" style="color: #667eea;">Getting Started</a></li>
+                        <li><a href="community.html" class="footer-link" style="color: #667eea;">Community</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Centre d'aide</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html" class="footer-link" style="font-weight: 600; color: #667eea;">Helping center - Contact us</a></li>
+                        <li><a href="faq.html" class="footer-link" style="color: #667eea;">FAQ</a></li>
+                        <li><a href="system-status.html" class="footer-link" style="color: #667eea;">System Status</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Newsletter</h3>
+                    <p class="newsletter-desc">Get our exclusive analysis</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email" class="newsletter-input">
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="footer-legal">
+                        <p>&copy; 2024 WenBot. All rights reserved.</p>
+                        <div class="legal-links">
+                            <a href="legal.html#legal-notice" class="legal-link">Legal Notice</a>
+                            <a href="legal.html#privacy-policy" class="legal-link">Privacy Policy</a>
+                            <a href="legal.html#terms-of-service" class="legal-link">Terms of Service</a>
+                            <a href="legal.html#cookie-policy" class="legal-link">Cookie Policy</a>
+                            <a href="legal.html#gdpr" class="legal-link">GDPR</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-disclaimer">
+                        <p class="disclaimer-text">
+                            ⚠️ Risk Warning: Trading involves significant risk of capital loss. 
+                            Past performance does not guarantee future results. 
+                            Only trade funds you can afford to lose.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/scripts.js?v=5"></script>
+    <script src="js/auth.js"></script>
+    <script src="components/navbar.js?v=5"></script>
+    <script src="components/footer.js?v=5"></script>
+    
+    <script>
+        // Script pour l'effet de transparence de la navbar au scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html> 

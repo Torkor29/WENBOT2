@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Analyzer - Professional Analysis | WenBot</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds-updated">
+    <link rel="stylesheet" href="components/navbar.css">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link rel="stylesheet" href="css/responsive-optimizations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .analyzer-page {
+            background: var(--bg-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* Navbar transparente au début, blanche au scroll */
+        .navbar {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            border-bottom: none !important;
+            box-shadow: none !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.95) !important;
+            backdrop-filter: blur(20px) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1) !important;
+        }
+        
+        .navbar .nav-brand-text,
+        .navbar .nav-link {
+            color: white !important;
+            transition: color 0.3s ease !important;
+        }
+        
+        .navbar.scrolled .nav-brand-text,
+        .navbar.scrolled .nav-link {
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar .nav-link:hover {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+        
+        .navbar.scrolled .nav-link:hover {
+            color: var(--space-warm-orange) !important;
+        }
+
+        /* Styles pour la barre de recherche */
+        .navbar .search-input {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .navbar .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.7) !important;
+        }
+        
+        .navbar.scrolled .search-input {
+            background: rgba(0, 0, 0, 0.05) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .navbar.scrolled .search-input::placeholder {
+            color: rgba(0, 0, 0, 0.5) !important;
+        }
+
+        /* Hero Section */
+        .analyzer-hero {
+            position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            
+            /* Optimisations de rendu avancées */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            image-rendering: high-quality;
+            image-rendering: pixelated;
+            
+            /* Filtres de qualité professionnels */
+            filter: 
+                contrast(1.25) 
+                brightness(1.12) 
+                saturate(1.18) 
+                hue-rotate(2deg)
+                blur(0px)
+                sharpen(1.5);
+            
+            /* Transformation pour masquer la pixellisation */
+            transform: scale(1.015) translateZ(0);
+            
+            /* Optimisation GPU */
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        
+        .analyzer-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(212, 134, 74, 0.25) 0%, 
+                rgba(230, 160, 92, 0.15) 30%,
+                rgba(74, 107, 58, 0.2) 70%,
+                rgba(122, 155, 109, 0.15) 100%);
+            z-index: 1;
+        }
+        
+        .analyzer-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .analyzer-hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            color: white;
+            margin-bottom: var(--spacing-lg);
+            animation: fadeInUp 0.8s ease;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: var(--font-size-lg);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: var(--spacing-2xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main Content */
+        .analyzer-main {
+            position: relative;
+            z-index: 2;
+            padding: var(--spacing-3xl) 0;
+            margin-top: -40px;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-lg);
+        }
+
+        .upload-zone {
+            padding: 40px;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            text-align: center;
+            margin: 30px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .upload-zone:hover {
+            border-color: rgba(230, 138, 68, 0.5);
+            background: rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .upload-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .upload-title {
+            font-size: 24px;
+            color: #1a1a1a;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .upload-text {
+            color: #333333;
+            font-size: 16px;
+            margin: 0;
+        }
+
+        .file-types {
+            color: #E68A44;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .upload-btn {
+            background: #E68A44;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 0;
+        }
+
+        .upload-btn:hover {
+            background: #FF9F55;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(230, 138, 68, 0.3);
+        }
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 15px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23E68A44'%3E%3Cpath d='M11 14.9861C11 15.5384 11.4477 15.9861 12 15.9861C12.5523 15.9861 13 15.5384 13 14.9861V7.82831L16.2428 11.0711L17.657 9.65685L12 4L6.34315 9.65685L7.75736 11.0711L11 7.82831V14.9861Z'%3E%3C/path%3E%3Cpath d='M4 14H6V18H18V14H20V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18V14Z'%3E%3C/path%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .upload-zone.drag-over {
+            border-color: #E68A44;
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .file-list {
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .file-item:hover {
+            border-color: #E68A44;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(230, 138, 68, 0.1);
+        }
+
+        .file-name {
+            flex-grow: 1;
+            color: #333333;
+            font-weight: 500;
+            margin-right: 15px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-size {
+            color: #666666;
+            margin: 0 15px;
+            font-size: 14px;
+        }
+
+        .remove-file {
+            color: #ff4444;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .remove-file:hover {
+            background: rgba(255, 68, 68, 0.1);
+            color: #ff2222;
+        }
+
+        /* Style pour le bouton d'analyse */
+        .start-analysis {
+            background: #E68A44;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+            display: inline-block;
+        }
+
+        .start-analysis:hover {
+            background: #FF9F55;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(230, 138, 68, 0.3);
+        }
+
+        /* Styles pour l'indicateur de chargement */
+        .loading-indicator {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 15px;
+            border: 3px solid rgba(230, 138, 68, 0.2);
+            border-top-color: #E68A44;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-indicator p {
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Animation pour les résultats */
+        .results-container {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .results-container.visible {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .analysis-status {
+            text-align: center;
+            color: #2ECC71;
+            font-size: 1.125rem;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
+            margin: 25px 0;
+        }
+
+        .result-card {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 16px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 140px;
+        }
+
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border-color: rgba(230, 138, 68, 0.3);
+        }
+
+        .result-value {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.75rem;
+            color: #E68A44;
+            margin: 0 0 12px 0;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .result-value.profit {
+            color: #2ECC71;
+        }
+
+        .result-value.loss {
+            color: #E74C3C;
+        }
+
+        .result-label {
+            color: #666666;
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .download-section {
+            text-align: center;
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .download-report {
+            background: #E68A44;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .download-report:hover {
+            background: #FF9F55;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(230, 138, 68, 0.3);
+        }
+
+        .download-report svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin: 15px 0;
+            display: none;
+            padding: 15px;
+            border-radius: 10px;
+            background: rgba(255, 107, 107, 0.1);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .analyzer-container {
+                padding: 20px;
+                margin: 0 15px;
+            }
+
+            .upload-zone {
+                padding: 30px 20px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .result-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body class="analyzer-page" data-navbar-style="dark">
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-brand-text">WenBot</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <a href="Analyzer_1.html" class="btn-trading-analyzer active">Trading Analyzer</a>
+                <button class="btn-join">Join</button>
+            </div>
+
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="analyzer-page">
+        <!-- Hero Section -->
+        <section class="analyzer-hero">
+            <div class="section-container">
+                <h1 class="hero-title">Professional Trading Analysis</h1>
+                <p class="hero-subtitle">Upload your trading history and get detailed insights into your performance with our advanced analytics engine.</p>
+            </div>
+        </section>
+
+        <!-- Main Content -->
+        <section class="analyzer-main">
+            <div class="section-container">
+                <div class="content-card">
+                    <div class="upload-zone" id="upload-zone">
+                        <div class="upload-content">
+                            <div class="upload-icon"></div>
+                            <h2 class="upload-title">Upload Your Trading Files</h2>
+                            <p class="upload-text">Drag and drop your files here</p>
+                            <p class="upload-text">or</p>
+                            <button class="upload-btn" id="select-files">Select Files</button>
+                            <p class="file-types">Supported formats: XLSX, XLS (MT4/MT5 History)</p>
+                        </div>
+                    </div>
+
+                    <div class="file-list" id="file-list">
+                        <!-- Les fichiers téléchargés apparaîtront ici -->
+                    </div>
+
+                    <div class="results-container" id="results-container">
+                        <div class="analysis-status">Analyse terminée avec succès!</div>
+                        
+                        <div class="results-grid">
+                            <div class="result-card">
+                                <div class="result-value">44</div>
+                                <div class="result-label">Trades Total</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-value profit">4629.66 €</div>
+                                <div class="result-label">Profit Total</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-value">15752.04 €</div>
+                                <div class="result-label">Solde Final</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-value">1.16%</div>
+                                <div class="result-label">Drawdown Max</div>
+                            </div>
+                            
+                            <div class="result-card">
+                                <div class="result-value">57.52%</div>
+                                <div class="result-label">Rendement</div>
+                            </div>
+                        </div>
+
+                        <div class="download-section">
+                            <button class="download-report">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 16l-4-4h3V4h2v8h3l-4 4zm9-13h-6v2h6v16H3V5h6V3H3c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
+                                </svg>
+                                Télécharger le rapport complet
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Scripts -->
+    <script src="components/navbar.js"></script>
+    <script src="components/footer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadZone = document.getElementById('upload-zone');
+            const fileList = document.getElementById('file-list');
+            const uploadBtn = document.querySelector('.upload-btn');
+            let files = [];
+
+            // Gestion du drag & drop
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('drag-over');
+            });
+
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('drag-over');
+            });
+
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('drag-over');
+                handleFiles(e.dataTransfer.files);
+            });
+
+            // Gestion du clic sur le bouton
+            uploadBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.multiple = true;
+                input.accept = '.csv,.xlsx,.mt4,.mt5';
+                input.click();
+
+                input.addEventListener('change', () => {
+                    handleFiles(input.files);
+                });
+            });
+
+            function handleFiles(newFiles) {
+                Array.from(newFiles).forEach(file => {
+                    if (!files.some(f => f.name === file.name)) {
+                        files.push(file);
+                        addFileToList(file);
+                    }
+                });
+
+                if (files.length > 0) {
+                    // Activer le bouton d'analyse
+                    const analyzeBtn = document.querySelector('.analyze-btn');
+                    if (!analyzeBtn) {
+                        const btn = document.createElement('button');
+                        btn.className = 'upload-btn analyze-btn';
+                        btn.textContent = 'Start Analysis';
+                        btn.style.marginTop = '30px';
+                        btn.onclick = startAnalysis;
+                        fileList.parentNode.appendChild(btn);
+                    }
+                }
+            }
+
+            function addFileToList(file) {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                
+                const fileName = document.createElement('span');
+                fileName.className = 'file-name';
+                fileName.textContent = file.name;
+
+                const fileSize = document.createElement('span');
+                fileSize.className = 'file-size';
+                fileSize.textContent = formatFileSize(file.size);
+
+                const removeBtn = document.createElement('span');
+                removeBtn.className = 'remove-file';
+                removeBtn.textContent = '×';
+                removeBtn.onclick = () => removeFile(file, fileItem);
+
+                fileItem.appendChild(fileName);
+                fileItem.appendChild(fileSize);
+                fileItem.appendChild(removeBtn);
+                fileList.appendChild(fileItem);
+            }
+
+            function removeFile(file, element) {
+                files = files.filter(f => f !== file);
+                element.remove();
+                
+                if (files.length === 0) {
+                    const analyzeBtn = document.querySelector('.analyze-btn');
+                    if (analyzeBtn) analyzeBtn.remove();
+                }
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            async function startAnalysis() {
+                const resultsContainer = document.getElementById('results-container');
+                
+                try {
+                    // Afficher un indicateur de chargement
+                    const loadingIndicator = document.createElement('div');
+                    loadingIndicator.className = 'loading-indicator';
+                    loadingIndicator.innerHTML = `
+                        <div class="spinner"></div>
+                        <p>Analyse en cours...</p>
+                    `;
+                    document.querySelector('.content-card').appendChild(loadingIndicator);
+
+                    // Préparer les fichiers pour l'envoi
+                    const formData = new FormData();
+                    files.forEach(file => {
+                        formData.append('files[]', file);
+                    });
+                    
+                    // Envoyer les fichiers pour analyse
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error || "Erreur lors de l'analyse");
+                    }
+                    
+                    // Supprimer l'indicateur de chargement
+                    loadingIndicator.remove();
+                    
+                    // Suivre le progrès de l'analyse
+                    const taskId = data.task_id;
+                    await pollAnalysisStatus(taskId);
+                    
+                } catch (error) {
+                    console.error('Erreur lors de l\'analyse:', error);
+                    alert('Une erreur est survenue lors de l\'analyse. Veuillez réessayer.');
+                    if (loadingIndicator) {
+                        loadingIndicator.remove();
+                    }
+                }
+            }
+
+            async function pollAnalysisStatus(taskId) {
+                const resultsContainer = document.getElementById('results-container');
+                
+                while (true) {
+                    try {
+                        const response = await fetch(`/api/status/${taskId}`);
+                        const status = await response.json();
+                        
+                        if (!response.ok) {
+                            throw new Error(status.error || "Erreur lors de la vérification du statut");
+                        }
+                        
+                        if (status.status === 'completed') {
+                            // Afficher les résultats avec animation
+                            resultsContainer.style.display = 'block';
+                            resultsContainer.offsetHeight; // Force reflow
+                            resultsContainer.classList.add('visible');
+                            
+                            // Activer le bouton de téléchargement
+                            const downloadBtn = document.querySelector('.download-report');
+                            downloadBtn.onclick = () => downloadAnalysisReport(taskId);
+                            break;
+                            
+                        } else if (status.status === 'error') {
+                            throw new Error(status.error || "Erreur pendant l'analyse");
+                        }
+                        
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            }
+
+            async function downloadAnalysisReport(taskId) {
+                try {
+                    const response = await fetch(`/api/report/${taskId}`);
+                    
+                    if (!response.ok) {
+                        throw new Error('Erreur lors du téléchargement du rapport');
+                    }
+                    
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `rapport_analyse_${new Date().toISOString().slice(0,10)}.xlsx`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                    
+                } catch (error) {
+                    console.error('Erreur lors du téléchargement:', error);
+                    alert('Une erreur est survenue lors du téléchargement du rapport. Veuillez réessayer.');
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

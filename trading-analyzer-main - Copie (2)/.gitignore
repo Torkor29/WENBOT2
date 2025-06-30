@@ -1,0 +1,46 @@
+# Fichiers Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Flask
+instance/
+.webassets-cache
+
+# Fichiers temporaires de l'application
+static/uploads/*
+!static/uploads/.gitkeep
+reports/*
+!reports/.gitkeep
+
+# Fichiers Excel temporaires
+~$*.xlsx
+~$*.xls
+
+# Variables d'environnement
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/ 

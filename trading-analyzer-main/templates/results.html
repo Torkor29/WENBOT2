@@ -1,0 +1,667 @@
+{% extends "base.html" %}
+
+{% block title %}Résultats d'analyse - Wenbot trading analyzer{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h1 class="display-5 fw-bold text-primary mb-3">
+                    <i class="fas fa-chart-line text-success me-3"></i>
+                    Résultats de l'analyse
+                </h1>
+                <p class="lead text-muted">
+                    {% if results.analysis_type == 'forex' %}
+                        Analyse complète de vos trades Forex
+                    {% else %}
+                        Analyse complète de vos autres instruments
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mb-4">
+                <a href="{{ url_for('download_report', task_id=task_id) }}" class="btn btn-success btn-lg me-3">
+                    <i class="fas fa-download me-2"></i>
+                    Télécharger le rapport Excel
+                </a>
+                <a href="{{ url_for('upload_files') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-upload me-2"></i>
+                    Nouvelle analyse
+                </a>
+            </div>
+
+            <!-- Loading message while fetching data -->
+            <div id="loadingMessage" class="text-center">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="mt-2 text-muted">Chargement des statistiques...</p>
+            </div>
+
+            <!-- Results content (initially hidden) -->
+            <div id="resultsContent" style="display: none;">
+                <!-- Key Statistics Cards -->
+                <div class="row g-4 mb-5">
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card border-0 shadow-sm h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="stat-icon bg-primary text-white rounded-circle mx-auto mb-3">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h3 class="fw-bold text-primary mb-2" id="totalTrades">-</h3>
+                                <p class="text-muted mb-0">Total Trades</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card border-0 shadow-sm h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="stat-icon bg-success text-white rounded-circle mx-auto mb-3">
+                                    <i class="fas fa-percentage"></i>
+                                </div>
+                                <h3 class="fw-bold text-success mb-2" id="successRate">-</h3>
+                                <p class="text-muted mb-0">Taux de Réussite</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card border-0 shadow-sm h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="stat-icon bg-warning text-white rounded-circle mx-auto mb-3">
+                                    <i class="fas fa-euro-sign"></i>
+                                </div>
+                                <h3 class="fw-bold text-warning mb-2" id="totalProfit">-</h3>
+                                <p class="text-muted mb-0">Profit Total</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-3">
+                        <div class="card stat-card border-0 shadow-sm h-100">
+                            <div class="card-body text-center p-4">
+                                <div class="stat-icon bg-danger text-white rounded-circle mx-auto mb-3">
+                                    <i class="fas fa-chart-line-down"></i>
+                                </div>
+                                <h3 class="fw-bold text-danger mb-2" id="maxDrawdown">-</h3>
+                                <p class="text-muted mb-0">Drawdown Max</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="row g-4 mb-5">
+                    <!-- Performance Chart -->
+                    <div class="col-lg-8">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-area me-2"></i>
+                                    Évolution du Solde
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <canvas id="performanceChart" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Trades Distribution -->
+                    <div class="col-lg-4">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-chart-pie me-2"></i>
+                                    Répartition des Trades
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <canvas id="tradesChart" height="400"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Statistics -->
+                <div class="row g-4 mb-5">
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-info text-white">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-calculator me-2"></i>
+                                    Statistiques Détaillées
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="stat-item p-3 bg-light rounded">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-muted">Trades Gagnants</span>
+                                                <span class="fw-bold text-success" id="winningTrades">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-item p-3 bg-light rounded">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-muted">Trades Perdants</span>
+                                                <span class="fw-bold text-danger" id="losingTrades">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-item p-3 bg-light rounded">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-muted">Solde Final</span>
+                                                <span class="fw-bold text-primary" id="finalBalance">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="stat-item p-3 bg-light rounded">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="text-muted">Rendement</span>
+                                                <span class="fw-bold text-warning" id="totalReturn">-</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-warning text-dark">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    Analyse du Risque
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <div class="risk-indicator mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fw-bold">Niveau de Risque</span>
+                                        <span class="badge" id="riskBadge">-</span>
+                                    </div>
+                                    <div class="progress" style="height: 10px;">
+                                        <div class="progress-bar" id="riskBar" style="width: 0%"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <div class="d-flex justify-content-between">
+                                            <span class="text-muted">Drawdown Maximum</span>
+                                            <span class="fw-bold" id="detailedDrawdown">-</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Section -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm bg-light">
+                            <div class="card-body p-4 text-center">
+                                <h5 class="fw-bold text-primary mb-3">
+                                    <i class="fas fa-file-excel me-2"></i>
+                                    Rapport Excel Complet
+                                </h5>
+                                <p class="text-muted mb-3">
+                                    Téléchargez le rapport Excel détaillé avec tous les graphiques, 
+                                    statistiques avancées et données brutes.
+                                </p>
+                                <a href="{{ url_for('download_report', task_id=task_id) }}" class="btn btn-success btn-lg">
+                                    <i class="fas fa-download me-2"></i>
+                                    Télécharger le rapport complet
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+canvas {
+    max-height: 400px;
+}
+
+/* ===== STYLES MODE SOMBRE POUR RESULTS ===== */
+
+/* Titres et textes */
+[data-theme="dark"] h1 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] h2 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] h3 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] h5 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .lead {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #b3b3b3 !important;
+}
+
+[data-theme="dark"] p {
+    color: #e0e0e0 !important;
+}
+
+/* Cards */
+[data-theme="dark"] .card {
+    background-color: #1f1f1f !important;
+    border-color: #333333 !important;
+}
+
+[data-theme="dark"] .card-body {
+    background-color: #1f1f1f !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card h3 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card .card-title {
+    color: #ffffff !important;
+}
+
+/* Stat cards */
+[data-theme="dark"] .stat-card {
+    background-color: #1f1f1f !important;
+    border-color: #333333 !important;
+}
+
+[data-theme="dark"] .stat-card .card-body {
+    background-color: #1f1f1f !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .stat-card h3 {
+    color: #ffffff !important;
+}
+
+/* Stat items */
+[data-theme="dark"] .stat-item {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .stat-item:hover {
+    background-color: #333333 !important;
+}
+
+[data-theme="dark"] .stat-item .fw-bold {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .stat-item span {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .stat-item .text-muted {
+    color: #b3b3b3 !important;
+}
+
+/* Sections bg-light */
+[data-theme="dark"] .bg-light {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .bg-light h6 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .bg-light .text-muted {
+    color: #b3b3b3 !important;
+}
+
+/* Progress bars et risk indicators */
+[data-theme="dark"] .progress {
+    background-color: #333333 !important;
+}
+
+[data-theme="dark"] .risk-indicator {
+    background-color: #2a2a2a !important;
+    border-color: #444444 !important;
+}
+
+/* Charts - améliorer la visibilité */
+[data-theme="dark"] canvas {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+    border-radius: 8px;
+}
+
+/* Cards spécifiques */
+[data-theme="dark"] .card.border-0.shadow-sm.bg-light {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card.border-0.shadow-sm.bg-light .card-body {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card.border-0.shadow-sm.bg-light h5 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .card.border-0.shadow-sm.bg-light .text-muted {
+    color: #b3b3b3 !important;
+}
+
+/* Loading message */
+[data-theme="dark"] #loadingMessage {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] #loadingMessage .text-muted {
+    color: #b3b3b3 !important;
+}
+</style>
+
+<!-- STYLES SIMPLIFIÉS - BOOTSTRAP NATIF -->
+<style>
+/* Styles de base seulement */
+.stat-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.stat-icon {
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.stat-item {
+    transition: background-color 0.3s ease;
+}
+
+.risk-indicator .progress-bar {
+    transition: width 0.5s ease;
+}
+
+canvas {
+    max-height: 400px;
+}
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const taskId = '{{ task_id }}';
+    let performanceChart = null;
+    let tradesChart = null;
+    
+    // Fetch results data
+    fetch(`/api/results/${taskId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                showError(data.error);
+                return;
+            }
+            
+            displayResults(data);
+            document.getElementById('loadingMessage').style.display = 'none';
+            document.getElementById('resultsContent').style.display = 'block';
+        })
+        .catch(error => {
+            console.error('Error fetching results:', error);
+            showError('Erreur lors du chargement des résultats');
+        });
+    
+    function displayResults(data) {
+        const stats = data.stats;
+        
+        // DEBUG FORCÉ : Afficher toutes les données reçues
+        console.log('=== DEBUG FORCÉ - TOUTES LES DONNÉES ===');
+        console.log('Stats complètes:', JSON.stringify(stats, null, 2));
+        
+        if (stats.balance_evolution) {
+            console.log('Balance evolution détaillée:');
+            console.log('Longueur:', stats.balance_evolution.length);
+            console.log('Premières valeurs:', stats.balance_evolution.slice(0, 10));
+            console.log('Dernières valeurs:', stats.balance_evolution.slice(-10));
+            console.log('Min:', Math.min(...stats.balance_evolution));
+            console.log('Max:', Math.max(...stats.balance_evolution));
+            
+            // Calculer les différences entre valeurs consécutives
+            const differences = [];
+            for (let i = 1; i < stats.balance_evolution.length; i++) {
+                differences.push(stats.balance_evolution[i] - stats.balance_evolution[i-1]);
+            }
+            console.log('Différences entre trades consécutifs:', differences.slice(0, 10));
+            console.log('Max différence:', Math.max(...differences.map(Math.abs)));
+        }
+        
+        if (stats.profit_evolution) {
+            console.log('Profits individuels:', stats.profit_evolution.slice(0, 10));
+            console.log('Profits positifs:', stats.profit_evolution.filter(p => p > 0).length);
+            console.log('Profits négatifs:', stats.profit_evolution.filter(p => p < 0).length);
+        }
+        console.log('=== FIN DEBUG ===');
+        
+        // Update key statistics
+        document.getElementById('totalTrades').textContent = stats.total_trades;
+        document.getElementById('successRate').textContent = stats.taux_reussite.toFixed(1) + '%';
+        document.getElementById('totalProfit').textContent = formatEuro(stats.profit_total);
+        document.getElementById('maxDrawdown').textContent = stats.drawdown_max.toFixed(1) + '%';
+        
+        // Update detailed statistics
+        document.getElementById('winningTrades').textContent = stats.trades_gagnants;
+        document.getElementById('losingTrades').textContent = stats.trades_perdants;
+        document.getElementById('finalBalance').textContent = formatEuro(stats.solde_final);
+        document.getElementById('totalReturn').textContent = stats.rendement.toFixed(1) + '%';
+        document.getElementById('detailedDrawdown').textContent = stats.drawdown_max.toFixed(1) + '%';
+        
+        // Update risk assessment
+        updateRiskAssessment(stats.drawdown_max);
+        
+        // Create charts
+        createPerformanceChart(stats);
+        createTradesChart(stats);
+    }
+    
+    function updateRiskAssessment(drawdown) {
+        const riskBadge = document.getElementById('riskBadge');
+        const riskBar = document.getElementById('riskBar');
+        
+        let riskLevel, riskColor, riskText;
+        
+        if (drawdown < 10) {
+            riskLevel = 'Faible';
+            riskColor = 'bg-success';
+            riskText = 'badge-success';
+        } else if (drawdown < 20) {
+            riskLevel = 'Modéré';
+            riskColor = 'bg-warning';
+            riskText = 'badge-warning';
+        } else if (drawdown < 30) {
+            riskLevel = 'Élevé';
+            riskColor = 'bg-orange';
+            riskText = 'badge-warning';
+        } else {
+            riskLevel = 'Très Élevé';
+            riskColor = 'bg-danger';
+            riskText = 'badge-danger';
+        }
+        
+        riskBadge.textContent = riskLevel;
+        riskBadge.className = `badge bg-${riskText === 'badge-success' ? 'success' : riskText === 'badge-warning' ? 'warning' : 'danger'}`;
+        riskBar.className = `progress-bar ${riskColor}`;
+        riskBar.style.width = Math.min(drawdown * 2, 100) + '%';
+    }
+    
+    function createPerformanceChart(stats) {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        
+        // Utiliser les VRAIES données d'évolution du solde
+        const trades = Array.from({length: stats.balance_evolution.length}, (_, i) => i);
+        const balances = stats.balance_evolution;
+        
+        // DEBUG : Afficher les données reçues
+        console.log('[DEBUG] Stats reçues:', stats);
+        console.log('[DEBUG] Balance evolution reçue:', balances);
+        console.log('[DEBUG] Longueur balance_evolution:', balances ? balances.length : 'undefined');
+        
+        if (balances && balances.length > 0) {
+            console.log('[DEBUG] Premières 10 valeurs:', balances.slice(0, 10));
+            console.log('[DEBUG] Dernières 10 valeurs:', balances.slice(-10));
+            console.log('[DEBUG] Min balance:', Math.min(...balances));
+            console.log('[DEBUG] Max balance:', Math.max(...balances));
+            
+            // Vérifier s'il y a des variations
+            const uniqueValues = [...new Set(balances)];
+            console.log('[DEBUG] Valeurs uniques:', uniqueValues.length);
+            if (uniqueValues.length === 1) {
+                console.warn('[WARNING] Toutes les valeurs sont identiques:', uniqueValues[0]);
+            }
+        }
+        
+        // Vérifier si on a des données réelles
+        if (!balances || balances.length === 0) {
+            console.warn('Pas de données d\'évolution du solde disponibles');
+            return;
+        }
+        
+        performanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: trades,
+                datasets: [{
+                    label: 'Solde (€)',
+                    data: balances,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return formatEuro(value);
+                            }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Nombre de Trades'
+                        }
+                    }
+                },
+                interaction: {
+                    intersect: false,
+                    mode: 'index'
+                },
+                elements: {
+                    point: {
+                        radius: 0,
+                        hoverRadius: 5
+                    }
+                }
+            }
+        });
+    }
+    
+    function createTradesChart(stats) {
+        const ctx = document.getElementById('tradesChart').getContext('2d');
+        
+        tradesChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Gagnants', 'Perdants'],
+                datasets: [{
+                    data: [stats.trades_gagnants, stats.trades_perdants],
+                    backgroundColor: ['#198754', '#dc3545'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20
+                        }
+                    }
+                }
+            }
+        });
+    }
+    
+    function formatEuro(value) {
+        return new Intl.NumberFormat('fr-FR', {
+            style: 'currency',
+            currency: 'EUR',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0
+        }).format(value);
+    }
+    
+    function showError(message) {
+        document.getElementById('loadingMessage').innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Erreur :</strong> ${message}
+            </div>
+            <div class="text-center mt-3">
+                <a href="{{ url_for('upload_files') }}" class="btn btn-primary">
+                    <i class="fas fa-redo me-2"></i>Nouvelle analyse
+                </a>
+            </div>
+        `;
+    }
+});
+</script>
+{% endblock %} 

@@ -1,0 +1,582 @@
+{% extends "base.html" %}
+
+{% block title %}Upload de fichiers - Wenbot trading analyzer{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <!-- Overlay simple pour utilisateurs non connectés -->
+            {% if not current_user.is_authenticated %}
+            <div class="simple-overlay">
+                <div class="simple-message">
+                    <div class="text-center">
+                        <h4 class="mb-3">🔒 Accès réservé aux membres</h4>
+                        <p class="mb-4">Créez un compte gratuit pour utiliser l'analyseur de trading</p>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">
+                            Créer mon compte
+                        </a>
+                        <div class="mt-3">
+                            <a href="{{ url_for('auth.login') }}" class="text-decoration-none">
+                                Déjà un compte ? Se connecter
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Contenu principal -->
+            <div class="main-content {% if not current_user.is_authenticated %}blurred{% endif %}">
+                <!-- Header -->
+                <div class="text-center mb-5">
+                    <h1 class="display-5 fw-bold text-primary mb-3">
+                        <i class="fas fa-upload text-success me-3"></i>
+                        Analyser vos fichiers de trading
+                    </h1>
+                    <p class="lead text-muted">
+                        Uploadez vos fichiers Excel de trading et choisissez le type d'analyse
+                    </p>
+                </div>
+
+            <!-- Upload Form -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white py-3">
+                    <h5 class="mb-0">
+                        <i class="fas fa-file-upload me-2"></i>
+                        Configuration de l'analyse
+                    </h5>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <!-- Type d'analyse -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-cogs me-2 text-primary"></i>
+                                Type d'analyse
+                            </label>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <input type="radio" class="btn-check" name="analysis_type" id="forex" value="forex" checked>
+                                    <label class="btn btn-outline-primary w-100 py-3" for="forex">
+                                        <i class="fas fa-exchange-alt fa-2x d-block mb-2"></i>
+                                        <strong>Analyse Forex</strong><br>
+                                        <small>Paires de devises avec calculs de pips</small>
+                                    </label>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="radio" class="btn-check" name="analysis_type" id="autres" value="autres">
+                                    <label class="btn btn-outline-warning w-100 py-3" for="autres">
+                                        <i class="fas fa-coins fa-2x d-block mb-2"></i>
+                                        <strong>Autres Instruments</strong><br>
+                                        <small>Or, indices, crypto, actions</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Zone de drop des fichiers -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-files-o me-2 text-primary"></i>
+                                Fichiers Excel (.xlsx, .xls)
+                            </label>
+                            
+                            <div id="dropzone" class="dropzone border-2 border-dashed rounded-3 p-5 text-center">
+                                <div class="dropzone-content">
+                                    <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">Glissez-déposez vos fichiers ici</h5>
+                                    <p class="text-muted mb-3">ou</p>
+                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                                        <i class="fas fa-folder-open me-2"></i>
+                                        Parcourir les fichiers
+                                    </button>
+                                    <input type="file" id="fileInput" name="files" multiple accept=".xlsx,.xls" style="display: none;">
+                                    <div class="mt-3">
+                                        <small class="text-muted">
+                                            <i class="fas fa-info-circle me-1"></i>
+                                            Formats acceptés : .xlsx, .xls • Taille max : 16MB par fichier
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Liste des fichiers sélectionnés -->
+                            <div id="fileList" class="mt-3" style="display: none;">
+                                <h6 class="fw-bold text-success mb-2">
+                                    <i class="fas fa-check-circle me-2"></i>
+                                    Fichiers sélectionnés :
+                                </h6>
+                                <div id="fileItems"></div>
+                            </div>
+                        </div>
+
+                        <!-- Informations sur le traitement -->
+                        <div class="alert alert-info border-0" role="alert">
+                            <h6 class="alert-heading">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Informations importantes
+                            </h6>
+                            <ul class="mb-0">
+                                <li>Le traitement peut prendre quelques minutes selon la taille des fichiers</li>
+                                <li>Les calculs incluent les intérêts composés et l'analyse du drawdown</li>
+                                <li>Un rapport Excel détaillé sera généré avec graphiques</li>
+                                <li>Tous les fichiers sont supprimés automatiquement après 24h</li>
+                            </ul>
+                        </div>
+
+                        <!-- Bouton de soumission -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg py-3" id="submitBtn" disabled>
+                                <i class="fas fa-play me-2"></i>
+                                <span id="submitText">Commencer l'analyse</span>
+                                <div class="spinner-border spinner-border-sm ms-2" role="status" id="submitSpinner" style="display: none;">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Exemples de formats -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h5 class="fw-bold text-primary mb-3">
+                        <i class="fas fa-question-circle me-2"></i>
+                        Formats de fichiers supportés
+                    </h5>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded" style="background-color: #2d3748 !important; color: white !important; border: 1px solid #4a5568;">
+                                <h6 class="fw-bold text-success" style="color: white !important;">
+                                    <i class="fas fa-check me-2" style="color: #22c55e !important;"></i>
+                                    Fichiers compatibles
+                                </h6>
+                                <ul class="list-unstyled mb-0" style="color: white !important;">
+                                    <li style="color: white !important;"><i class="fas fa-file-excel me-2" style="color: #22c55e !important;"></i>Exports MetaTrader 4/5</li>
+                                    <li style="color: white !important;"><i class="fas fa-file-excel me-2" style="color: #22c55e !important;"></i>Rapports Excel de brokers</li>
+                                    <li style="color: white !important;"><i class="fas fa-file-excel me-2" style="color: #22c55e !important;"></i>Fichiers avec colonnes "Ordre" et "Transaction"</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3 bg-light rounded" style="background-color: #1e40af !important; color: white !important; border: 1px solid #3730a3;">
+                                <h6 class="fw-bold text-primary" style="color: white !important;">
+                                    <i class="fas fa-lightbulb me-2" style="color: #fbbf24 !important;"></i>
+                                    Conseils
+                                </h6>
+                                <ul class="list-unstyled mb-0" style="color: white !important;">
+                                    <li style="color: white !important;"><i class="fas fa-arrow-right me-2" style="color: #60a5fa !important;"></i>Un fichier par compte de trading</li>
+                                    <li style="color: white !important;"><i class="fas fa-arrow-right me-2" style="color: #60a5fa !important;"></i>Regroupez par instrument si possible</li>
+                                    <li style="color: white !important;"><i class="fas fa-arrow-right me-2" style="color: #60a5fa !important;"></i>Vérifiez que les colonnes sont bien formatées</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div> <!-- Fin main-content -->
+        </div>
+    </div>
+</div>
+
+<style>
+/* Overlay simple et propre */
+.simple-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.simple-message {
+    background: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    max-width: 450px;
+    width: 90%;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenu principal avec effet de flou léger */
+.main-content.blurred {
+    filter: blur(2px);
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.7;
+}
+
+/* Adaptation pour le mode sombre */
+[data-bs-theme="dark"] .simple-message {
+    background: #2d3748;
+    color: white;
+    border: 1px solid #4a5568;
+}
+
+[data-bs-theme="dark"] .simple-message h4 {
+    color: white;
+}
+
+[data-bs-theme="dark"] .simple-message p {
+    color: #e2e8f0;
+}
+
+.dropzone {
+    border-color: #dee2e6 !important;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dropzone.dragover {
+    border-color: #0d6efd !important;
+    background-color: #e7f1ff;
+}
+
+.btn-check:checked + .btn-outline-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.btn-check:checked + .btn-outline-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: black;
+}
+
+.file-item {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.file-item:hover {
+    background-color: #e9ecef;
+}
+
+.file-size {
+    font-size: 0.85rem;
+}
+
+/* ===== STYLES MODE SOMBRE POUR UPLOAD ===== */
+
+/* Dropzone */
+[data-bs-theme="dark"] .dropzone {
+    background-color: #2a2a2a !important;
+    border-color: #444444 !important;
+    color: #e0e0e0 !important;
+}
+
+[data-bs-theme="dark"] .dropzone.dragover {
+    background-color: #1a2332 !important;
+    border-color: #2c5aa0 !important;
+}
+
+[data-bs-theme="dark"] .dropzone-content h5 {
+    color: #e0e0e0 !important;
+}
+
+[data-bs-theme="dark"] .dropzone-content p {
+    color: #b3b3b3 !important;
+}
+
+[data-bs-theme="dark"] .dropzone-content .text-muted {
+    color: #b3b3b3 !important;
+}
+
+[data-bs-theme="dark"] .dropzone-content small {
+    color: #b3b3b3 !important;
+}
+
+/* Cards */
+[data-bs-theme="dark"] .card {
+    background-color: #1f1f1f !important;
+    border-color: #333333 !important;
+}
+
+[data-bs-theme="dark"] .card-header {
+    background-color: #1f1f1f !important;
+    border-color: #333333 !important;
+}
+
+[data-bs-theme="dark"] .card-body {
+    background-color: #1f1f1f !important;
+    color: #ffffff !important;
+}
+
+/* File items */
+[data-bs-theme="dark"] .file-item {
+    background-color: #2a2a2a !important;
+    border-color: #444444 !important;
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .file-item:hover {
+    background-color: #333333 !important;
+}
+
+[data-bs-theme="dark"] .file-item .fw-bold {
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .file-item .text-muted {
+    color: #b3b3b3 !important;
+}
+
+/* Form labels */
+[data-bs-theme="dark"] .form-label {
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .fw-bold {
+    color: #ffffff !important;
+}
+
+/* Alerts */
+[data-bs-theme="dark"] .alert-info {
+    background-color: #1a2332 !important;
+    border-color: #2c5aa0 !important;
+    color: #9ec5fe !important;
+}
+
+[data-bs-theme="dark"] .alert-info .alert-heading {
+    color: #9ec5fe !important;
+}
+
+[data-bs-theme="dark"] .alert-info li {
+    color: #9ec5fe !important;
+}
+
+/* Sections bg-light */
+[data-bs-theme="dark"] .bg-light {
+    background-color: #2a2a2a !important;
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .bg-light h6 {
+    color: #ffffff !important;
+}
+
+[data-bs-theme="dark"] .bg-light li {
+    color: #e0e0e0 !important;
+}
+
+[data-bs-theme="dark"] .bg-light .text-muted {
+    color: #b3b3b3 !important;
+}
+
+/* Boutons radio personnalisés */
+[data-bs-theme="dark"] .btn-outline-primary {
+    border-color: #0d6efd !important;
+    color: #0d6efd !important;
+}
+
+[data-bs-theme="dark"] .btn-outline-primary:hover {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .btn-outline-warning {
+    border-color: #ffc107 !important;
+    color: #ffc107 !important;
+}
+
+[data-theme="dark"] .btn-outline-warning:hover {
+    background-color: #ffc107 !important;
+    color: #000000 !important;
+}
+
+/* Titres et textes principaux */
+[data-theme="dark"] h1 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] h5 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] h6 {
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .lead {
+    color: #e0e0e0 !important;
+}
+
+[data-theme="dark"] .text-muted {
+    color: #b3b3b3 !important;
+}
+
+[data-theme="dark"] p {
+    color: #e0e0e0 !important;
+}
+</style>
+
+<!-- STYLES SIMPLIFIÉS - BOOTSTRAP NATIF -->
+<style>
+/* Styles de base seulement */
+.dropzone {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.dropzone.dragover {
+    border-color: #0d6efd !important;
+    background-color: #e7f1ff;
+}
+
+.file-item {
+    transition: all 0.3s ease;
+}
+
+.file-size {
+    font-size: 0.85rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const fileList = document.getElementById('fileList');
+    const fileItems = document.getElementById('fileItems');
+    const submitBtn = document.getElementById('submitBtn');
+    const submitText = document.getElementById('submitText');
+    const submitSpinner = document.getElementById('submitSpinner');
+    const uploadForm = document.getElementById('uploadForm');
+    
+    let selectedFiles = [];
+
+    // Drag & drop events
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('dragover');
+        
+        const files = Array.from(e.dataTransfer.files);
+        handleFiles(files);
+    });
+
+    // Click event
+    dropzone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    // File input change
+    fileInput.addEventListener('change', (e) => {
+        const files = Array.from(e.target.files);
+        handleFiles(files);
+    });
+
+    function handleFiles(files) {
+        // Filter Excel files
+        const excelFiles = files.filter(file => 
+            file.name.toLowerCase().endsWith('.xlsx') || 
+            file.name.toLowerCase().endsWith('.xls')
+        );
+
+        if (excelFiles.length === 0) {
+            alert('Veuillez sélectionner des fichiers Excel (.xlsx ou .xls)');
+            return;
+        }
+
+        selectedFiles = excelFiles;
+        updateFileInput();
+        displayFiles();
+        updateSubmitButton();
+    }
+
+    function updateFileInput() {
+        // Create new DataTransfer object to update file input
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
+    }
+
+    function displayFiles() {
+        if (selectedFiles.length === 0) {
+            fileList.style.display = 'none';
+            return;
+        }
+
+        fileList.style.display = 'block';
+        fileItems.innerHTML = '';
+
+        selectedFiles.forEach((file, index) => {
+            const fileSize = formatFileSize(file.size);
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item p-3 mb-2 d-flex justify-content-between align-items-center';
+            
+            fileItem.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-file-excel text-success me-3 fa-lg"></i>
+                    <div>
+                        <div class="fw-bold">${file.name}</div>
+                        <div class="file-size text-muted">${fileSize}</div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeFile(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            fileItems.appendChild(fileItem);
+        });
+    }
+
+    window.removeFile = function(index) {
+        selectedFiles.splice(index, 1);
+        updateFileInput();
+        displayFiles();
+        updateSubmitButton();
+    };
+
+    function updateSubmitButton() {
+        submitBtn.disabled = selectedFiles.length === 0;
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Form submission
+    uploadForm.addEventListener('submit', function(e) {
+        if (selectedFiles.length === 0) {
+            e.preventDefault();
+            alert('Veuillez sélectionner au moins un fichier');
+            return;
+        }
+
+        // Show loading state
+        submitBtn.disabled = true;
+        submitText.textContent = 'Envoi en cours...';
+        submitSpinner.style.display = 'inline-block';
+    });
+});
+</script>
+{% endblock %} 

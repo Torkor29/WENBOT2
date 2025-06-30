@@ -1,0 +1,584 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('subscription.page_title') }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header Principal -->
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="fas fa-crown me-3"></i>{{ t('subscription.choose_plan') }}
+        </h1>
+        <p class="lead text-muted">{{ t('subscription.unleash_potential') }}</p>
+    </div>
+
+    <!-- Statut Actuel -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-md-8">
+            <div class="card subscription-status-card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h5 class="mb-2">
+                                {% if user.subscription_status == 'PREMIUM' %}
+                                    <i class="fas fa-crown text-warning me-2"></i>
+                                    <span class="text-warning fw-bold">{{ t('subscription.premium_plan') }}</span>
+                                {% elif user.subscription_status == 'BASIC' %}
+                                    <i class="fas fa-star text-primary me-2"></i>
+                                    <span class="text-primary fw-bold">{{ t('subscription.basic_plan') }}</span>
+                                {% else %}
+                                    <i class="fas fa-user text-secondary me-2"></i>
+                                    <span class="text-secondary fw-bold">{{ t('subscription.free_plan') }}</span>
+                                {% endif %}
+                            </h5>
+                            
+                            {% if user.subscription_status == 'PREMIUM' %}
+                                <p class="text-success mb-1">✅ {{ t('subscription.full_access') }}</p>
+                            {% elif user.subscription_status == 'BASIC' %}
+                                <p class="text-primary mb-1">⭐ Fonctionnalités étendues activées</p>
+                            {% else %}
+                                <p class="text-muted mb-1">Fonctionnalités limitées</p>
+                            {% endif %}
+                            
+                            {% if user.subscription_end_date %}
+                                <small class="text-muted">Expire le {{ user.subscription_end_date.strftime('%d/%m/%Y') }}</small>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            <div class="text-center">
+                                <h6 class="mb-2">Usage mensuel</h6>
+                                <div class="progress mb-2" style="height: 20px;">
+                                    {% set progress_pct = (user.monthly_analyses_used / user.monthly_analyses_limit * 100) if user.monthly_analyses_limit > 0 else 0 %}
+                                    <div class="progress-bar bg-primary" role="progressbar" style="width: {{ progress_pct }}%">
+                                        <small class="fw-bold">{{ user.monthly_analyses_used }}/{{ user.monthly_analyses_limit }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plans d'Abonnement -->
+    <div class="row g-4 justify-content-center">
+        
+        <!-- Plan Gratuit -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card plan-card plan-free h-100 border-0 shadow-sm">
+                <div class="card-header text-center py-4 border-0">
+                    <div class="plan-icon mb-3">
+                        <i class="fas fa-gift fa-2x"></i>
+                    </div>
+                    <h4 class="plan-title mb-2">{{ t('subscription.free') }}</h4>
+                    <div class="plan-price">
+                        <span class="price-currency">€</span>
+                        <span class="price-amount">0</span>
+                        <span class="price-period">{{ t('subscription.per_month') }}</span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="plan-features list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>3 analyses par mois</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Analyses Forex de base</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Rapports Excel basiques</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span class="text-muted">Analyses AUTRES instruments</span>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span class="text-muted">Rapports avancés</span>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span class="text-muted">Support prioritaire</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent text-center p-4">
+                    {% if user.subscription_status == 'FREE' %}
+                        <button class="btn btn-outline-secondary btn-lg w-100" disabled>
+                            <i class="fas fa-check me-2"></i>Plan Actuel
+                        </button>
+                    {% else %}
+                        <button class="btn btn-outline-secondary btn-lg w-100" onclick="changeSubscription('FREE')">
+                            <i class="fas fa-arrow-down me-2"></i>Rétrograder
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Plan Basic -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card plan-card plan-basic h-100 border-0 shadow-sm">
+                <div class="card-header text-center py-4 border-0">
+                    <div class="plan-icon mb-3">
+                        <i class="fas fa-chart-line fa-2x"></i>
+                    </div>
+                    <h4 class="plan-title mb-2">Basic</h4>
+                    <div class="plan-price">
+                        <span class="price-currency">€</span>
+                        <span class="price-amount">9</span>
+                        <span class="price-period">/mois</span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="plan-features list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>15 analyses par mois</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Analyses Forex complètes</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Analyses AUTRES instruments</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Rapports Excel détaillés</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Graphiques avancés</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-times text-danger me-2"></i>
+                            <span class="text-muted">Support prioritaire 24/7</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent text-center p-4">
+                    {% if user.subscription_status == 'BASIC' %}
+                        <button class="btn btn-primary btn-lg w-100" disabled>
+                            <i class="fas fa-check me-2"></i>Plan Actuel
+                        </button>
+                    {% else %}
+                        <button class="btn btn-primary btn-lg w-100" onclick="changeSubscription('BASIC')">
+                            <i class="fas fa-arrow-up me-2"></i>Passer en Basic
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Plan Premium -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card plan-card plan-premium h-100 border-0 shadow-lg">
+                <div class="card-header text-center py-4 border-0 position-relative">
+                    <!-- Badge Recommandé intégré dans le header -->
+                    <div class="recommended-badge-header">
+                        <span class="badge">⭐ Recommandé</span>
+                    </div>
+                    
+                    <div class="plan-icon mb-3">
+                        <i class="fas fa-crown fa-2x"></i>
+                    </div>
+                    <h4 class="plan-title mb-2">Premium</h4>
+                    <div class="plan-price">
+                        <span class="price-currency">€</span>
+                        <span class="price-amount">19</span>
+                        <span class="price-period">/mois</span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <ul class="plan-features list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Analyses illimitées</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Tous types d'instruments</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Rapports premium complets</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Analytics avancées</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Comparaisons multi-périodes</strong>
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-check text-success me-2"></i>
+                            <strong>Support prioritaire 24/7</strong>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer bg-transparent text-center p-4">
+                    {% if user.subscription_status == 'PREMIUM' %}
+                        <button class="btn btn-warning btn-lg w-100" disabled>
+                            <i class="fas fa-crown me-2"></i>Plan Actuel
+                        </button>
+                    {% else %}
+                        <button class="btn btn-warning btn-lg w-100" onclick="changeSubscription('PREMIUM')">
+                            <i class="fas fa-crown me-2"></i>Passer en Premium
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-10">
+            <h3 class="text-center mb-4">
+                <i class="fas fa-question-circle text-primary me-2"></i>
+                Questions Fréquentes
+            </h3>
+            
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            Comment fonctionne la limite d'analyses ?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Votre quota d'analyses se renouvelle automatiquement chaque mois. Les analyses non utilisées ne sont pas reportées sur le mois suivant.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Puis-je annuler mon abonnement à tout moment ?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Oui, vous pouvez annuler votre abonnement à tout moment. Vous conserverez l'accès jusqu'à la fin de votre période de facturation.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item border-0 shadow-sm mb-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Quelle est la différence entre Basic et Premium ?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            Le plan Basic offre 15 analyses par mois avec toutes les fonctionnalités principales. Le Premium offre des analyses illimitées plus des fonctionnalités avancées et un support prioritaire.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmation -->
+<div class="modal fade" id="subscriptionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmation de changement d'abonnement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modalMessage"></p>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note :</strong> Les changements d'abonnement prennent effet immédiatement.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                <button type="button" class="btn btn-primary" id="confirmSubscription">Confirmer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let selectedPlan = '';
+
+function changeSubscription(plan) {
+    selectedPlan = plan;
+    
+    let message = '';
+    switch(plan) {
+        case 'FREE':
+            message = 'Êtes-vous sûr de vouloir repasser au plan gratuit ? Vous perdrez l\'accès aux fonctionnalités premium.';
+            break;
+        case 'BASIC':
+            message = 'Passer au plan Basic (9€/mois) ? Vous aurez accès à 15 analyses par mois et aux fonctionnalités avancées.';
+            break;
+        case 'PREMIUM':
+            message = 'Passer au plan Premium (19€/mois) ? Vous aurez un accès illimité à toutes les fonctionnalités.';
+            break;
+    }
+    
+    document.getElementById('modalMessage').textContent = message;
+    
+    const modal = new bootstrap.Modal(document.getElementById('subscriptionModal'));
+    modal.show();
+}
+
+document.getElementById('confirmSubscription').addEventListener('click', function() {
+    alert('Fonctionnalité de paiement à implémenter');
+    bootstrap.Modal.getInstance(document.getElementById('subscriptionModal')).hide();
+});
+</script>
+
+<style>
+/* Design moderne et responsive pour les plans d'abonnement */
+
+/* Statut actuel */
+.subscription-status-card {
+    background: var(--bs-body-bg);
+    border: 1px solid var(--bs-border-color) !important;
+    border-radius: 16px;
+}
+
+/* Cards des plans */
+.plan-card {
+    transition: all 0.3s ease;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Plan Gratuit */
+.plan-free .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: var(--bs-gray-700);
+}
+
+.plan-free .plan-icon i {
+    color: var(--bs-secondary);
+}
+
+/* Plan Basic */
+.plan-basic .card-header {
+    background: linear-gradient(135deg, #0d6efd 0%, #0b5ed7 100%);
+    color: white;
+}
+
+.plan-basic .plan-icon i,
+.plan-basic .plan-title,
+.plan-basic .plan-price {
+    color: white !important;
+}
+
+/* Plan Premium */
+.plan-premium {
+    border: 2px solid #ffc107 !important;
+}
+
+.plan-premium .card-header {
+    background: linear-gradient(135deg, #ffc107 0%, #ffcd39 100%);
+    color: #000;
+}
+
+.plan-premium .plan-icon i,
+.plan-premium .plan-title,
+.plan-premium .plan-price {
+    color: #000 !important;
+}
+
+/* Badge recommandé - repositionné dans le header */
+.recommended-badge-header {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 10;
+}
+
+.recommended-badge-header .badge {
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-weight: 600;
+    font-size: 0.75rem;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Typographie des prix */
+.plan-price {
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.price-currency {
+    font-size: 1.2rem;
+    vertical-align: top;
+}
+
+.price-amount {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+.price-period {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+.plan-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* Features des plans */
+.plan-features {
+    margin: 0;
+    padding: 0;
+}
+
+.plan-features li {
+    padding: 0.5rem 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Boutons */
+.btn-lg {
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Icônes */
+.plan-icon i {
+    opacity: 0.9;
+}
+
+.fa-check {
+    color: #28a745 !important;
+}
+
+.fa-times {
+    color: #dc3545 !important;
+}
+
+/* Accordéon FAQ */
+.accordion-item {
+    border-radius: 12px !important;
+    margin-bottom: 1rem;
+}
+
+.accordion-button {
+    border-radius: 12px !important;
+    font-weight: 600;
+    padding: 1.25rem 1.5rem;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+    color: var(--bs-primary);
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.accordion-body {
+    padding: 1.5rem;
+    line-height: 1.6;
+}
+
+/* Progress bar */
+.progress {
+    border-radius: 10px;
+    background-color: rgba(var(--bs-primary-rgb), 0.1);
+}
+
+.progress-bar {
+    border-radius: 10px;
+}
+
+/* Mode sombre - Améliorations spécifiques */
+[data-bs-theme="dark"] .plan-card {
+    background-color: var(--bs-gray-900);
+    border: 1px solid var(--bs-gray-700) !important;
+}
+
+[data-bs-theme="dark"] .plan-free .card-header {
+    background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+    color: #f8f9fa;
+}
+
+[data-bs-theme="dark"] .plan-free .plan-icon i {
+    color: #adb5bd;
+}
+
+[data-bs-theme="dark"] .subscription-status-card {
+    background-color: var(--bs-gray-900);
+    border: 1px solid var(--bs-gray-700) !important;
+}
+
+[data-bs-theme="dark"] .accordion-item {
+    background-color: var(--bs-gray-900);
+}
+
+[data-bs-theme="dark"] .accordion-button {
+    background-color: var(--bs-gray-800);
+    color: var(--bs-gray-100);
+    border: 1px solid var(--bs-gray-700);
+}
+
+[data-bs-theme="dark"] .accordion-button:not(.collapsed) {
+    background-color: rgba(var(--bs-primary-rgb), 0.2);
+    color: var(--bs-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .plan-card {
+        margin-bottom: 2rem;
+    }
+    
+    .price-amount {
+        font-size: 2.5rem;
+    }
+    
+    .recommended-badge-header {
+        top: 10px;
+        right: 10px;
+    }
+    
+    .recommended-badge-header .badge {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+}
+</style>
+
+{% endblock %} 

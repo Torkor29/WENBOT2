@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WenBot - Where the world brings markets to life</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds">
+    <link rel="stylesheet" href="components/navbar.css">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link rel="stylesheet" href="css/responsive-optimizations.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-brand-text">WenBot</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html#home" class="nav-link active">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <a href="Analyzer_1.html" class="btn-trading-analyzer">Trading Analyzer</a>
+                <button class="btn-join">Join</button>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Section with Espace Background -->
+    <section class="main-section" id="home">
+        <div class="main-container">
+            <!-- Hero Content -->
+            <div class="hero-content">
+                <h1 class="hero-title">Where the world brings markets to life</h1>
+                <p class="hero-subtitle">Join thousands of traders and investors taking control of their future.</p>
+                <a href="auth.html" class="hero-cta-btn">Join us</a>
+            </div>
+            
+            <!-- Performance Section -->
+            <div class="performance-intro">
+                <h2 class="performance-title">Track Your Success</h2>
+                <p class="performance-subtitle">Real-time insights into your trading performance and market analytics</p>
+            </div>
+            
+            <!-- Dashboard Card -->
+            <div class="dashboard-card">
+                <div class="dashboard-header">
+                    <div class="user-info">
+                        <div class="user-avatar">
+                            <img src="images/avatar.png" alt="User Avatar">
+                        </div>
+                        <div class="user-details">
+                            <h3>Welcome back !</h3>
+                            <p>What's new on Wenbot ?</p>
+                        </div>
+                    </div>
+                    <div class="date-selector">
+                        <span class="date-text">📅 Today</span>
+                        <span class="dropdown-arrow">▼</span>
+                    </div>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Revenue</span>
+                            <span class="stat-change positive">+87%</span>
+                            <span class="stat-value">$15,158</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Weekly report</span>
+                            <span class="stat-change positive">+11%</span>
+                            <span class="stat-value">$1,518</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">❌</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Lost trades</span>
+                            <span class="stat-change negative">-5%</span>
+                            <span class="stat-value">17</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Winrate</span>
+                            <span class="stat-change positive">+4% this week</span>
+                            <span class="stat-value">88%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">🔥</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Consecutive Wins</span>
+                            <span class="stat-change positive">Current streak</span>
+                            <span class="stat-value">12</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">📉</div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Drawdown</span>
+                            <span class="stat-change neutral">Relative DD</span>
+                            <span class="stat-value">1.4%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-chart">
+                    <svg class="chart-svg" viewBox="0 0 800 300">
+                        <!-- Définition des dégradés -->
+                        <defs>
+                            <linearGradient id="chartGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" style="stop-color:#D4864A;stop-opacity:1" />
+                                <stop offset="30%" style="stop-color:#E6A05C;stop-opacity:1" />
+                                <stop offset="70%" style="stop-color:#7A9B6D;stop-opacity:1" />
+                                <stop offset="100%" style="stop-color:#E8C547;stop-opacity:1" />
+                            </linearGradient>
+                            <linearGradient id="chartAreaGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#D4864A;stop-opacity:0.4" />
+                                <stop offset="50%" style="stop-color:#E6A05C;stop-opacity:0.2" />
+                                <stop offset="100%" style="stop-color:#7A9B6D;stop-opacity:0.1" />
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Grille -->
+                        <g class="chart-grid">
+                            <line class="chart-grid-line" x1="100" y1="50" x2="100" y2="250" />
+                            <line class="chart-grid-line" x1="200" y1="50" x2="200" y2="250" />
+                            <line class="chart-grid-line" x1="300" y1="50" x2="300" y2="250" />
+                            <line class="chart-grid-line" x1="400" y1="50" x2="400" y2="250" />
+                            <line class="chart-grid-line" x1="500" y1="50" x2="500" y2="250" />
+                            <line class="chart-grid-line" x1="600" y1="50" x2="600" y2="250" />
+                            <line class="chart-grid-line" x1="700" y1="50" x2="700" y2="250" />
+                            
+                            <line class="chart-grid-line" x1="50" y1="80" x2="750" y2="80" />
+                            <line class="chart-grid-line" x1="50" y1="120" x2="750" y2="120" />
+                            <line class="chart-grid-line" x1="50" y1="160" x2="750" y2="160" />
+                            <line class="chart-grid-line" x1="50" y1="200" x2="750" y2="200" />
+                        </g>
+                        
+                        <!-- Labels des axes -->
+                        <g class="chart-labels">
+                            <text class="chart-axis-text" x="100" y="270">Jan</text>
+                            <text class="chart-axis-text" x="200" y="270">Feb</text>
+                            <text class="chart-axis-text" x="300" y="270">Mar</text>
+                            <text class="chart-axis-text" x="400" y="270">Apr</text>
+                            <text class="chart-axis-text" x="500" y="270">May</text>
+                            <text class="chart-axis-text" x="600" y="270">Jun</text>
+                            <text class="chart-axis-text" x="700" y="270">Jul</text>
+                            
+                            <text class="chart-axis-text" x="20" y="85">170%</text>
+                            <text class="chart-axis-text" x="20" y="125">135%</text>
+                            <text class="chart-axis-text" x="20" y="165">90%</text>
+                            <text class="chart-axis-text" x="20" y="205">45%</text>
+                            <text class="chart-axis-text" x="20" y="245">0%</text>
+                        </g>
+                        
+                        <!-- Zone sous la courbe -->
+                        <path class="chart-area" d="M 100,240 Q 150,230 200,200 T 300,160 Q 350,140 400,120 T 500,100 Q 550,90 600,85 T 700,75 L 700,250 L 100,250 Z" />
+                        
+                        <!-- Courbe principale -->
+                        <path class="chart-line" d="M 100,240 Q 150,230 200,200 T 300,160 Q 350,140 400,120 T 500,100 Q 550,90 600,85 T 700,75" />
+                        
+                        <!-- Points interactifs -->
+                        <circle class="chart-point" cx="100" cy="240" r="4" />
+                        <circle class="chart-point" cx="200" cy="200" r="4" />
+                        <circle class="chart-point" cx="300" cy="160" r="4" />
+                        <circle class="chart-point" cx="400" cy="120" r="4" />
+                        <circle class="chart-point" cx="500" cy="100" r="4" />
+                        <circle class="chart-point" cx="600" cy="85" r="4" />
+                        <circle class="chart-point active" cx="700" cy="75" r="4" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trading Pairs Section -->
+    <section class="trading-pairs-section">
+        <div class="section-container">
+            <h2 class="section-title">Trading pairs on WenBot</h2>
+            
+            <div class="pairs-carousel">
+                <div class="pairs-track" id="pairs-track">
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">AU/USD</span>
+                            <span class="pair-change positive">+0.12%</span>
+                        </div>
+                        <div class="pair-price">2,320</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 2,340 L</span>
+                            <span class="pair-low">2,310</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">ETH/USD</span>
+                            <span class="pair-change positive">+0.30%</span>
+                        </div>
+                        <div class="pair-price">3,500</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 3,600 L</span>
+                            <span class="pair-low">3,480</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">EUR/USD</span>
+                            <span class="pair-change positive">+0.15%</span>
+                        </div>
+                        <div class="pair-price">1.0850</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 1.0860 L</span>
+                            <span class="pair-low">1.0840</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">GBP/USD</span>
+                            <span class="pair-change negative">-0.06%</span>
+                        </div>
+                        <div class="pair-price">1.2650</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 1.2670 L</span>
+                            <span class="pair-low">1.2640</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">USD/JPY</span>
+                            <span class="pair-change positive">+0.25%</span>
+                        </div>
+                        <div class="pair-price">151.20</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 151.30 L</span>
+                            <span class="pair-low">151.10</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">BTC/USD</span>
+                            <span class="pair-change neutral">0.00%</span>
+                        </div>
+                        <div class="pair-price">67,200</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 67,800 L</span>
+                            <span class="pair-low">66,900</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">XAU/USD</span>
+                            <span class="pair-change positive">+0.12%</span>
+                        </div>
+                        <div class="pair-price">2,320</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 2,340 L</span>
+                            <span class="pair-low">2,310</span>
+                        </div>
+                    </div>
+                    
+                    <div class="pair-card">
+                        <div class="pair-header">
+                            <span class="pair-symbol">ETH/USD</span>
+                            <span class="pair-change positive">+0.30%</span>
+                        </div>
+                        <div class="pair-price">3,500</div>
+                        <div class="pair-details">
+                            <span class="pair-high">H: 3,600 L</span>
+                            <span class="pair-low">3,480</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section" id="about" data-navbar-style="light">
+        <div class="section-container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>What is WenBot?</h2>
+                    <p>WenBot isn't a bot that trades randomly or clutters charts with unnecessary indicators. It operates like a boxer perfecting a single move for hundreds of hours to achieve precision.</p>
+                    <p>Instead of chasing every opportunity, WenBot <strong>waits for an ultra-specific setup</strong> before executing a trade.</p>
+                    <p>The strategy starts with <strong>a signal based on two moving averages</strong>, refined through multiple higher timeframes. Unlike conventional approaches, WenBot doesn't just react to moving average crossovers. It fully <strong>leverages MACD</strong> and filters trends using <strong>ADX</strong> to avoid false signals. <strong>99% of signals are rejected</strong>—it's better to miss an opportunity than take unnecessary risks.</p>
+                </div>
+                
+                <div class="about-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">✅</div>
+                        <div class="feature-text">
+                            <h4>Optimized MACD and ADX to confirm trend strength</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">⚡</div>
+                        <div class="feature-text">
+                            <h4>Volatility and major news events taken into account</h4>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-item">
+                        <div class="feature-icon">📅</div>
+                        <div class="feature-text">
+                            <h4>Specific trading days and time windows</h4>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="trade-stats">
+                    <h3>Trade Duration & Risk Management</h3>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-icon">🏆</div>
+                            <div class="stat-details">
+                                <span class="stat-title">Average trade duration:</span>
+                                <span class="stat-desc">4 to 8 hours on M15</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-details">
+                                <span class="stat-title">Backtested on 2020–2022, validated on 2023–2024</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">⚖️</div>
+                            <div class="stat-details">
+                                <span class="stat-title">Risk/Reward ratio of 1:2 to 1:4, win rate >80%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">🛡️</div>
+                            <div class="stat-details">
+                                <span class="stat-title">Max risk per trade: 0.5% of capital</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">📉</div>
+                            <div class="stat-details">
+                                <span class="stat-title">Absolute drawdown: 4–8%, relative drawdown: 5–10%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-item">
+                            <div class="stat-icon">🎯</div>
+                            <div class="stat-details">
+                                <span class="stat-title">WenBot doesn't gamble. It waits for the right moment and executes with discipline.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="section-container">
+            <h2 class="section-title">Frequently Asked Questions about WenBot</h2>
+            
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <div class="faq-icon">🎓</div>
+                    <h3>Is WenBot suitable for beginners?</h3>
+                    <p>Yes, WenBot is designed to be accessible to everyone. The interface is intuitive and step-by-step guides are included to support each user.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-icon">🔧</div>
+                    <h3>How are trading signals generated?</h3>
+                    <p>Signals are generated by advanced algorithms combining technical analysis, artificial intelligence, and risk filtering to keep only the best opportunities.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-icon">🔗</div>
+                    <h3>Can I connect WenBot to my broker?</h3>
+                    <p>Yes, WenBot is compatible with most major brokers via secure API. Integration is done in just a few clicks.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-icon">⚠️</div>
+                    <h3>What is the risk level?</h3>
+                    <p>WenBot applies strict risk management: each trade is limited to 0.5% of capital, and most signals are filtered to avoid false moves.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-icon">🎁</div>
+                    <h3>Is there a free trial?</h3>
+                    <p>Yes, you can try WenBot for free for 14 days, with no commitment or credit card required.</p>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-icon">📱</div>
+                    <h3>Does WenBot work on mobile?</h3>
+                    <p>Of course! WenBot is accessible on computer, tablet, and smartphone, so you can follow your signals anywhere.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Component -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <!-- Main Footer Content -->
+            <div class="footer-content">
+                <!-- Company Column -->
+                <div class="footer-column">
+                    <div class="footer-brand">
+                        <span class="footer-logo">WenBot</span>
+                        <p class="footer-tagline">Where the world brings markets to life</p>
+                    </div>
+                    <p class="footer-description">
+                        Advanced algorithmic trading platform designed to maximize your performance on financial markets with exceptional precision.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Telegram">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Discord">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Products Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">WenBot Trading</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="documentation.html" class="footer-link" style="color: #667eea;">Documentation</a></li>
+                        <li><a href="getting-started.html" class="footer-link" style="color: #667eea;">Getting Started</a></li>
+                        <li><a href="community.html" class="footer-link" style="color: #667eea;">Community</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Centre d'aide</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html" class="footer-link" style="font-weight: 600; color: #667eea;">Helping center - Contact us</a></li>
+                        <li><a href="faq.html" class="footer-link" style="color: #667eea;">FAQ</a></li>
+                        <li><a href="system-status.html" class="footer-link" style="color: #667eea;">System Status</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Newsletter</h3>
+                    <p class="newsletter-desc">Get our exclusive analysis</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email" class="newsletter-input">
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="footer-legal">
+                        <p>&copy; 2024 WenBot. All rights reserved.</p>
+                        <div class="legal-links">
+                            <a href="legal.html#legal-notice" class="legal-link">Legal Notice</a>
+                            <a href="legal.html#privacy-policy" class="legal-link">Privacy Policy</a>
+                            <a href="legal.html#terms-of-service" class="legal-link">Terms of Service</a>
+                            <a href="legal.html#cookie-policy" class="legal-link">Cookie Policy</a>
+                            <a href="legal.html#gdpr" class="legal-link">GDPR</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-disclaimer">
+                        <p class="disclaimer-text">
+                            ⚠️ Risk Warning: Trading involves significant risk of capital loss. 
+                            Past performance does not guarantee future results. 
+                            Only trade funds you can afford to lose.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-arrow"></div>
+        <div class="scroll-arrow"></div>
+    </div>
+
+    <script src="js/scripts.js?v=5"></script>
+    <script src="js/auth.js"></script>
+    <script src="components/navbar.js?v=5"></script>
+    <script src="components/footer.js?v=5"></script>
+
+    <script>
+        // Script pour faire disparaître l'indicateur de scroll
+        window.addEventListener('scroll', function() {
+            const scrollIndicator = document.getElementById('scrollIndicator');
+            if (window.scrollY > 50) {
+                scrollIndicator.classList.add('hidden');
+            } else {
+                scrollIndicator.classList.remove('hidden');
+            }
+        });
+
+        // Optionnel : scroll automatique au clic sur l'indicateur
+        document.getElementById('scrollIndicator').addEventListener('click', function() {
+            window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth'
+            });
+        });
+    </script>
+</body>
+</html> 

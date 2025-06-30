@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="{{ current_lang }}" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Wenbot Trading Analyzer{% endblock %}</title>
+    
+    <!-- Bootstrap 5.3+ CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Premium -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid px-4">
+            <!-- Brand -->
+            <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+                <i class="fas fa-chart-line me-2"></i>
+                {{ t('site.title') }}
+            </a>
+            
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation Links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="{{ url_for('index') }}">
+                            <i class="fas fa-home me-1"></i>{{ t('nav.home') }}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" href="{{ url_for('upload_files') }}">
+                            {% if current_user.is_authenticated %}
+                                <i class="fas fa-upload me-1"></i>{{ t('nav.analyze') }}
+                            {% else %}
+                                <i class="fas fa-file-upload me-1"></i>{{ t('nav.upload_files') }}
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% if current_user.is_authenticated and current_user.is_admin() %}
+                        <li class="nav-item">
+                            <a class="nav-link px-3 text-warning" href="{{ url_for('admin.dashboard') }}">
+                                <i class="fas fa-crown me-1"></i>{{ t('nav.admin') }}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                
+                <ul class="navbar-nav ms-auto align-items-center">
+                    {% if current_user.is_authenticated %}
+                        <!-- User Info -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle px-3" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                {% if current_user.is_admin() %}
+                                    <i class="fas fa-crown text-warning me-1"></i>
+                                {% elif current_user.is_premium() %}
+                                    <i class="fas fa-star text-primary me-1"></i>
+                                {% else %}
+                                    <i class="fas fa-user me-1"></i>
+                                {% endif %}
+                                {{ current_user.get_full_name() }}
+                                {% if not current_user.is_premium() %}
+                                    <small class="badge bg-secondary ms-1">{{ current_user.get_remaining_analyses() }}</small>
+                                {% endif %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('auth.profile') }}">
+                                        <i class="fas fa-user me-2"></i>{{ t('nav.profile') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('auth.subscription') }}">
+                                        <i class="fas fa-credit-card me-2"></i>{{ t('nav.subscription') }}
+                                        {% if current_user.is_premium() %}
+                                            <span class="badge bg-success ms-1">Premium</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                                {% if current_user.is_admin() %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-warning" href="{{ url_for('admin.dashboard') }}">
+                                            <i class="fas fa-crown me-2"></i>{{ t('nav.administration') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% if not current_user.is_premium() %}
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item text-primary" href="{{ url_for('auth.upgrade') }}">
+                                            <i class="fas fa-rocket me-2"></i>{{ t('nav.upgrade') }}
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('auth.logout') }}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>{{ t('nav.logout') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <!-- Non connecté -->
+                        <li class="nav-item">
+                            <a class="nav-link px-3" href="{{ url_for('auth.login') }}">
+                                <i class="fas fa-sign-in-alt me-1"></i>{{ t('nav.login') }}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ms-2" href="{{ url_for('auth.register') }}">
+                                <i class="fas fa-user-plus me-1"></i>{{ t('nav.register') }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    <!-- Language Selector -->
+                    <li class="nav-item dropdown ms-2">
+                        <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-globe me-1"></i>
+                            {% if current_lang == 'fr' %}
+                                FR
+                            {% else %}
+                                EN
+                            {% endif %}
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                            <li>
+                                <a class="dropdown-item {% if current_lang == 'en' %}active{% endif %}" href="{{ url_for('set_language', language='en') }}">
+                                    <i class="flag-icon flag-icon-us me-2"></i>English
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item {% if current_lang == 'fr' %}active{% endif %}" href="{{ url_for('set_language', language='fr') }}">
+                                    <i class="flag-icon flag-icon-fr me-2"></i>Français
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    
+                    <!-- Theme Toggle -->
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-theme-toggle" id="themeToggle" title="{{ t('nav.theme_toggle') }}">
+                            <i class="fas fa-moon" id="themeIcon"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-4">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                        <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'check-circle' }} me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer Premium -->
+    <footer class="footer mt-5">
+        <div class="container py-4">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="footer-brand">
+                        <i class="fas fa-chart-line me-2"></i>
+                        <strong>{{ t('site.title') }}</strong>
+                    </div>
+                    <p class="footer-text mb-0">
+                        {{ t('site.tagline') }}
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="footer-copyright mb-0">
+                        {{ t('footer.copyright') }}
+                    </p>
+                    <small class="text-muted">
+                        {{ t('footer.instruments') }}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Theme System -->
+    <script>
+        // SYSTÈME DE THÈME ULTRA-SIMPLE ET FIABLE
+        class ThemeManager {
+            constructor() {
+                this.currentTheme = localStorage.getItem('theme') || 'light';
+                this.htmlElement = document.documentElement;
+                this.toggleButton = null;
+                this.themeIcon = null;
+                
+                this.init();
+            }
+            
+            init() {
+                // Application immédiate du thème
+                this.applyTheme(this.currentTheme);
+                
+                // Attendre que le DOM soit prêt
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', () => this.setupButton());
+                } else {
+                    this.setupButton();
+                }
+            }
+            
+            setupButton() {
+                this.toggleButton = document.getElementById('themeToggle');
+                this.themeIcon = document.getElementById('themeIcon');
+                
+                if (this.toggleButton) {
+                    this.toggleButton.addEventListener('click', () => this.toggleTheme());
+                    this.updateButton();
+                    console.log('✅ Bouton thème configuré');
+                }
+            }
+            
+            applyTheme(theme) {
+                this.htmlElement.setAttribute('data-bs-theme', theme);
+                this.currentTheme = theme;
+                localStorage.setItem('theme', theme);
+                this.updateButton();
+                console.log(`🎨 Thème ${theme} appliqué`);
+            }
+            
+            updateButton() {
+                if (this.toggleButton && this.themeIcon) {
+                    if (this.currentTheme === 'dark') {
+                        this.themeIcon.className = 'fas fa-sun';
+                        this.toggleButton.title = 'Mode clair';
+                        this.toggleButton.classList.add('active');
+                    } else {
+                        this.themeIcon.className = 'fas fa-moon';
+                        this.toggleButton.title = 'Mode sombre';
+                        this.toggleButton.classList.remove('active');
+                    }
+                }
+            }
+            
+            toggleTheme() {
+                const newTheme = this.currentTheme === 'light' ? 'dark' : 'light';
+                this.applyTheme(newTheme);
+            }
+        }
+        
+        // Initialisation immédiate
+        window.themeManager = new ThemeManager();
+        
+        // Debug function
+        window.debugTheme = function() {
+            console.log('🔍 Current theme:', window.themeManager.currentTheme);
+            console.log('🔍 HTML data-bs-theme:', document.documentElement.getAttribute('data-bs-theme'));
+            console.log('🔍 LocalStorage theme:', localStorage.getItem('theme'));
+        };
+    </script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html> 

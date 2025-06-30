@@ -1,0 +1,44 @@
+services:
+  # Service Web pour l'API Flask
+  - type: web
+    name: trading-analyzer-api
+    env: python
+    buildCommand: pip install -r api/requirements.txt
+    startCommand: python api/analyzer_api.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.8.12
+      - key: FLASK_ENV
+        value: production
+      - key: DEBUG
+        value: false
+      - key: UPLOAD_FOLDER
+        value: /tmp/uploads
+      - key: REPORTS_FOLDER
+        value: /tmp/reports
+      - key: MAX_CONTENT_LENGTH
+        value: 16777216
+    disk:
+      name: uploads
+      mountPath: /tmp/uploads
+      sizeGB: 10
+    healthCheckPath: /
+    autoDeploy: true
+
+  # Service statique pour le frontend
+  - type: static
+    name: trading-analyzer-frontend
+    buildCommand: null
+    staticPublishPath: ./
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: API_URL
+        value: https://trading-analyzer-api.onrender.com
+
+# Configuration globale
+globals:
+  - key: NODE_VERSION
+    value: 16.13.0 

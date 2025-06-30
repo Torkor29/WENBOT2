@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+
+{% block title %}Administration - Gestion des Utilisateurs{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center justify-content-between">
+                <div>
+                    <h1 class="h3 mb-1">👥 Gestion des Utilisateurs</h1>
+                    <p class="text-muted">Gérer les rôles et permissions des utilisateurs</p>
+                </div>
+                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Retour Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtres et recherche -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">🔍 {{ t('admin.users.search') }}</label>
+                            <input type="text" class="form-control" name="search" 
+                                   value="{{ request.args.get('search', '') }}" 
+                                   placeholder="{{ t('admin.users.search_placeholder') }}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">👤 {{ t('admin.users.role') }}</label>
+                            <select class="form-select" name="role">
+                                <option value="">{{ t('admin.users.all_roles') }}</option>
+                                <option value="USER" {{ 'selected' if request.args.get('role') == 'USER' }}>{{ t('admin.users.user') }}</option>
+                                <option value="PREMIUM" {{ 'selected' if request.args.get('role') == 'PREMIUM' }}>{{ t('admin.users.premium') }}</option>
+                                <option value="ADMIN" {{ 'selected' if request.args.get('role') == 'ADMIN' }}>{{ t('admin.users.admin') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">📊 {{ t('admin.users.status') }}</label>
+                            <select class="form-select" name="status">
+                                <option value="">{{ t('admin.users.all_status') }}</option>
+                                <option value="active" {{ 'selected' if request.args.get('status') == 'active' }}>{{ t('admin.users.active') }}</option>
+                                <option value="inactive" {{ 'selected' if request.args.get('status') == 'inactive' }}>{{ t('admin.users.inactive') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">⭐ {{ t('admin.users.subscription') }}</label>
+                            <select class="form-select" name="subscription">
+                                <option value="">{{ t('admin.users.all_subscriptions') }}</option>
+                                <option value="FREE" {{ 'selected' if request.args.get('subscription') == 'FREE' }}>{{ t('admin.users.free') }}</option>
+                                <option value="BASIC" {{ 'selected' if request.args.get('subscription') == 'BASIC' }}>{{ t('admin.users.basic') }}</option>
+                                <option value="PREMIUM" {{ 'selected' if request.args.get('subscription') == 'PREMIUM' }}>{{ t('admin.users.premium') }}</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-search me-1"></i>{{ t('admin.users.filter') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="bg-primary text-white p-3 rounded">
+                <h4 class="mb-0">{{ users.total }}</h4>
+                <small>👥 Total utilisateurs</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-success text-white p-3 rounded">
+                <h4 class="mb-0">{{ users.items | selectattr('role', 'equalto', 'PREMIUM') | list | length }}</h4>
+                <small>⭐ Utilisateurs Premium</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-warning text-white p-3 rounded">
+                <h4 class="mb-0">{{ users.items | selectattr('is_active', 'equalto', true) | list | length }}</h4>
+                <small>✅ Comptes actifs</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="bg-info text-white p-3 rounded">
+                <h4 class="mb-0">{{ users.items | selectattr('email_confirmed', 'equalto', true) | list | length }}</h4>
+                <small>📧 Emails confirmés</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table des utilisateurs -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-table text-primary me-2"></i>Liste des Utilisateurs
+                        </h5>
+                        <span class="badge bg-secondary">{{ users.total }} résultats</span>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if users.items %}
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>👤 Utilisateur</th>
+                                        <th>📧 Email</th>
+                                        <th>🏷️ Rôle</th>
+                                        <th>⭐ Abonnement</th>
+                                        <th>📊 Usage</th>
+                                        <th>📅 Inscription</th>
+                                        <th>🔧 Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for user in users.items %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle bg-{% if user.role == 'ADMIN' %}danger{% elif user.role == 'PREMIUM' %}warning{% else %}primary{% endif %} text-white me-3">
+                                                    {{ user.firstname[0] if user.firstname else user.email[0] }}
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold">{{ user.firstname }} {{ user.lastname }}</div>
+                                                    <div class="small text-muted">
+                                                        {% if user.is_active %}
+                                                            <span class="badge bg-success">Actif</span>
+                                                        {% else %}
+                                                            <span class="badge bg-danger">Inactif</span>
+                                                        {% endif %}
+                                                        {% if user.email_confirmed %}
+                                                            <span class="badge bg-info">✓ Email</span>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>{{ user.email }}</div>
+                                            <small class="text-muted">
+                                                {% if user.last_seen %}
+                                                    Vu {{ user.last_seen.strftime('%d/%m/%Y') }}
+                                                {% else %}
+                                                    Jamais connecté
+                                                {% endif %}
+                                            </small>
+                                        </td>
+                                        <td>
+                                            {% if user.role == 'ADMIN' %}
+                                                <span class="badge bg-danger">👑 ADMIN</span>
+                                            {% elif user.role == 'PREMIUM' %}
+                                                <span class="badge bg-warning">⭐ PREMIUM</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">👤 USER</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if user.subscription_status == 'PREMIUM' %}
+                                                <span class="badge bg-success">Premium</span>
+                                            {% elif user.subscription_status == 'BASIC' %}
+                                                <span class="badge bg-primary">Basic</span>
+                                            {% else %}
+                                                <span class="badge bg-light text-dark">Gratuit</span>
+                                            {% endif %}
+                                            {% if user.subscription_end_date %}
+                                                <div class="small text-muted">
+                                                    Expire {{ user.subscription_end_date.strftime('%d/%m/%Y') }}
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <div class="progress" style="height: 20px;">
+                                                <div class="progress-bar" role="progressbar" 
+                                                     style="width: {{ (user.monthly_analyses_used / user.monthly_analyses_limit * 100) if user.monthly_analyses_limit > 0 else 0 }}%">
+                                                    {{ user.monthly_analyses_used }}/{{ user.monthly_analyses_limit }}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>{{ user.created_at.strftime('%d/%m/%Y') }}</div>
+                                            <small class="text-muted">{{ user.created_at.strftime('%H:%M') }}</small>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <a href="{{ url_for('admin.user_detail', user_id=user.id) }}" 
+                                                   class="btn btn-sm btn-outline-primary" title="Voir détails">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" 
+                                                   class="btn btn-sm btn-outline-warning" title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                {% if user.is_active %}
+                                                    <form style="display: inline;" method="POST" 
+                                                          action="{{ url_for('admin.toggle_user_status', user_id=user.id) }}"
+                                                          onsubmit="return confirm('Êtes-vous sûr de vouloir désactiver cet utilisateur ?')">
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Désactiver">
+                                                            <i class="fas fa-ban"></i>
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <form style="display: inline;" method="POST" 
+                                                          action="{{ url_for('admin.toggle_user_status', user_id=user.id) }}"
+                                                          onsubmit="return confirm('Êtes-vous sûr de vouloir activer cet utilisateur ?')">
+                                                        <button type="submit" class="btn btn-sm btn-outline-success" title="Activer">
+                                                            <i class="fas fa-check"></i>
+                                                        </button>
+                                                    </form>
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center p-5">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Aucun utilisateur trouvé</h5>
+                            <p class="text-muted">Essayez de modifier vos critères de recherche</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Pagination -->
+                {% if users.pages > 1 %}
+                <div class="card-footer bg-light">
+                    <nav aria-label="Navigation des pages">
+                        <ul class="pagination justify-content-center mb-0">
+                            {% if users.has_prev %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.users', page=users.prev_num, **request.args) }}">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for page_num in users.iter_pages() %}
+                                {% if page_num %}
+                                    {% if page_num != users.page %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="{{ url_for('admin.users', page=page_num, **request.args) }}">
+                                                {{ page_num }}
+                                            </a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ page_num }}</span>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">…</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if users.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="{{ url_for('admin.users', page=users.next_num, **request.args) }}">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts supprimés - utilisation de forms maintenant -->
+
+<style>
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.progress {
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    background-color: #007bff;
+    color: white;
+    font-size: 11px;
+    line-height: 20px;
+}
+</style>
+{% endblock %} 

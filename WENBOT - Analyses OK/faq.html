@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technical FAQ & Trading Documentation | WenBot</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds-updated">
+    <link rel="stylesheet" href="components/navbar.css">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .faq-hero {
+            position: relative;
+            /* Support WebP avec fallback JPEG - technique TradingView identique à l'accueil */
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/espace.webp?v=tradingview-quality');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            padding: 120px 0 80px;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+            
+            /* Optimisations de rendu avancées - style TradingView identique */
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            image-rendering: high-quality;
+            image-rendering: pixelated;
+            
+            /* Filtres de qualité professionnels identiques à l'accueil */
+            filter: 
+                contrast(1.25) 
+                brightness(1.12) 
+                saturate(1.18) 
+                hue-rotate(2deg)
+                blur(0px)
+                sharpen(1.5);
+            
+            /* Transformation pour masquer la pixellisation */
+            transform: scale(1.015) translateZ(0);
+            
+            /* Optimisation GPU */
+            backface-visibility: hidden;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        
+        .faq-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(212, 134, 74, 0.25) 0%, 
+                rgba(230, 160, 92, 0.15) 30%,
+                rgba(74, 107, 58, 0.2) 70%,
+                rgba(122, 155, 109, 0.15) 100%);
+            z-index: 1;
+        }
+        
+        .faq-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
+            z-index: 1;
+        }
+        
+        .faq-hero > * {
+            position: relative;
+            z-index: 2;
+        }
+        
+        .faq-hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .faq-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-content {
+            padding: 80px 0;
+            background: var(--bg-primary);
+        }
+        
+        .faq-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .faq-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 3rem;
+            background: white;
+            border-radius: 16px;
+            padding: 0.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .faq-tab {
+            padding: 1rem 2rem;
+            background: transparent;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #718096;
+        }
+        
+        .faq-tab.active {
+            background: linear-gradient(135deg, var(--space-warm-orange) 0%, var(--space-amber) 100%);
+            color: white;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(212, 134, 74, 0.3);
+        }
+        
+        .faq-section {
+            display: none;
+        }
+        
+        .faq-section.active {
+            display: block;
+        }
+        
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+        }
+        
+        .faq-item {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .faq-item:hover {
+            transform: translateY(-5px);
+        }
+        
+        .faq-item-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .faq-icon {
+            font-size: 2rem;
+            color: var(--space-warm-orange);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(212, 134, 74, 0.1), rgba(230, 160, 92, 0.1));
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+        
+        .faq-item h3 {
+            color: var(--text-primary);
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .faq-item p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .faq-code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .faq-formula {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            border: 2px solid var(--space-warm-orange);
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(212, 134, 74, 0.1);
+        }
+        
+        .faq-highlight {
+            background: linear-gradient(135deg, rgba(212, 134, 74, 0.08), rgba(230, 160, 92, 0.08));
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--space-warm-orange);
+            margin: 1rem 0;
+            color: var(--text-primary);
+        }
+        
+        .faq-highlight strong {
+            color: var(--space-warm-orange);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .faq-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .faq-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .faq-tabs {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="index.html" class="nav-brand-text">WenBot</a>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html#home" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link active">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <a href="Analyzer_1.html" class="btn-trading-analyzer">Trading Analyzer</a>
+                <button class="btn-join">Join</button>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="faq-hero">
+        <div class="hero-container">
+            <h1>Technical FAQ & Trading Documentation</h1>
+            <p>Comprehensive technical documentation, algorithmic trading insights, and in-depth explanations of WenBot's advanced trading strategies and risk management systems.</p>
+        </div>
+    </section>
+
+    <!-- FAQ Content -->
+    <section class="faq-content">
+        <div class="faq-container">
+            <!-- FAQ Tabs -->
+            <div class="faq-tabs">
+                <button class="faq-tab active" data-tab="algorithms">🤖 Algorithms</button>
+                <button class="faq-tab" data-tab="trading">📈 Trading Mechanics</button>
+                <button class="faq-tab" data-tab="risk">⚖️ Risk Management</button>
+                <button class="faq-tab" data-tab="technical">🔧 Technical Setup</button>
+            </div>
+
+            <!-- Algorithms Section -->
+            <div class="faq-section active" id="algorithms">
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">🧠</div>
+                            <h3>How does WenBot's AI algorithm work?</h3>
+                        </div>
+                        <p>WenBot uses a multi-layered neural network combining:</p>
+                        <div class="faq-highlight">
+                            <strong>• LSTM Networks:</strong> For time series pattern recognition<br>
+                            <strong>• Random Forest:</strong> For feature importance weighting<br>
+                            <strong>• Ensemble Methods:</strong> Combining multiple models for better accuracy
+                        </div>
+                        <div class="faq-code">
+Algorithm Pipeline:
+1. Data Collection (OHLCV + 50+ indicators)
+2. Feature Engineering (200+ technical features)
+3. Pattern Recognition (ML Classification)
+4. Signal Filtering (Confluence Requirements)
+5. Risk Assessment (Kelly Criterion)
+6. Position Sizing (Volatility-Adjusted)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">📊</div>
+                            <h3>What technical indicators does WenBot analyze?</h3>
+                        </div>
+                        <p>WenBot analyzes 50+ indicators across multiple categories:</p>
+                        <div class="faq-highlight">
+                            <strong>Trend Indicators:</strong> EMA(8,21,50,200), MACD, ADX, Parabolic SAR<br>
+                            <strong>Momentum:</strong> RSI, Stochastic, Williams %R, CCI<br>
+                            <strong>Volatility:</strong> Bollinger Bands, ATR, Keltner Channels<br>
+                            <strong>Volume:</strong> OBV, VWAP, Volume Profile, A/D Line<br>
+                            <strong>Support/Resistance:</strong> Fibonacci, Pivot Points, S/R Zones
+                        </div>
+                        <div class="faq-formula">
+                            Signal Strength = Σ(Indicator_Weight × Indicator_Score) / Total_Weight
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">🎯</div>
+                            <h3>How are entry and exit points determined?</h3>
+                        </div>
+                        <p>WenBot uses a confluence-based approach requiring multiple confirmations:</p>
+                        <div class="faq-code">
+Entry Criteria (All Must Be True):
+✓ Trend Alignment (3+ timeframes)
+✓ Momentum Confirmation (RSI + MACD)
+✓ Volume Spike (>1.5x average)
+✓ Support/Resistance Break
+✓ Risk/Reward >1:2
+✓ Market Structure Confirmation
+                        </div>
+                        <div class="faq-highlight">
+                            <strong>Exit Strategy:</strong><br>
+                            • Take Profit: Fibonacci extensions (1.618, 2.618)<br>
+                            • Stop Loss: ATR-based (1.5x ATR from entry)<br>
+                            • Trailing Stop: Dynamic based on market volatility
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">⏱️</div>
+                            <h3>What timeframes does WenBot operate on?</h3>
+                        </div>
+                        <p>WenBot performs multi-timeframe analysis for optimal accuracy:</p>
+                        <div class="faq-highlight">
+                            <strong>Primary Analysis:</strong> H4 (4-hour charts)<br>
+                            <strong>Trend Confirmation:</strong> D1 (Daily charts)<br>
+                            <strong>Entry Timing:</strong> H1 (1-hour charts)<br>
+                            <strong>Exit Refinement:</strong> M15 (15-minute charts)
+                        </div>
+                        <div class="faq-formula">
+                            Multi-TF Score = (D1_Score × 0.4) + (H4_Score × 0.4) + (H1_Score × 0.2)
+                        </div>
+                        <p>Only trades with 80%+ confluence across all timeframes are executed.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trading Mechanics Section -->
+            <div class="faq-section" id="trading">
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">💱</div>
+                            <h3>Which currency pairs and assets are supported?</h3>
+                        </div>
+                        <p>WenBot trades across major asset classes with optimized strategies:</p>
+                        <div class="faq-highlight">
+                            <strong>Forex Majors:</strong> EUR/USD, GBP/USD, USD/JPY, AUD/USD, USD/CHF, USD/CAD, NZD/USD<br>
+                            <strong>Crypto:</strong> BTC/USD, ETH/USD, BNB/USD, ADA/USD, SOL/USD<br>
+                            <strong>Commodities:</strong> XAU/USD (Gold), XAG/USD (Silver), Oil (WTI/Brent)<br>
+                            <strong>Indices:</strong> SPX500, NAS100, GER40, UK100, JPN225
+                        </div>
+                        <div class="faq-code">
+Pair Selection Criteria:
+• Minimum daily volume: $1B+
+• Spread < 2 pips (Forex) / 0.05% (Crypto)
+• Sufficient historical data (>3 years)
+• Market hours overlap for liquidity
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">📈</div>
+                            <h3>How does position sizing work?</h3>
+                        </div>
+                        <p>WenBot uses dynamic position sizing based on multiple risk factors:</p>
+                        <div class="faq-formula">
+                            Position Size = (Account Balance × Risk %) / (Entry Price - Stop Loss)
+                        </div>
+                        <div class="faq-highlight">
+                            <strong>Risk Factors:</strong><br>
+                            • Base Risk: 0.5% per trade<br>
+                            • Volatility Adjustment: ±0.2% based on ATR<br>
+                            • Correlation Adjustment: Reduced if correlated positions exist<br>
+                            • Drawdown Protection: Reduced size during drawdown periods
+                        </div>
+                        <div class="faq-code">
+Example Calculation:
+Account: $10,000
+Risk: 0.5% = $50
+EUR/USD Entry: 1.1000
+Stop Loss: 1.0950 (50 pips)
+Position Size: $50 / 0.0050 = $10,000 notional
+= 0.1 lots (10,000 units)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">🕐</div>
+                            <h3>What are WenBot's trading sessions and frequency?</h3>
+                        </div>
+                        <p>WenBot operates with session-based optimization:</p>
+                        <div class="faq-highlight">
+                            <strong>Active Sessions:</strong><br>
+                            • London Session: 08:00-17:00 GMT (High activity)<br>
+                            • New York Session: 13:00-22:00 GMT (Primary focus)<br>
+                            • Asian Session: 23:00-08:00 GMT (Selective trading)
+                        </div>
+                        <div class="faq-code">
+Trading Frequency:
+• Average: 3-5 signals per day
+• High volatility days: Up to 8 signals
+• Low volatility days: 1-2 signals
+• News events: Temporary pause
+• Weekend: Position management only
+                        </div>
+                        <p>Session filters ensure optimal liquidity and reduced slippage.</p>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">📰</div>
+                            <h3>How does WenBot handle news events?</h3>
+                        </div>
+                        <p>WenBot incorporates economic calendar and sentiment analysis:</p>
+                        <div class="faq-highlight">
+                            <strong>High Impact Events:</strong> Trading paused 30 min before/after<br>
+                            <strong>Medium Impact:</strong> Reduced position sizing (-50%)<br>
+                            <strong>Low Impact:</strong> Normal operation with monitoring
+                        </div>
+                        <div class="faq-code">
+Monitored Events:
+• Central Bank Decisions (Fed, ECB, BoE, BoJ)
+• NFP, GDP, Inflation Data
+• Political Events & Elections
+• Geopolitical Tensions
+• Cryptocurrency Regulations
+                        </div>
+                        <p>Real-time sentiment scoring adjusts algorithm sensitivity.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Risk Management Section -->
+            <div class="faq-section" id="risk">
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">🛡️</div>
+                            <h3>What are WenBot's risk management protocols?</h3>
+                        </div>
+                        <p>WenBot employs multiple layers of risk protection:</p>
+                        <div class="faq-highlight">
+                            <strong>Position Level:</strong><br>
+                            • Max risk per trade: 0.5% of account<br>
+                            • Stop loss: Always set before entry<br>
+                            • Position timeout: 72 hours maximum<br>
+                            <strong>Portfolio Level:</strong><br>
+                            • Max total exposure: 5% of account<br>
+                            • Correlation limits: Max 3 correlated pairs<br>
+                            • Daily loss limit: 2% of account
+                        </div>
+                        <div class="faq-code">
+Risk Hierarchy:
+1. Position Stop Loss (0.5% max)
+2. Daily Loss Limit (2% max)
+3. Weekly Loss Limit (5% max)
+4. Monthly Drawdown Limit (10% max)
+5. Emergency Kill Switch (15% max)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">📉</div>
+                            <h3>How does drawdown protection work?</h3>
+                        </div>
+                        <p>Dynamic drawdown protection adapts to market conditions:</p>
+                        <div class="faq-formula">
+                            Adjusted Risk = Base Risk × (1 - Drawdown Severity)
+                        </div>
+                        <div class="faq-highlight">
+                            <strong>Drawdown Levels:</strong><br>
+                            • 0-3%: Normal operation (0.5% risk)<br>
+                            • 3-5%: Reduced risk (0.3% risk)<br>
+                            • 5-8%: Conservative mode (0.2% risk)<br>
+                            • 8-10%: Minimal risk (0.1% risk)<br>
+                            • >10%: Trading halted
+                        </div>
+                        <div class="faq-code">
+Recovery Protocol:
+• 5 consecutive profitable trades to increase risk
+• 2 weeks of positive performance required
+• Gradual risk increase: +0.1% per week
+• Continuous monitoring and adjustment
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">⚖️</div>
+                            <h3>What is the Kelly Criterion implementation?</h3>
+                        </div>
+                        <p>WenBot uses a modified Kelly Criterion for optimal position sizing:</p>
+                        <div class="faq-formula">
+                            Kelly % = (Win Rate × Avg Win - Loss Rate × Avg Loss) / Avg Win
+                        </div>
+                        <div class="faq-highlight">
+                            <strong>WenBot's Optimization:</strong><br>
+                            • Historical Win Rate: 83%<br>
+                            • Average Win: 2.4% per trade<br>
+                            • Average Loss: 0.5% per trade<br>
+                            • Kelly Calculation: 1.75%<br>
+                            • Conservative Factor: 0.3x Kelly = 0.5%
+                        </div>
+                        <div class="faq-code">
+Kelly Adjustments:
+• Minimum sample size: 100 trades
+• Rolling 500-trade calculation
+• Volatility adjustment factor
+• Maximum position cap: 1% regardless of Kelly
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">🔄</div>
+                            <h3>How are correlations monitored and managed?</h3>
+                        </div>
+                        <p>Real-time correlation monitoring prevents overexposure:</p>
+                        <div class="faq-highlight">
+                            <strong>Correlation Thresholds:</strong><br>
+                            • High Correlation: >0.7 (Max 1 position)<br>
+                            • Medium Correlation: 0.4-0.7 (Max 2 positions)<br>
+                            • Low Correlation: <0.4 (No limit)
+                        </div>
+                        <div class="faq-code">
+Correlation Matrix (30-day rolling):
+EUR/USD vs GBP/USD: 0.89 (High)
+EUR/USD vs USD/JPY: -0.76 (High negative)
+XAU/USD vs USD Index: -0.82 (High negative)
+BTC/USD vs ETH/USD: 0.94 (Very high)
+                        </div>
+                        <p>Dynamic correlation calculations prevent hidden risks in portfolio.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Setup Section -->
+            <div class="faq-section" id="technical">
+                <div class="faq-grid">
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">🔌</div>
+                            <h3>How to connect WenBot to your broker?</h3>
+                        </div>
+                        <p>WenBot supports major brokers through secure API integration:</p>
+                        <div class="faq-highlight">
+                            <strong>Supported Brokers:</strong><br>
+                            • MetaTrader 4/5 (MT4/MT5)<br>
+                            • Interactive Brokers (TWS API)<br>
+                            • Binance (Crypto)<br>
+                            • Coinbase Pro<br>
+                            • TradingView (Webhook alerts)
+                        </div>
+                        <div class="faq-code">
+MT4/MT5 Setup:
+1. Install WenBot EA (Expert Advisor)
+2. Allow DLL imports and WebRequests
+3. Set API endpoint: https://api.wenbot.club
+4. Enter your API key and secret
+5. Enable auto-trading
+6. Verify connection status
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">🔐</div>
+                            <h3>What are the security protocols?</h3>
+                        </div>
+                        <p>Bank-grade security protects your trading data and funds:</p>
+                        <div class="faq-highlight">
+                            <strong>Encryption:</strong> AES-256 end-to-end encryption<br>
+                            <strong>Authentication:</strong> OAuth 2.0 + 2FA required<br>
+                            <strong>API Security:</strong> Rate limiting + IP whitelisting<br>
+                            <strong>Compliance:</strong> SOC 2 Type II certified
+                        </div>
+                        <div class="faq-code">
+Security Features:
+• No funds storage (trade execution only)
+• Read-only market data access
+• Position management permissions only
+• Real-time security monitoring
+• Automated threat detection
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">📊</div>
+                            <h3>How to interpret WenBot's performance metrics?</h3>
+                        </div>
+                        <p>Understanding key performance indicators:</p>
+                        <div class="faq-highlight">
+                            <strong>Key Metrics:</strong><br>
+                            • Sharpe Ratio: 2.8+ (Risk-adjusted returns)<br>
+                            • Calmar Ratio: 4.2+ (Return/Max Drawdown)<br>
+                            • Sortino Ratio: 3.9+ (Downside deviation)<br>
+                            • Profit Factor: 2.4+ (Gross Profit/Gross Loss)
+                        </div>
+                        <div class="faq-code">
+Performance Calculation:
+Sharpe Ratio = (Return - Risk Free Rate) / Volatility
+Win Rate = Winning Trades / Total Trades × 100
+Average RRR = Average Win / Average Loss
+Expectancy = (Win Rate × Avg Win) - (Loss Rate × Avg Loss)
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <div class="faq-item-header">
+                            <div class="faq-icon">⚙️</div>
+                            <h3>What are the system requirements?</h3>
+                        </div>
+                        <p>Minimal hardware requirements for optimal performance:</p>
+                        <div class="faq-highlight">
+                            <strong>Minimum Requirements:</strong><br>
+                            • CPU: Dual-core 2.0 GHz<br>
+                            • RAM: 4GB<br>
+                            • Storage: 2GB free space<br>
+                            • Internet: Stable 10 Mbps<br>
+                            • VPS recommended for 24/7 operation
+                        </div>
+                        <div class="faq-code">
+Recommended VPS Specs:
+• 2 vCPU cores
+• 8GB RAM
+• 50GB SSD storage
+• 1 Gbps connection
+• 99.9% uptime guarantee
+• Data centers: London, New York, Tokyo
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Component -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <!-- Main Footer Content -->
+            <div class="footer-content">
+                <!-- Company Column -->
+                <div class="footer-column">
+                    <div class="footer-brand">
+                        <span class="footer-logo">WenBot</span>
+                        <p class="footer-tagline">Where the world brings markets to life</p>
+                    </div>
+                    <p class="footer-description">
+                        Advanced algorithmic trading platform designed to maximize your performance on financial markets with exceptional precision.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Telegram">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Discord">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419-.0190 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1568 2.4189Z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Products Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Products</h3>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">WenBot Trading</a></li>
+                    </ul>
+                </div>
+
+                <!-- Resources Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Resources</h3>
+                    <ul class="footer-links">
+                        <li><a href="documentation.html" class="footer-link" style="color: #667eea;">Documentation</a></li>
+                        <li><a href="getting-started.html" class="footer-link" style="color: #667eea;">Getting Started</a></li>
+                        <li><a href="community.html" class="footer-link" style="color: #667eea;">Community</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="contact.html" class="footer-link" style="font-weight: 600; color: #667eea;">Helping center - Contact us</a></li>
+                        <li><a href="faq.html" class="footer-link" style="color: #667eea;">FAQ</a></li>
+                        <li><a href="system-status.html" class="footer-link" style="color: #667eea;">System Status</a></li>
+                    </ul>
+                </div>
+
+                <!-- Newsletter Column -->
+                <div class="footer-column">
+                    <h3 class="footer-title">Newsletter</h3>
+                    <p class="newsletter-desc">Get our exclusive analysis</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email" class="newsletter-input">
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Bottom -->
+            <div class="footer-bottom">
+                <div class="footer-bottom-content">
+                    <div class="footer-legal">
+                        <p>&copy; 2024 WenBot. All rights reserved.</p>
+                        <div class="legal-links">
+                            <a href="legal.html#legal-notice" class="legal-link">Legal Notice</a>
+                            <a href="legal.html#privacy-policy" class="legal-link">Privacy Policy</a>
+                            <a href="legal.html#terms-of-service" class="legal-link">Terms of Service</a>
+                            <a href="legal.html#cookie-policy" class="legal-link">Cookie Policy</a>
+                            <a href="legal.html#gdpr" class="legal-link">GDPR</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-disclaimer">
+                        <p class="disclaimer-text">
+                            ⚠️ Risk Warning: Trading involves significant risk of capital loss. 
+                            Past performance does not guarantee future results. 
+                            Only trade funds you can afford to lose.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // FAQ Tabs Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.faq-tab');
+            const sections = document.querySelectorAll('.faq-section');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const targetTab = tab.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and sections
+                    tabs.forEach(t => t.classList.remove('active'));
+                    sections.forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding section
+                    tab.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+        });
+
+        // Navigation mobile
+        const navToggle = document.getElementById('nav-toggle');
+        const navMenu = document.getElementById('nav-menu');
+        
+        navToggle?.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+        });
+    </script>
+    
+    <script src="js/scripts.js?v=5"></script>
+    <script src="js/auth.js"></script>
+    <script src="components/navbar.js?v=5"></script>
+    <script src="components/footer.js?v=5"></script>
+</body>
+</html> 

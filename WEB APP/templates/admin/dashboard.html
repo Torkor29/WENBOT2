@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}{{ t('admin.dashboard_page_title') }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <!-- Header Admin -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center p-4 bg-gradient-primary text-white rounded-3 shadow-sm">
+                <i class="fas fa-crown fa-3x me-4"></i>
+                <div>
+                    <h1 class="h3 mb-1">👑 {{ t('admin.dashboard_title') }}</h1>
+                    <p class="mb-0 opacity-75">{{ t('admin.dashboard_subtitle') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistiques principales -->
+    <div class="row mb-4">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 5px solid #007bff !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="h4 mb-0 text-primary fw-bold">{{ total_users }}</div>
+                            <div class="text-muted small">👥 {{ t('admin.dashboard.total_users') }}</div>
+                        </div>
+                        <div class="text-primary fs-2">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 5px solid #28a745 !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="h4 mb-0 text-success fw-bold">{{ premium_users }}</div>
+                            <div class="text-muted small">⭐ Utilisateurs Premium</div>
+                        </div>
+                        <div class="text-success fs-2">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 5px solid #ffc107 !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="h4 mb-0 text-warning fw-bold">{{ total_analyses }}</div>
+                            <div class="text-muted small">📊 Analyses effectuées</div>
+                        </div>
+                        <div class="text-warning fs-2">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-0 shadow-sm h-100" style="border-left: 5px solid #17a2b8 !important;">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <div class="h4 mb-0 text-info fw-bold">{{ active_today }}</div>
+                            <div class="text-muted small">🔥 Actifs aujourd'hui</div>
+                        </div>
+                        <div class="text-info fs-2">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions rapides -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-bolt text-primary me-2"></i>Actions rapides
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('admin.users') }}" class="btn btn-outline-primary w-100 py-3">
+                                <i class="fas fa-users-cog d-block mb-2 fs-4"></i>
+                                <div class="fw-bold">Gérer Utilisateurs</div>
+                                <small class="text-muted">Modifier rôles et accès</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('admin.analytics') }}" class="btn btn-outline-success w-100 py-3">
+                                <i class="fas fa-chart-pie d-block mb-2 fs-4"></i>
+                                <div class="fw-bold">Analytics</div>
+                                <small class="text-muted">Statistiques détaillées</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('admin.settings') }}" class="btn btn-outline-warning w-100 py-3">
+                                <i class="fas fa-cog d-block mb-2 fs-4"></i>
+                                <div class="fw-bold">Paramètres</div>
+                                <small class="text-muted">Configuration système</small>
+                            </a>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <a href="{{ url_for('index') }}" class="btn btn-outline-info w-100 py-3">
+                                <i class="fas fa-home d-block mb-2 fs-4"></i>
+                                <div class="fw-bold">Retour Site</div>
+                                <small class="text-muted">Interface utilisateur</small>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aperçu récent -->
+    <div class="row">
+        <!-- Derniers utilisateurs -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user-plus text-success me-2"></i>Derniers utilisateurs
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if recent_users %}
+                        <div class="list-group list-group-flush">
+                            {% for user in recent_users %}
+                            <div class="list-group-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle bg-{{ 'warning' if user.role == 'PREMIUM' else 'primary' }} text-white me-3">
+                                        {{ user.firstname[0] if user.firstname else user.email[0] }}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-bold">{{ user.firstname }} {{ user.lastname }}</div>
+                                        <div class="text-muted small">{{ user.email }}</div>
+                                        <small class="text-muted">
+                                            {% if user.role == 'PREMIUM' %}⭐ Premium{% else %}👤 Standard{% endif %}
+                                        </small>
+                                    </div>
+                                    <div class="text-end">
+                                        <small class="text-muted">{{ user.created_at.strftime('%d/%m') }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center p-4">
+                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                            <p class="text-muted">Aucun utilisateur récent</p>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-light text-center">
+                    <a href="{{ url_for('admin.users') }}" class="btn btn-sm btn-outline-primary">
+                        Voir tous les utilisateurs
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activité récente -->
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-bottom">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-chart-line text-info me-2"></i>Activité récente
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Ici vous pouvez ajouter des statistiques d'activité -->
+                    <div class="text-center p-4">
+                        <i class="fas fa-chart-bar fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">Fonctionnalité à venir</p>
+                        <small class="text-muted">Suivi des analyses et connexions</small>
+                    </div>
+                </div>
+                <div class="card-footer bg-light text-center">
+                    <a href="{{ url_for('admin.analytics') }}" class="btn btn-sm btn-outline-info">
+                        Voir analytics détaillées
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+</style>
+{% endblock %} 

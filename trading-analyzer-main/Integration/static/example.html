@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analyse Trading</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .upload-form {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .progress {
+            display: none;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            background: #f0f0f0;
+            border-radius: 4px;
+            height: 20px;
+            margin: 10px 0;
+        }
+        .progress-bar-fill {
+            background: #4CAF50;
+            height: 100%;
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .result {
+            display: none;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            background: #ffe6e6;
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+            display: none;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        select {
+            padding: 8px;
+            margin: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analyse Trading</h1>
+        
+        <div class="upload-form">
+            <form id="uploadForm">
+                <input type="file" name="files" multiple accept=".xlsx,.xls" required>
+                <select name="analysis_type">
+                    <option value="forex">Forex</option>
+                    <option value="autres">Autres instruments</option>
+                </select>
+                <button type="submit">Analyser</button>
+            </form>
+        </div>
+
+        <div class="error" id="errorMessage"></div>
+
+        <div class="progress" id="progressContainer">
+            <h3>Progression de l'analyse</h3>
+            <div class="progress-bar">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+            <div class="status" id="statusMessage">En attente...</div>
+        </div>
+
+        <div class="result" id="resultContainer">
+            <h3>Résultats de l'analyse</h3>
+            <div class="stats" id="statsContainer">
+                <!-- Les statistiques seront ajoutées ici -->
+            </div>
+            <p>
+                <button id="downloadReport">Télécharger le rapport complet</button>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // En local, l'API est sur le même serveur
+        const API_BASE_URL = '/api';
+        
+        const uploadForm = document.getElementById('uploadForm');
+        const progressContainer = document.getElementById('progressContainer');
+        const progressBar = document.getElementById('progressBar');
+        const statusMessage = document.getElementById('statusMessage');
+        const resultContainer = document.getElementById('resultContainer');
+        const statsContainer = document.getElementById('statsContainer');
+        const errorMessage = document.getElementById('errorMessage');
+        const downloadButton = document.getElementById('downloadReport');
+
+        let currentTaskId = null;
+
+        uploadForm.onsubmit = async (e) => {
+            e.preventDefault();
+            errorMessage.style.display = 'none';
+            progressContainer.style.display = 'block';
+            resultContainer.style.display = 'none';
+            
+            const formData = new FormData(uploadForm);
+            
+            try {
+                // Envoyer les fichiers
+                const response = await fetch(`${API_BASE_URL}/analyze`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.task_id) {
+                    currentTaskId = data.task_id;
+                    pollStatus(data.task_id);
+                } else {
+                    throw new Error(data.error || 'Erreur lors de l\'envoi des fichiers');
+                }
+            } catch (error) {
+                showError(error.message);
+            }
+        };
+
+        async function pollStatus(taskId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/status/${taskId}`);
+                const data = await response.json();
+                
+                // Mettre à jour la progression
+                progressBar.style.width = `${data.progress || 0}%`;
+                statusMessage.textContent = data.message || 'En cours...';
+                
+                if (data.status === 'completed') {
+                    showResults(data.results);
+                } else if (data.status === 'error') {
+                    showError(data.error);
+                } else {
+                    // Continuer le polling
+                    setTimeout(() => pollStatus(taskId), 1000);
+                }
+            } catch (error) {
+                showError('Erreur lors de la vérification du statut');
+            }
+        }
+
+        function showResults(results) {
+            resultContainer.style.display = 'block';
+            
+            // Afficher les statistiques
+            if (results && results.data) {
+                const stats = results.data;
+                statsContainer.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.total_trades}</div>
+                        <div class="stat-label">Trades total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.trades_gagnants}</div>
+                        <div class="stat-label">Trades gagnants</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.trades_perdants}</div>
+                        <div class="stat-label">Trades perdants</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.taux_reussite.toFixed(1)}%</div>
+                        <div class="stat-label">Taux de réussite</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.profit_total.toFixed(2)}€</div>
+                        <div class="stat-label">Profit total</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${stats.rendement.toFixed(2)}%</div>
+                        <div class="stat-label">Rendement</div>
+                    </div>
+                `;
+            }
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            progressContainer.style.display = 'none';
+        }
+
+        downloadButton.onclick = async () => {
+            if (!currentTaskId) return;
+            
+            try {
+                window.location.href = `${API_BASE_URL}/report/${currentTaskId}`;
+            } catch (error) {
+                showError('Erreur lors du téléchargement du rapport');
+            }
+        };
+    </script>
+</body>
+</html> 

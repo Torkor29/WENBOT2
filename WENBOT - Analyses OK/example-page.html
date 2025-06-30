@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page d'exemple - WenBot</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="components/navbar.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Styles spécifiques à cette page */
+        .example-hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2962ff 0%, #9c27b0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px;
+        }
+        
+        .white-content {
+            background: white;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .dark-content {
+            background: #0d1421;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Le composant navbar sera inséré ici automatiquement -->
+    
+    <!-- Contenu de la page -->
+    <section id="home" class="example-hero">
+        <div>
+            <h1>Page d'Exemple WenBot</h1>
+            <p>Démonstration du composant navbar réutilisable</p>
+            <p>La navbar est transparente sur cette section</p>
+        </div>
+    </section>
+    
+    <section id="features" class="white-content white-section">
+        <div>
+            <h2>Section Blanche</h2>
+            <p>La navbar s'adapte automatiquement !</p>
+            <p>Le texte devient sombre pour rester lisible</p>
+        </div>
+    </section>
+    
+    <section id="advantages" class="dark-content">
+        <div>
+            <h2>Section Sombre</h2>
+            <p>Retour au thème sombre</p>
+            <p>La navbar redevient claire automatiquement</p>
+        </div>
+    </section>
+    
+    <section id="pricing" class="white-content white-section">
+        <div>
+            <h2>Autre Section Claire</h2>
+            <p>L'adaptation fonctionne sur toutes les sections</p>
+        </div>
+    </section>
+    
+    <section id="faq" class="dark-content">
+        <div>
+            <h2>Section FAQ</h2>
+            <p>Scrollez pour voir l'adaptation en action !</p>
+        </div>
+    </section>
+
+    <!-- Chargement du composant navbar -->
+    <script src="components/navbar.js"></script>
+    <script>
+        // Chargement automatique du composant
+        document.addEventListener('DOMContentLoaded', () => {
+            NavbarComponent.loadComponent().then(navbar => {
+                console.log('✅ Navbar chargée avec succès sur la page d\'exemple !');
+            });
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Analyzer - Analyse Avancée</title>
+    <link rel="stylesheet" href="css/styles.css?v=white-backgrounds">
+    <link rel="stylesheet" href="components/navbar.css">
+    <link rel="stylesheet" href="components/footer.css?v=glassmorphism-input">
+    <link rel="stylesheet" href="css/responsive-optimizations.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .analyzer-container {
+            max-width: 1200px;
+            margin: 120px auto 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .metrics-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            color: #E6A05C;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .analysis-tabs {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover, .tab-button.active {
+            background: linear-gradient(45deg, #D4864A, #E6A05C);
+        }
+
+        canvas {
+            max-width: 100%;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="nav-brand-text">WenBot</span>
+            </div>
+            
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="about.html" class="nav-link">About</a>
+                <a href="advantages.html" class="nav-link">Advantages</a>
+                <a href="pricing.html" class="nav-link">Pricing</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="contact.html" class="nav-link">Contact</a>
+            </div>
+            
+            <div class="nav-actions">
+                <div class="search-container">
+                    <input type="text" placeholder="Search" class="search-input">
+                </div>
+                <a href="Analyzer_1.html" class="btn-trading-analyzer active">Trading Analyzer</a>
+                <button class="btn-join">Join</button>
+            </div>
+            
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="analyzer-container">
+        <h1>Analyse Avancée</h1>
+        
+        <div class="analysis-tabs">
+            <button class="tab-button active" onclick="showAnalysis('performance')">Performance</button>
+            <button class="tab-button" onclick="showAnalysis('risk')">Gestion du Risque</button>
+            <button class="tab-button" onclick="showAnalysis('patterns')">Patterns</button>
+        </div>
+
+        <div class="metrics-container" id="metrics-container">
+            <!-- Les métriques seront ajoutées ici -->
+        </div>
+
+        <div class="chart-grid" id="chart-grid">
+            <!-- Les graphiques seront ajoutés ici -->
+        </div>
+    </div>
+
+    <script>
+        // Récupérer les données de la session précédente
+        const taskId = sessionStorage.getItem('currentTaskId');
+        if (!taskId) {
+            window.location.href = 'Analyzer_1.html';
+        }
+
+        let charts = {};
+
+        async function loadAdvancedAnalysis() {
+            try {
+                const response = await fetch(`/api/status/${taskId}`);
+                const data = await response.json();
+
+                if (!response.ok || data.status !== 'completed') {
+                    throw new Error('Données non disponibles');
+                }
+
+                showAnalysis('performance');
+
+            } catch (error) {
+                console.error('Erreur:', error);
+            }
+        }
+
+        function showAnalysis(type) {
+            // Mettre à jour les boutons actifs
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.toLowerCase().includes(type)) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Mettre à jour les métriques et graphiques selon le type
+            switch (type) {
+                case 'performance':
+                    showPerformanceAnalysis();
+                    break;
+                case 'risk':
+                    showRiskAnalysis();
+                    break;
+                case 'patterns':
+                    showPatternsAnalysis();
+                    break;
+            }
+        }
+
+        function showPerformanceAnalysis() {
+            // Métriques de performance
+            const metricsContainer = document.getElementById('metrics-container');
+            metricsContainer.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-value">2.5</div>
+                    <div class="metric-label">Ratio Profit/Perte</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">75%</div>
+                    <div class="metric-label">Meilleur Mois</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">1.8</div>
+                    <div class="metric-label">Facteur de Profit</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">45%</div>
+                    <div class="metric-label">Rendement Annualisé</div>
+                </div>
+            `;
+
+            // Graphiques de performance
+            const chartGrid = document.getElementById('chart-grid');
+            chartGrid.innerHTML = `
+        <div class="chart-container">
+                    <canvas id="equityCurve"></canvas>
+            </div>
+                <div class="chart-container">
+                    <canvas id="monthlyReturns"></canvas>
+        </div>
+            `;
+
+            // Créer les graphiques
+            createEquityCurve();
+            createMonthlyReturns();
+        }
+
+        function showRiskAnalysis() {
+            // Métriques de risque
+            const metricsContainer = document.getElementById('metrics-container');
+            metricsContainer.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-value">15%</div>
+                    <div class="metric-label">Drawdown Maximum</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">1.2%</div>
+                    <div class="metric-label">Risque par Trade</div>
+            </div>
+                <div class="metric-card">
+                    <div class="metric-value">0.85</div>
+                    <div class="metric-label">Ratio de Sharpe</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">12j</div>
+                    <div class="metric-label">Temps de Récupération</div>
+            </div>
+            `;
+
+            // Graphiques de risque
+            const chartGrid = document.getElementById('chart-grid');
+            chartGrid.innerHTML = `
+                <div class="chart-container">
+                    <canvas id="drawdownChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="riskMetrics"></canvas>
+            </div>
+            `;
+
+            // Créer les graphiques
+            createDrawdownChart();
+            createRiskMetrics();
+        }
+
+        function showPatternsAnalysis() {
+            // Métriques des patterns
+            const metricsContainer = document.getElementById('metrics-container');
+            metricsContainer.innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-value">85%</div>
+                    <div class="metric-label">Pattern le Plus Rentable</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">10:00</div>
+                    <div class="metric-label">Meilleure Heure</div>
+            </div>
+                <div class="metric-card">
+                    <div class="metric-value">Mardi</div>
+                    <div class="metric-label">Meilleur Jour</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">2h</div>
+                    <div class="metric-label">Durée Moyenne</div>
+            </div>
+            `;
+
+            // Graphiques des patterns
+            const chartGrid = document.getElementById('chart-grid');
+            chartGrid.innerHTML = `
+                <div class="chart-container">
+                    <canvas id="timeAnalysis"></canvas>
+        </div>
+                <div class="chart-container">
+                    <canvas id="patternSuccess"></canvas>
+    </div>
+            `;
+
+            // Créer les graphiques
+            createTimeAnalysis();
+            createPatternSuccess();
+        }
+
+        // Fonctions de création des graphiques
+        function createEquityCurve() {
+            const ctx = document.getElementById('equityCurve').getContext('2d');
+            charts.equityCurve = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin'],
+                    datasets: [{
+                        label: 'Courbe de Capital',
+                        data: [10000, 12000, 11500, 13500, 15000, 14500],
+                        borderColor: '#E6A05C',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            labels: { color: 'white' }
+                        }
+                    },
+                    scales: {
+                        y: { ticks: { color: 'white' } },
+                        x: { ticks: { color: 'white' } }
+                    }
+                }
+            });
+        }
+
+        // ... Autres fonctions de création de graphiques similaires ...
+
+        // Charger les données au démarrage
+        loadAdvancedAnalysis();
+    </script>
+</body>
+</html> 

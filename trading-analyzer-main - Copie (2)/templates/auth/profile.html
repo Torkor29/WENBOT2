@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}Mon Profil - Wenbot Trading Analyzer{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <!-- Avatar -->
+                    <div class="profile-avatar mb-3">
+                        {% if user.is_admin() %}
+                            <i class="fas fa-crown text-warning"></i>
+                        {% elif user.is_premium() %}
+                            <i class="fas fa-star text-primary"></i>
+                        {% else %}
+                            <i class="fas fa-user"></i>
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Nom et statut -->
+                    <h5 class="card-title">{{ user.get_full_name() }}</h5>
+                    <p class="text-muted small">{{ user.email }}</p>
+                    
+                    <!-- Badge de statut -->
+                    {% if user.is_admin() %}
+                        <span class="badge bg-warning text-dark">
+                            <i class="fas fa-crown me-1"></i>Administrateur
+                        </span>
+                    {% elif user.is_premium() %}
+                        <span class="badge bg-primary">
+                            <i class="fas fa-star me-1"></i>Premium
+                        </span>
+                    {% else %}
+                        <span class="badge bg-secondary">
+                            <i class="fas fa-user me-1"></i>Gratuit
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <div class="list-group mt-3">
+                <a href="{{ url_for('auth.profile') }}" class="list-group-item list-group-item-action active">
+                    <i class="fas fa-user me-2"></i>Profil
+                </a>
+                <a href="{{ url_for('auth.edit_profile') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-edit me-2"></i>Modifier le profil
+                </a>
+                <a href="{{ url_for('auth.change_password') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-lock me-2"></i>Changer le mot de passe
+                </a>
+                <a href="{{ url_for('auth.subscription') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-credit-card me-2"></i>Abonnement
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contenu principal -->
+        <div class="col-md-9">
+            <!-- Informations du compte -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Informations du compte
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <label class="form-label text-muted">Prénom</label>
+                                <p class="mb-0">{{ user.first_name }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <label class="form-label text-muted">Nom</label>
+                                <p class="mb-0">{{ user.last_name }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <label class="form-label text-muted">Email</label>
+                                <p class="mb-0">{{ user.email }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <label class="form-label text-muted">Membre depuis</label>
+                                <p class="mb-0">{{ user.created_at.strftime('%d/%m/%Y') if user.created_at else 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <label class="form-label text-muted">Dernière connexion</label>
+                                <p class="mb-0">{{ user.last_login.strftime('%d/%m/%Y à %H:%M') if user.last_login else 'Première connexion' }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="info-item mb-3">
+                                <label class="form-label text-muted">Statut du compte</label>
+                                <p class="mb-0">
+                                    {% if user.is_active %}
+                                        <span class="badge bg-success">Actif</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">Inactif</span>
+                                    {% endif %}
+                                    {% if user.email_confirmed %}
+                                        <span class="badge bg-info ms-1">Email confirmé</span>
+                                    {% else %}
+                                        <span class="badge bg-warning ms-1">Email non confirmé</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Statistiques d'usage -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Utilisation
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% if not user.is_premium() %}
+                            <div class="col-md-6">
+                                <div class="usage-stat">
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span class="text-muted">Analyses ce mois</span>
+                                        <span class="fw-bold">{{ user.monthly_analyses_used }} / {{ user.monthly_analyses_limit }}</span>
+                                    </div>
+                                    <div class="progress">
+                                                                                 {% set progress_pct = (user.monthly_analyses_used / user.monthly_analyses_limit * 100) if user.monthly_analyses_limit > 0 else 0 %}
+                                         <div class="progress-bar" style="width: {{ '%.0f'|format(progress_pct) }}%"></div>
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ user.get_remaining_analyses() }} analyses restantes
+                                    </small>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-md-6">
+                                <div class="usage-stat">
+                                    <h3 class="text-primary mb-1">∞</h3>
+                                    <p class="text-muted mb-0">Analyses illimitées</p>
+                                    <small class="text-success">
+                                        <i class="fas fa-check me-1"></i>
+                                        Compte Premium actif
+                                    </small>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="col-md-6">
+                            <div class="usage-stat">
+                                <h3 class="text-info mb-1">{{ user.analyses|length }}</h3>
+                                <p class="text-muted mb-0">Analyses totales</p>
+                                <small class="text-muted">Depuis l'inscription</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Actions rapides -->
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>
+                        Actions rapides
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="{{ url_for('upload_files') }}" class="btn btn-primary w-100">
+                                <i class="fas fa-upload me-2"></i>
+                                Nouvelle analyse
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="{{ url_for('auth.edit_profile') }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-edit me-2"></i>
+                                Modifier le profil
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            {% if not user.is_premium() %}
+                                <a href="{{ url_for('auth.upgrade') }}" class="btn btn-warning w-100">
+                                    <i class="fas fa-star me-2"></i>
+                                    Passer au Premium
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('auth.subscription') }}" class="btn btn-success w-100">
+                                    <i class="fas fa-crown me-2"></i>
+                                    Gérer l'abonnement
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--bs-primary), var(--bs-secondary));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2rem;
+    margin: 0 auto;
+}
+
+.info-item label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.usage-stat {
+    text-align: center;
+    padding: 1rem;
+    border-radius: 10px;
+    background: var(--bs-light);
+}
+
+[data-bs-theme="dark"] .usage-stat {
+    background: var(--bs-dark);
+}
+
+.progress {
+    height: 6px;
+    border-radius: 3px;
+}
+
+.list-group-item {
+    border-radius: 10px;
+    margin-bottom: 2px;
+    border: none;
+}
+
+.card {
+    border-radius: 15px;
+}
+</style>
+{% endblock %} 
